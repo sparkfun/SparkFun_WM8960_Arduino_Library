@@ -55,7 +55,7 @@
 // I2C address (7-bit format for Wire library)
 #define WM8960_ADDR 0x34
 
-// WM8960 registers
+// WM8960 register addresses
 #define WM8960_REG_LEFT_INPUT_VOLUME 0x00
 #define WM8960_REG_RIGHT_INPUT_VOLUME 0x01
 #define WM8960_REG_LOUT1_VOLUME 0x02
@@ -148,7 +148,7 @@ class WM8960
 
 		boolean enableVREF(); // necessary for all other functions
 		boolean disableVREF(); // use for turning this off to save power
-		
+
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// PGA 
 		/////////////////////////////////////////////////////////
@@ -172,8 +172,8 @@ class WM8960
 		//	*You can select between VMIN, RINPUT2 or RINPUT3
 		// 	*Note, the inverting input of PGA_RIGHT is perminantly connected to RINPUT1
 
-		boolean pgaLeftNonInvSignalSelect(char signal); // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
-		boolean pgaRightNonInvSignalSelect(char signal); // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
+		boolean pgaLeftNonInvSignalSelect(uint8_t signal); // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
+		boolean pgaRightNonInvSignalSelect(uint8_t signal); // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
 
 		// Connection from each INPUT1 to the inverting input of its PGA
 		boolean pgaLeftInvSignalConnect(); 		// Connect LINPUT1 to inverting input of Left Input PGA
@@ -249,8 +249,8 @@ class WM8960
 		boolean setAlcAttack(uint8_t attack); // valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
 
 		// Peak Limiter
-		enablePeakLimiter();
-		disablePeakLimiter();
+		boolean enablePeakLimiter();
+		boolean disablePeakLimiter();
 
 		// Noise Gate
 		boolean enableNoiseGate();
@@ -279,8 +279,8 @@ class WM8960
 
 
 		// DAC mute
-		enableDacMute();
-		disableDacMute();
+		boolean enableDacMute();
+		boolean disableDacMute();
 
 		// DE-Emphasis
 
@@ -355,12 +355,12 @@ class WM8960
 		/////////////////////////////////////////////////////////
 
 		// Enable and disable headphones (mute)
-		unsigned char enableHeadphones();
-		unsigned char disableHeadphones();
-		unsigned char enableRightHeadphone();
-		unsigned char disableRightHeadphone();
-		unsigned char enableLeftHeadphone();
-		unsigned char disableLeftHeadphone();
+		boolean enableHeadphones();
+		boolean disableHeadphones();
+		boolean enableRightHeadphone();
+		boolean disableRightHeadphone();
+		boolean enableLeftHeadphone();
+		boolean disableLeftHeadphone();
 
 		boolean enableHeadphoneStandby();
 		boolean disableHeadphoneStandby();
@@ -383,12 +383,12 @@ class WM8960
 		/////////////////////////////////////////////////////////
 
 		// Enable and disable speakers (mute)
-		unsigned char enableSpeakers();
-		unsigned char disableSpeakers();
-		unsigned char enableRightSpeaker();
-		unsigned char disableRightSpeaker();
-		unsigned char enableLeftSpeaker();
-		unsigned char disableLeftSpeaker();
+		boolean enableSpeakers();
+		boolean disableSpeakers();
+		boolean enableRightSpeaker();
+		boolean disableRightSpeaker();
+		boolean enableLeftSpeaker();
+		boolean disableLeftSpeaker();
 
 		// Although you can control each Speaker output independently, here we are
 		// going to assume you want both left and right to do the same thing.
@@ -470,12 +470,81 @@ class WM8960
 		boolean set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 
-		// General-purpose register read/write
-		unsigned char writeRegister(unsigned char reg, unsigned char value);
-		unsigned char readRegister(unsigned char reg, unsigned char *value);
+		// General-purpose register write
+		boolean writeRegister(uint8_t reg, uint16_t value);
+		// **The WM8960 does not support reading registers!!!
 
 	private:
 		TwoWire *_i2cPort;
 		uint8_t _deviceAddress = WM8960_ADDR;
+
+		// The WM8960 does not support I2C reads
+		// This means we must keep a local copy of all the register values
+		// We will instantiate with default values
+		// As we write to the device, we will also make sure
+		// to update our local copy as well, stored here in this array.
+		// Each register is 9-bits, so we will store them as a uint16_t
+		// They are in order from R0-R55, and we even keep blank spots for the
+		// "reserved" registers. This way we can use the register address macro defines above
+		// to easiy access each local copy of each register.
+		// example... _registerLocalCopy[WM8960_REG_LEFT_INPUT_VOLUME]
+		uint16_t _registerLocalCopy[56] = {
+			0x0097, // R0 (0x00)
+			0x0097, // R1 (0x01)
+			0x0000, // R2 (0x02)
+			0x0000, // R3 (0x03)
+			0x0000, // R4 (0x04)
+			0x0008, // F5 (0x05)
+			0x0000, // R6 (0x06)
+			0x000A, // R7 (0x07)
+			0x01C0, // R8 (0x08)
+			0x0000, // R9 (0x09)
+			0x00FF, // R10 (0x0a)
+			0x00FF, // R11 (0x0b)
+			0x0000, // R12 (0x0C) RESERVED
+			0x0000, // R13 (0x0D) RESERVED
+			0x0000, // R14 (0x0E) RESERVED
+			0x0000, // R15 (0x0F) RESERVED
+			0x0000, // R16 (0x10)
+			0x007B, // R17 (0x11)
+			0x0100, // R18 (0x12)
+			0x0032, // R19 (0x13)
+			0x0000, // R20 (0x14)
+			0x00C3, // R21 (0x15)
+			0x00C3, // R22 (0x16)
+			0x01C0, // R23 (0x17)
+			0x0000, // R24 (0x18)
+			0x0000, // R25 (0x19)
+			0x0000, // R26 (0x1A)
+			0x0000, // R27 (0x1B)
+			0x0000, // R28 (0x1C)
+			0x0000, // R29 (0x1D)
+			0x0000, // R30 (0x1E) RESERVED
+			0x0000, // R31 (0x1F) RESERVED
+			0x0100, // R32 (0x20)
+			0x0100, // R33 (0x21)
+			0x0050, // R34 (0x22)
+			0x0000, // R35 (0x23) RESERVED
+			0x0000, // R36 (0x24) RESERVED
+			0x0050, // R37 (0x25)
+			0x0000, // R38 (0x26)
+			0x0000, // R39 (0x27)
+			0x0000, // R40 (0x28)
+			0x0000, // R41 (0x29)
+			0x0040, // R42 (0x2A)
+			0x0000, // R43 (0x2B)
+			0x0000, // R44 (0x2C)
+			0x0050, // R45 (0x2D)
+			0x0050, // R46 (0x2E)
+			0x0000, // R47 (0x2F)
+			0x0002, // R48 (0x30)
+			0x0037, // R49 (0x31)
+			0x0000, // R50 (0x32) RESERVED
+			0x0080, // R51 (0x33)
+			0x0008, // R52 (0x34)
+			0x0031, // R53 (0x35)
+			0x0026, // R54 (0x36)
+			0x00e9, // R55 (0x37)
+		}
 };
 #endif
