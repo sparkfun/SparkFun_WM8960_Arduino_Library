@@ -105,13 +105,6 @@
 #define WM8960_REG_PLL_K_2 0x36
 #define WM8960_REG_PLL_K_3 0x37
 
-
-// control settings
-#define COMPRESSION_RATIO_1_1 0x00
-#define COMPRESSION_RATIO_2_1 0x01
-#define COMPRESSION_RATIO_4_1 0x10
-#define COMPRESSION_RATIO_8_1 0x11
-
 // PGA input selections
 #define PGAL_LINPUT2 0
 #define PGAL_LINPUT3 1
@@ -149,19 +142,17 @@
 class WM8960
 {
 	public:
-	
 		WM8960();
-
 		boolean begin(TwoWire &wirePort = Wire);
-
 		boolean isConnected();
 
-/*
+		boolean enableVREF(); // necessary for all other functions
+		boolean disableVREF(); // use for turning this off to save power
+		
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// PGA 
+		/////////////////////////////////////////////////////////
 
-*/
-
-
-		// PGA
 		boolean pgaLeftEnable();
 		boolean pgaLeftDisable();
 		boolean pgaRightEnable();
@@ -178,7 +169,7 @@ class WM8960
 		// 	*You can select between VMID, LINPUT2 or LINPUT3
 		// 	*Note, the inverting input of PGA_LEFT is perminantly connected to LINPUT1
 		// On PGA_RIGHT:
-		//	* You can select between VMIN, RINPUT2 or RINPUT3
+		//	*You can select between VMIN, RINPUT2 or RINPUT3
 		// 	*Note, the inverting input of PGA_RIGHT is perminantly connected to RINPUT1
 
 		boolean pgaLeftNonInvSignalSelect(char signal); // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
@@ -224,7 +215,10 @@ class WM8960
 		boolean disableMicBias();
 		boolean setMicBiasVoltage(boolean voltage); // MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
 
-		// ADC
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// ADC
+		/////////////////////////////////////////////////////////
+
 		boolean enableAdcLeft();
 		boolean disableAdcLeft();
 		boolean enableAdcRight();
@@ -240,6 +234,9 @@ class WM8960
 		boolean setAdcLeftDigitalVolume(uint8_t volume); 
 		boolean setAdcRightDigitalVolume(uint8_t volume);
 
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// ALC
+		/////////////////////////////////////////////////////////
 
 		// Automatic Level Control
 		// Note that when the ALC function is enabled, the settings of
@@ -260,8 +257,9 @@ class WM8960
 		boolean disableNoiseGate();
 		boolean setNoiseGateThreshold(uint8_t threshold); // 0-31, 0 = -76.5dBfs, 31 = -30dBfs
 
-
-		// DAC
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// DAC
+		/////////////////////////////////////////////////////////
 
 		// enable/disble each channel
 		boolean enableDacLeft();
@@ -286,7 +284,6 @@ class WM8960
 
 		// DE-Emphasis
 
-
 		// 3D Stereo Enhancement
 		// 3D enable/disable
 		boolean enable3d();
@@ -299,11 +296,11 @@ class WM8960
 		boolean enableDac6dbAttenuation();
 		boolean disableDac6dbAttentuation();
 
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// OUTPUT mixers
+		/////////////////////////////////////////////////////////
 
-		// OUTPUT mixers
 		// what's connected to what? Oh so many options...
-		// See below for full names of abbreviations:
-
 		// LOMIX	Left Output Mixer
 		// ROMIX	Right Output Mixer
 		// OUT3MIX		Mono Output Mixer
@@ -350,8 +347,12 @@ class WM8960
 		boolean disableRI2MO();
 		boolean enableOUT3asVMID(); // this will disable both connections, thus enable VMID on OUT3
 		// note, to enable VMID, you also need to enable OUT3 in the WM8960_REG_PWR_MGMT_2 [1]
+		boolean enableVMID(); // enables VMID in the WM8960_REG_PWR_MGMT_1 register, and set's it to playback/record settings of 2*50Kohm.
+		boolean disableVMID();
 
-		// Headphones
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// Headphones
+		/////////////////////////////////////////////////////////
 
 		// Enable and disable headphones (mute)
 		unsigned char enableHeadphones();
@@ -377,8 +378,9 @@ class WM8960
 		boolean headphoneZeroCrossOff(); // sets both left and right Headphone outputs
 		
 
-
-		// Speakers
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// Speakers
+		/////////////////////////////////////////////////////////
 
 		// Enable and disable speakers (mute)
 		unsigned char enableSpeakers();
@@ -408,40 +410,65 @@ class WM8960
 		boolean setSpeakerDcGain(uint8_t gain);
 		boolean setSpeakerAcGain(uint8_t gain);
 
-		// Clock controls - Class D amp
-		boolean setClassDClockDivide(uint8_t divide);
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// Digital audio interface control
+		/////////////////////////////////////////////////////////
 
-		// Digital audio interface control
 		// defaults to I2S, peripheral-mode, 24-bit word length
 		// *Might need to change the WL to match our application. 
 		// *I believe the BT example will need 16-bit WL.
+		boolean setAudioDataWordLength(uint8_t length); // 0=16bit, 1=20bit, 2=24bit, 3=32bit.
 
-		// Clock controls - Getting the Frequency of SampleRate as we wish
-		// Our MCLK (an external clock on the breakout board) is 24.0MHz.
+		// Loopback
+		// When enabled, the output data from the ADC audio interface is fed directly into the DAC data input.
+		boolean enableLoopBack();
+		boolean disableLoopBack();
+
+		/////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////// Clock controls
+		/////////////////////////////////////////////////////////
+
+		// Getting the Frequency of SampleRate as we wish
+		// Our MCLK (an external clock on the SFE breakout board) is 24.0MHz.
 		// According to table 40 (DS pg 58), we want SYSCLK to be 11.2896 for a SR of 44.1KHz
 		// To get that Desired Output (SYSCLK), we need the following settings on the PLL stuff.
 		// as found on table 45 (ds pg 61).
-		// PRESCALE DIVIDE (PLLRESCALE): 2
+		// PRESCALE DIVIDE (PLLPRESCALE): 2
 		// POSTSCALE DVIDE (SYSCLKDIV[1:0]): 2
 		// FIXED POST-DIVIDE: 4
 		// R: 7.5264 
 		// N: 7h
 		// K: 86C226h
+
 		// example at bottom of table 46, shows that we should be in fractional mode for a 44.1KHz.
 
+		// In terms of registers, this is what we want for 44.1KHz
+		// PLLEN=1			(PLL enable)
+		// PLLPRESCALE=1	(divide by 2) *This get's us from MCLK (24MHz) down to 12MHZ for F2
+		// PLLN=7h			(PLL N value) *this is "int R"
+		// PLLK=86C226h		(PLL K value) *this is int ( 2^24 * (R- intR)) 
+		// SDM=1			(Fractional mode)
+		// CLKSEL=1			(PLL select) 
+		// MS=0				(Peripheral mode)
+		// WL=00			(16 bits)
+		// SYSCLKDIV=2		(Divide by 2)
+		// ADCDIV=000		(Divide by 1) = 44.1kHz
+		// DACDIV=000		(Divide by 1) = 44.1kHz
+		// BCLKDIV=0100		(Divide by 4) = 64fs
+		// DCLKDIV=111		(Divide by 16) = 705.6kHz
+
+		// And now for the functions that will set these registers...
 		boolean enablePLL();
 		boolean disablePLL();
-		boolean setIntegerMode();
-		boolean setFractionalMode();
-
-
-
-
-
-
-
-
-
+		boolean set_PLLPRESCALE(boolean val = 1); // (0=divide by 1), (1=div by 2)
+		boolean set_PLLN(uint8_t n);
+		boolean set_PLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
+		boolean set_SMD(boolean mode); // 0=integer, 1=fractional
+		boolean set_CLKSEL(boolean sel); // 0=MCLK, 1=PLL_output
+		boolean set_SYSCLKDIV(uint8_t div = 2); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
+		boolean set_ADVDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 
 		// General-purpose register read/write
 		unsigned char writeRegister(unsigned char reg, unsigned char value);
@@ -450,10 +477,5 @@ class WM8960
 	private:
 		TwoWire *_i2cPort;
 		uint8_t _deviceAddress = WM8960_ADDR;
-		uint8_t _sampleRate = 0;
 };
-
-
-
-
 #endif
