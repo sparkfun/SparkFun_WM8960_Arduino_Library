@@ -477,6 +477,7 @@ class WM8960
 	private:
 		TwoWire *_i2cPort;
 		uint8_t _deviceAddress = WM8960_ADDR;
+		boolean _writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, boolean bitValue);
 
 		// The WM8960 does not support I2C reads
 		// This means we must keep a local copy of all the register values
