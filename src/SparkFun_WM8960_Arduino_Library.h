@@ -53,7 +53,7 @@
 #include <Wire.h>
 
 // I2C address (7-bit format for Wire library)
-#define WM8960_ADDR 0x34
+#define WM8960_ADDR 0x1A // npote the DS shows address as 0x34h (which is 0x1A shifted left 1 bit, and then includes the appended "0" (aka write bit).)
 
 // WM8960 register addresses
 #define WM8960_REG_LEFT_INPUT_VOLUME 0x00
@@ -153,10 +153,15 @@ class WM8960
 		///////////////////////////////////////////////////////// PGA 
 		/////////////////////////////////////////////////////////
 
-		boolean pgaLeftEnable();
-		boolean pgaLeftDisable();
-		boolean pgaRightEnable();
-		boolean pgaRightDisable();
+		boolean enable_AINL();
+		boolean disable_AINL();
+		boolean enable_AINR();
+		boolean disable_AINR();
+
+		boolean enable_LMIC();
+		boolean disable_LMIC();
+		boolean enable_RMIC();
+		boolean disable_RMIC();
 
 		boolean enable_LMICBOOST();
 		boolean disable_LMICBOOST();
@@ -176,10 +181,10 @@ class WM8960
 		boolean pgaRightNonInvSignalSelect(uint8_t signal); // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
 
 		// Connection from each INPUT1 to the inverting input of its PGA
-		boolean pgaLeftInvSignalConnect(); 		// Connect LINPUT1 to inverting input of Left Input PGA
-		boolean pgaLeftInvSignalDisconnect(); 	// Disconnect LINPUT1 from inverting input of Left Input PGA
-		boolean pgaRightInvSignalConnect(); 	// Connect RINPUT1 to inverting input of Right Input PGA
-		boolean pgaRightInvSignalDisconnect(); 	// Disconnect RINPUT1 from inverting input of Right Input PGA	
+		boolean connect_LMN1(); 		// Connect LINPUT1 to inverting input of Left Input PGA
+		boolean disconnect_LMN1(); 	// Disconnect LINPUT1 from inverting input of Left Input PGA
+		boolean connect_RMN1(); 	// Connect RINPUT1 to inverting input of Right Input PGA
+		boolean disconnect_RMN1(); 	// Disconnect RINPUT1 from inverting input of Right Input PGA	
 
 		// Connection from output of PGAs to downstream "boost mixers".
 		boolean connect_LMIC2B(); 		// Connect Left Input PGA to Left Input Boost mixer
@@ -546,6 +551,6 @@ class WM8960
 			0x0031, // R53 (0x35)
 			0x0026, // R54 (0x36)
 			0x00e9, // R55 (0x37)
-		}
+		};
 };
 #endif

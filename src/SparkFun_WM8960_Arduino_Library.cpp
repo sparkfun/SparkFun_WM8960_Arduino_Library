@@ -100,7 +100,7 @@ boolean WM8960::_writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, bo
     else {
       regvalue &= ~(1<<bitNumber); // clear only the bit we want  
     }
-    if (WM8960::writeRegister(registerAddress, regvalue)); // write modified value to device
+    if (WM8960::writeRegister(registerAddress, regvalue)) // write modified value to device
     {
         _registerLocalCopy[registerAddress] = regvalue; // if successful, update local copy
         return 1;
@@ -148,6 +148,26 @@ boolean WM8960::disable_AINR()
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 4, 0);
 }
 
+boolean WM8960::enable_LMIC()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 1);
+}
+
+boolean WM8960::disable_LMIC()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 0);
+}
+
+boolean WM8960::enable_RMIC()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 1);
+}
+
+boolean WM8960::disable_RMIC()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 0);
+}
+
 boolean WM8960::enable_LMICBOOST()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 1);
@@ -180,11 +200,13 @@ boolean WM8960::disable_RMICBOOST()
  // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
 boolean WM8960::pgaLeftNonInvSignalSelect(uint8_t signal)
 {
+  return true;
 }
 
  // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
 boolean WM8960::pgaRightNonInvSignalSelect(uint8_t signal)
 {
+  return true;
 }
 
 // Connection from each INPUT1 to the inverting input of its PGA
@@ -206,7 +228,7 @@ boolean WM8960::connect_RMN1()
 }
 
 // Disconnect RINPUT1 to inverting input of Right Input PGA
-boolean WM8960::connect_RMN1()
+boolean WM8960::disconnect_RMN1()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 8, 0);
 }
@@ -260,12 +282,13 @@ boolean WM8960::pgaZeroCrossOff()
 
 boolean WM8960::pgaLeftMuteOn()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 7, 1);
 }
 
 boolean WM8960::pgaLeftMuteOff()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 0);
+  WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 7, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 8, 1);
 }
 
 boolean WM8960::pgaRightMuteOn()
@@ -413,7 +436,10 @@ boolean WM8960::disableNoiseGate()
   return WM8960::_writeRegisterBit(WM8960_REG_NOISE_GATE, 0, 0);
 }
 
-boolean WM8960::setNoiseGateThreshold(uint8_t threshold); // 0-31, 0 = -76.5dBfs, 31 = -30dBfs
+boolean WM8960::setNoiseGateThreshold(uint8_t threshold) // 0-31, 0 = -76.5dBfs, 31 = -30dBfs
+{
+  return true;
+}
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// DAC
@@ -457,12 +483,12 @@ boolean WM8960::setDacRightDigitalVolume(uint8_t volume);
 		// DAC mute
 boolean WM8960::enableDacMute()
 {
-  return WM8960::_writeRegisterBit(#define WM8960_REG_ADC_DAC_CTRL_1, 3, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_ADC_DAC_CTRL_1, 3, 1);
 }
 
 boolean WM8960::disableDacMute()
 {
-  return WM8960::_writeRegisterBit(#define WM8960_REG_ADC_DAC_CTRL_1, 3, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_ADC_DAC_CTRL_1, 3, 0);
 }
 
 		// DE-Emphasis
@@ -520,12 +546,12 @@ boolean WM8960::disableLOMIX()
 
 boolean WM8960::enableROMIX()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 2, 1);
 }
 
 boolean WM8960::disableROMIX()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 2, 0);
 }
 
 boolean WM8960::enableOUT3MIX()
@@ -551,11 +577,24 @@ boolean WM8960::disableLI2LO()
   return WM8960::_writeRegisterBit(WM8960_REG_LEFT_OUT_MIX_1, 7, 0);
 }
 
-/*
 
-boolean WM8960::setLI2LOVOL(uint8_t volume); // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
 
-*/
+boolean WM8960::setLI2LOVOL(uint8_t volume) // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
+{
+  // limit incoming values
+  if(volume > 7) volume = 7;
+  if(volume < 0) volume = 0;
+
+  volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
+  uint16_t regvalue = _registerLocalCopy[WM8960_REG_LEFT_OUT_MIX_1]; // Get the local copy of the register
+  regvalue &= (B10001111); // clear bits we care about [6:4] are LI2LOVOL
+  regvalue |= (volume << 4); // shift and set the bits from in incoming desired volume value
+  if(WM8960::writeRegister(WM8960_REG_LEFT_OUT_MIX_1, regvalue)) // write register
+  {
+    _registerLocalCopy[WM8960_REG_LEFT_OUT_MIX_1] = regvalue; // if successful, update local copy
+  }
+}
+
 
 boolean WM8960::enableLB2LO()
 {
@@ -589,7 +628,21 @@ boolean WM8960::disableRI2RO()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 0);
 }
 
-//boolean WM8960::setRI2ROVOL(uint8_t volume); // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
+boolean WM8960::setRI2ROVOL(uint8_t volume) // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
+{
+    // limit incoming values
+  if(volume > 7) volume = 7;
+  if(volume < 0) volume = 0;
+  
+  volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
+  uint16_t regvalue = _registerLocalCopy[WM8960_REG_RIGHT_OUT_MIX_2]; // Get the local copy of the register
+  regvalue &= (B10001111); // clear bits we care about [6:4] are LI2LOVOL
+  regvalue |= (volume << 4); // shift and set the bits from in incoming desired volume value
+  if(WM8960::writeRegister(WM8960_REG_RIGHT_OUT_MIX_2, regvalue)) // write register
+  {
+    _registerLocalCopy[WM8960_REG_RIGHT_OUT_MIX_2] = regvalue; // if successful, update local copy
+  }
+}
 
 boolean WM8960::enableRB2RO()
 {
@@ -651,16 +704,20 @@ boolean WM8960::enableOUT3asVMID()
   return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
 }
 
+*/
+
 // enables VMID in the WM8960_REG_PWR_MGMT_2 register, and set's it to playback/record settings of 2*50Kohm.
 boolean WM8960::enableVMID()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 8, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 7, 1);
 }
 
  
 boolean WM8960::disableVMID()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 8, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 7, 0);
 }
 
 
@@ -672,61 +729,96 @@ boolean WM8960::disableVMID()
 		// Enable and disable headphones (mute)
 boolean WM8960::enableHeadphones()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return (WM8960::enableRightHeadphone() & WM8960::enableLeftHeadphone());
 }
-
 
 boolean WM8960::disableHeadphones()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return (WM8960::disableRightHeadphone() & WM8960::disableLeftHeadphone());
 }
-
 
 boolean WM8960::enableRightHeadphone()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 5, 1);
 }
-
 
 boolean WM8960::disableRightHeadphone()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 5, 0);
 }
-
 
 boolean WM8960::enableLeftHeadphone()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 6, 1);
 }
-
 
 boolean WM8960::disableLeftHeadphone()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 6, 0);
 }
 
 
+// boolean WM8960::enableHeadphoneStandby()
+// {
+//   return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+// }
 
-boolean WM8960::enableHeadphoneStandby()
-{
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
-}
 
-
-boolean WM8960::disableHeadphoneStandby()
-{
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
-}
-
+// boolean WM8960::disableHeadphoneStandby()
+// {
+//   return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+// }
 
 
 		// Although you can control each headphone output independently, here we are
 		// going to assume you want both left and right to do the same thing.
 		// Set volume
-boolean WM8960::setHeadphoneVolume(uint8_t volume); // Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+boolean WM8960::setHeadphoneVolume(uint8_t volume) // Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
 		// updates both left and right channels
 		// handles the OUT1VU (volume update) bit control, so that it happens at the same time on both channels.
 		// Note, we must also make sure that the outputs are enabled in the WM8960_REG_PWR_MGMT_2 [6:5]
+{
+  // grab local copy of register
+  // modify the bits we need to
+  // write register in device, including the volume update bit write
+  // if successful, save locally.
+
+  // LEFT
+    uint16_t regvalue = _registerLocalCopy[WM8960_REG_LOUT1_VOLUME]; // Get the local copy of the register
+    regvalue &= (B10000000); // clear bits we care about [6:0] are LOUT1VOL
+
+    regvalue |= volume; // set the bits from in incoming desired volume value
+
+    boolean result1 = WM8960::writeRegister(WM8960_REG_LOUT1_VOLUME, regvalue); // write register
+    if(result1) 
+    {
+      _registerLocalCopy[WM8960_REG_LOUT1_VOLUME] = regvalue; // if successful, update local copy
+    }
+
+  // RIGHT
+    regvalue = _registerLocalCopy[WM8960_REG_ROUT1_VOLUME]; // Get the local copy of the register
+    regvalue &= (B10000000); // clear bits we care about [6:0] are LOUT1VOL
+
+    regvalue |= volume; // set the bits from in incoming desired volume value
+
+    boolean result2 = WM8960::writeRegister(WM8960_REG_ROUT1_VOLUME, regvalue); // write register
+    if(result2) 
+    {
+      _registerLocalCopy[WM8960_REG_ROUT1_VOLUME] = regvalue; // if successful, update local copy
+    }
+
+    boolean result3 = WM8960::_writeRegisterBit(WM8960_REG_LOUT1_VOLUME, 8, 1); // updated left channel
+    boolean result4 = WM8960::_writeRegisterBit(WM8960_REG_ROUT1_VOLUME, 8, 1); // updated right channel
+
+    if (result1 && result2 && result3 && result4) // if all I2C sommands Ack'd, then...
+    {
+        //_registerLocalCopy[WM8960_REG_LOUT1_VOLUME] = regvalue; // if successful, update local copy
+        return 1;
+    }
+  return 0;
+}
+
+/*
 
 		// Zero Cross prevents zipper sounds on volume changes
 boolean WM8960::headphoneZeroCrossOn()

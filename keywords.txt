@@ -1,0 +1,68 @@
+#######################################
+# Syntax Coloring Map SFE_TPA2016D2
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+SFE_TPA2016D2            KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+enableSpeakers						KEYWORD2
+disableSpeakers						KEYWORD2
+enableRightSpeaker				KEYWORD2
+disableRightSpeaker				KEYWORD2
+enableLeftSpeaker					KEYWORD2
+disableLeftSpeaker				KEYWORD2
+enableShutdown						KEYWORD2
+disableShutdown						KEYWORD2
+readFaults								KEYWORD2
+readFaultLeft								KEYWORD2
+readFaultRight								KEYWORD2
+readFaultThermal								KEYWORD2
+resetFaults								KEYWORD2
+enableNoiseGate						KEYWORD2
+disableNoiseGate					KEYWORD2
+writeAttack								KEYWORD2
+readAttack								KEYWORD2
+writeRelease							KEYWORD2
+readRelease								KEYWORD2
+writeHold									KEYWORD2
+readHold									KEYWORD2
+writeFixedGain						KEYWORD2
+readFixedGain							KEYWORD2
+disableLimiter						KEYWORD2
+enableLimiter							KEYWORD2
+writeNoiseGateThreshold		KEYWORD2
+readNoiseGateThreshold		KEYWORD2
+writeOutputLimiterLevel		KEYWORD2
+readOutputLimiterLevel		KEYWORD2
+writeMaxGain							KEYWORD2
+readMaxGain								KEYWORD2
+writeCompressionRatio			KEYWORD2
+readCompressionRatio			KEYWORD2
+writeRegister							KEYWORD2
+readRegister							KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+TPA2016D2_ADDR							LITERAL1
+TPA2016D2_CONTROL_REGISTER	LITERAL1
+TPA2016D2_ATTACK_REGISTER		LITERAL1
+TPA2016D2_RELEASE_REGISTER	LITERAL1
+TPA2016D2_HOLD_REGISTER			LITERAL1
+TPA2016D2_GAIN_REGISTER			LITERAL1
+TPA2016D2_AGC1_REGISTER			LITERAL1
+TPA2016D2_AGC2_REGISTER			LITERAL1
+COMPRESSION_RATIO_1_1			LITERAL1
+COMPRESSION_RATIO_2_1			LITERAL1
+COMPRESSION_RATIO_4_1			LITERAL1
+COMPRESSION_RATIO_8_1			LITERAL1
+
+#######################################
+# Instances (KEYWORD3)
+#######################################
+
