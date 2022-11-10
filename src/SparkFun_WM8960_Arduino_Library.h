@@ -21,11 +21,6 @@
 	All functions return 1 if the read/write was successful, and 0
 	if there was a communications failure. You can ignore the return value
 	if you just don't care anymore.
-	
-	For functions that return a value, e.g. "readGain(char *gain)", first
-	declare	a variable of the proper type e.g. "char x", then pass the
-	address of your variable to the function by putting '&' in front of it
-	e.g. "readGain(&x)". The function will modify the variable directly.
 
 	For information on the data sent to and received from the CODEC,
 	refer to the WM8960 datasheet at:
@@ -199,10 +194,10 @@ class WM8960
 		boolean pgaZeroCrossOn(); // sets both left and right PGAs
 		boolean pgaZeroCrossOff(); // sets both left and right PGAs
 
-		boolean pgaLeftMuteOn();
-		boolean pgaLeftMuteOff();
-		boolean pgaRightMuteOn();
-		boolean pgaRightMuteOff();
+		boolean enable_LINMUTE();
+		boolean disable_LINMUTE();
+		boolean enable_RINMUTE();
+		boolean disable_RINMUTE();
 
 		boolean pgaLeftIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
 		boolean pgaRightIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
@@ -483,6 +478,7 @@ class WM8960
 		TwoWire *_i2cPort;
 		uint8_t _deviceAddress = WM8960_ADDR;
 		boolean _writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, boolean bitValue);
+		boolean _writeRegisterMultiBits(uint8_t registerAddress, uint8_t settingMsbNum, uint8_t settingLsbNum, uint8_t setting);
 
 		// The WM8960 does not support I2C reads
 		// This means we must keep a local copy of all the register values

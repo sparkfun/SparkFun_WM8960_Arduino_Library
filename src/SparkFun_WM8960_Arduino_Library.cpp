@@ -21,11 +21,6 @@
 	All functions return 1 if the read/write was successful, and 0
 	if there was a communications failure. You can ignore the return value
 	if you just don't care anymore.
-	
-	For functions that return a value, e.g. "readGain(char *gain)", first
-	declare	a variable of the proper type e.g. "char x", then pass the
-	address of your variable to the function by putting '&' in front of it
-	e.g. "readGain(&x)". The function will modify the variable directly.
 
 	For information on the data sent to and received from the CODEC,
 	refer to the WM8960 datasheet at:
@@ -105,6 +100,32 @@ boolean WM8960::_writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, bo
         _registerLocalCopy[registerAddress] = regvalue; // if successful, update local copy
         return 1;
     }
+  return 0;
+}
+
+// writeRegisterMultiBits
+// This function writes data into the desired bits within the desired register
+// Some settings require more than just flipping a single bit within a register.
+// For these settings use this more advanced register write helper function.
+// 
+// For example, to change the LIN2BOOST setting to +6dB,
+// I need to write a setting of 7 (aka +6dB) to the bits [3:1] in the WM8960_REG_INPUT_BOOST_MIXER_1 register. Like so...
+//  _writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1, 3, 1, 7);
+//
+boolean WM8960::_writeRegisterMultiBits(uint8_t registerAddress, uint8_t settingMsbNum, uint8_t settingLsbNum, uint8_t setting)
+{
+  uint8_t numOfBits = (settingMsbNum - settingLsbNum) + 1;
+  uint16_t regvalue = _registerLocalCopy[registerAddress]; // Get the local copy of the register
+  for(int i = 0 ; i < numOfBits ; i++)
+  {
+      regvalue &= ~(1 << (settingLsbNum + i)); // clear bits we care about 
+  }
+  regvalue |= (setting << settingLsbNum); // shift and set the bits from in incoming desired setting value
+  if (WM8960::writeRegister(registerAddress, regvalue)) // write modified value to device
+  {
+      _registerLocalCopy[registerAddress] = regvalue; // if successful, update local copy
+      return 1;
+  }
   return 0;
 }
 
@@ -238,7 +259,7 @@ boolean WM8960::disconnect_RMN1()
 // Connect Left Input PGA to Left Input Boost mixer
 boolean WM8960::connect_LMIC2B()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 3, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 3, 1);
 }
 
 // Disconnect Left Input PGA to Left Input Boost mixer
@@ -280,25 +301,26 @@ boolean WM8960::pgaZeroCrossOff()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 0);
 }
 
-boolean WM8960::pgaLeftMuteOn()
+boolean WM8960::enable_LINMUTE()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 7, 1);
 }
 
-boolean WM8960::pgaLeftMuteOff()
+boolean WM8960::disable_LINMUTE()
 {
   WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 7, 0);
   return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 8, 1);
 }
 
-boolean WM8960::pgaRightMuteOn()
+boolean WM8960::enable_RINMUTE()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 7, 1);
 }
 
-boolean WM8960::pgaRightMuteOff()
+boolean WM8960::disable_RINMUTE()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 0);
+  WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 7, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 8, 1);
 }
 
 // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
@@ -313,17 +335,47 @@ boolean WM8960::pgaRightIPVUSet()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 8, 1);
 }
 
- /*
 
-		// Boosts
-boolean WM8960::set_LMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
-boolean WM8960::set_RMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
-boolean WM8960::set_LIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-boolean WM8960::set_LIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-boolean WM8960::set_RIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-boolean WM8960::set_RIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...		
+// Input Boosts
 
-*/
+boolean WM8960::set_LMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+{
+  if(boost_gain >= 3) boost_gain = 3; // limit incoming values max
+  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ADCL_SIGNAL_PATH,5,4,boost_gain);
+}
+boolean WM8960::set_RMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+{
+  if(boost_gain >= 3) boost_gain = 3; // limit incoming values max
+  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ADCR_SIGNAL_PATH,5,4,boost_gain);
+}
+boolean WM8960::set_LIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
+{
+  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
+  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1,6,4,boost_gain);
+}
+boolean WM8960::set_LIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
+{
+  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
+  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1,3,1,boost_gain);
+}
+boolean WM8960::set_RIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
+{
+  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
+  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_2,6,4,boost_gain);
+}
+boolean WM8960::set_RIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB	
+{
+  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
+  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_2,3,1,boost_gain);
+}
+
+
 
 		// Mic Bias control
 boolean WM8960::enableMicBias()
@@ -579,20 +631,12 @@ boolean WM8960::disableLI2LO()
 
 
 
-boolean WM8960::setLI2LOVOL(uint8_t volume) // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
+boolean WM8960::setLI2LOVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
 {
-  // limit incoming values
-  if(volume > 7) volume = 7;
-  if(volume < 0) volume = 0;
-
+  if(volume >= 7) volume = 7; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
   volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
-  uint16_t regvalue = _registerLocalCopy[WM8960_REG_LEFT_OUT_MIX_1]; // Get the local copy of the register
-  regvalue &= (B10001111); // clear bits we care about [6:4] are LI2LOVOL
-  regvalue |= (volume << 4); // shift and set the bits from in incoming desired volume value
-  if(WM8960::writeRegister(WM8960_REG_LEFT_OUT_MIX_1, regvalue)) // write register
-  {
-    _registerLocalCopy[WM8960_REG_LEFT_OUT_MIX_1] = regvalue; // if successful, update local copy
-  }
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_OUT_MIX_1,6,4,volume);
 }
 
 
@@ -606,7 +650,13 @@ boolean WM8960::disableLB2LO()
   return WM8960::_writeRegisterBit(WM8960_REG_BYPASS_1, 7, 0);
 }
 
-//boolean WM8960::setLB2LOVOL(uint8_t volume); // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
+boolean WM8960::setLB2LOVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
+{
+  if(volume >= 7) volume = 7; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_BYPASS_1,6,4,volume);
+}
 
 boolean WM8960::enableLD2LO()
 {
@@ -628,20 +678,12 @@ boolean WM8960::disableRI2RO()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 0);
 }
 
-boolean WM8960::setRI2ROVOL(uint8_t volume) // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
+boolean WM8960::setRI2ROVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
 {
-    // limit incoming values
-  if(volume > 7) volume = 7;
-  if(volume < 0) volume = 0;
-  
+  if(volume >= 7) volume = 7; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
   volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
-  uint16_t regvalue = _registerLocalCopy[WM8960_REG_RIGHT_OUT_MIX_2]; // Get the local copy of the register
-  regvalue &= (B10001111); // clear bits we care about [6:4] are LI2LOVOL
-  regvalue |= (volume << 4); // shift and set the bits from in incoming desired volume value
-  if(WM8960::writeRegister(WM8960_REG_RIGHT_OUT_MIX_2, regvalue)) // write register
-  {
-    _registerLocalCopy[WM8960_REG_RIGHT_OUT_MIX_2] = regvalue; // if successful, update local copy
-  }
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_OUT_MIX_2,6,4,volume);
 }
 
 boolean WM8960::enableRB2RO()
@@ -654,11 +696,13 @@ boolean WM8960::disableRB2RO()
   return WM8960::_writeRegisterBit(WM8960_REG_BYPASS_2, 7, 0);
 }
 
-/*
-
-boolean WM8960::setRB2ROVOL(uint8_t volume); // 0-7, 0 = 0dB, ... 3dB steps ... 7 = -21dB
-
-*/
+boolean WM8960::setRB2ROVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
+{
+  if(volume >= 7) volume = 7; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_BYPASS_2,6,4,volume);
+}
 
 boolean WM8960::enableRD2RO()
 {
