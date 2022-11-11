@@ -906,22 +906,30 @@ boolean WM8960::disableSpeakers()
 
 boolean WM8960::enableRightSpeaker()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 7, 1);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 7, 1); //SPK_OP_EN
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 3, 1); // SPKR
+  return (result1 & result2);
 }
 
 boolean WM8960::disableRightSpeaker()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 7, 0);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 7, 0); //SPK_OP_EN
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 3, 0); // SPKR
+  return (result1 & result2);
 }
 
 boolean WM8960::enableLeftSpeaker()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 6, 1);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 6, 1); //SPK_OP_EN
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 4, 1); // SPKL
+  return (result1 & result2);
 }
 
 boolean WM8960::disableLeftSpeaker()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 6, 0);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_CLASS_D_CONTROL_1, 6, 0); //SPK_OP_EN
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 4, 0); // SPKL
+  return (result1 & result2);
 }
 
 // setSpeakerVolume
@@ -1021,7 +1029,7 @@ boolean WM8960::disableLoopBack()
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_2, 0, 0);
 }
 
-/*
+
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// Clock controls
@@ -1059,39 +1067,60 @@ boolean WM8960::disableLoopBack()
 		// And now for the functions that will set these registers...
 boolean WM8960::enablePLL()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 0, 1);
 }
 
 
 boolean WM8960::disablePLL()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 0, 0);
 }
 
 
-boolean WM8960::set_PLLPRESCALE(boolean val = 1)
+boolean WM8960::set_PLLPRESCALE(boolean div)
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PLL_N, 4, div);
 }
 
- // (0=divide by 1), (1=div by 2)
-boolean WM8960::set_PLLN(uint8_t n);
-boolean WM8960::set_PLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
+boolean WM8960::set_PLLN(uint8_t n)
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_N,3,0,n); 
+}
+
+boolean WM8960::set_PLLK(uint8_t one, uint8_t two, uint8_t three) // send each nibble of 24-bit value for value K
+{
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_K_1,5,0,one); 
+  boolean result2 = WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_K_2,8,0,two); 
+  boolean result3 = WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_K_3,8,0,three); 
+  if (result1 && result2 && result3) // if all I2C sommands Ack'd, then...
+  {
+    return 1;
+  }
+  return 0;  
+}
+
 boolean WM8960::set_SMD(boolean mode)
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PLL_N, 5, mode);
 }
 
  // 0=integer, 1=fractional
 boolean WM8960::set_CLKSEL(boolean sel)
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_CLOCKING_1, 0, sel);
 }
 
  // 0=MCLK, 1=PLL_output
-boolean WM8960::set_SYSCLKDIV(uint8_t div = 2); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
-boolean WM8960::set_ADVDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
-boolean WM8960::set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
-boolean WM8960::set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+boolean WM8960::set_SYSCLKDIV(uint8_t div) // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_1,2,1,div);  
+}
 
-*/
+//boolean WM8960::set_ADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+
+//boolean WM8960::set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+
+boolean WM8960::set_DCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,8,6,setting);
+}

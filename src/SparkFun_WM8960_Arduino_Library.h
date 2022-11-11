@@ -134,6 +134,20 @@
 #define ALC_MODE_LEFT_ONLY 2
 #define ALC_MODE_STEREO 3
 
+// SYSCLK divide
+#define SYSCLK_DIV_BY_1 0
+#define SYSCLK_DIV_BY_2 2
+#define CLKSEL_MCLK 0
+#define CLKSEL_PLL 1
+#define PLL_MODE_INTEGER 0
+#define PLL_MODE_FRACTIONAL 1
+#define PLLPRESCALE_DIV_1 0
+#define PLLPRESCALE_DIV_2 1
+
+// cladd d clock divide
+#define DCLKDIV_16 7
+
+
 class WM8960
 {
 	public:
@@ -460,13 +474,13 @@ class WM8960
 		// And now for the functions that will set these registers...
 		boolean enablePLL();
 		boolean disablePLL();
-		boolean set_PLLPRESCALE(boolean val = 1); // (0=divide by 1), (1=div by 2)
+		boolean set_PLLPRESCALE(boolean div); // valid options are PLLPRESCALE_DIV_1 and PLLPRESCALE_DIV_2
 		boolean set_PLLN(uint8_t n);
 		boolean set_PLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
 		boolean set_SMD(boolean mode); // 0=integer, 1=fractional
 		boolean set_CLKSEL(boolean sel); // 0=MCLK, 1=PLL_output
-		boolean set_SYSCLKDIV(uint8_t div = 2); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
-		boolean set_ADVDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean set_SYSCLKDIV(uint8_t div); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
+		boolean set_ADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 
