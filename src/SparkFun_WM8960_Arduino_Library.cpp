@@ -675,12 +675,12 @@ boolean WM8960::disableLD2LO()
 
 boolean WM8960::enableRI2RO()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 8, 1);
 }
 
 boolean WM8960::disableRI2RO()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 8, 0);
 }
 
 boolean WM8960::setRI2ROVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
@@ -1123,4 +1123,14 @@ boolean WM8960::set_SYSCLKDIV(uint8_t div) // (0=divide by 1), (2=div by 2) *1 a
 boolean WM8960::set_DCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,8,6,setting);
+}
+
+boolean WM8960::set_ALRCGPIO()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_2, 6, 1);
+}
+
+boolean WM8960::enableMasterMode()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 6, 1);
 }

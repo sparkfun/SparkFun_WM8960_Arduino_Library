@@ -483,6 +483,8 @@ class WM8960
 		boolean set_ADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+		boolean set_ALRCGPIO(); // set LR clock to be the same for ADC and DAC - needed for loopback mode.
+		boolean enableMasterMode();
 
 		// General-purpose register write
 		boolean writeRegister(uint8_t reg, uint16_t value);
