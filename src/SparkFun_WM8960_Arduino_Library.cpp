@@ -398,22 +398,22 @@ boolean WM8960::setMicBiasVoltage(boolean voltage)
 
 boolean WM8960::enableAdcLeft()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 3, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 3, 1);
 }
 
 boolean WM8960::disableAdcLeft()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 3, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 3, 0);
 }
 
 boolean WM8960::enableAdcRight()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 2, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 2, 1);
 }
 
 boolean WM8960::disableAdcRight()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 2, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 2, 0);
 }
 
 /*
@@ -1120,6 +1120,11 @@ boolean WM8960::set_SYSCLKDIV(uint8_t div) // (0=divide by 1), (2=div by 2) *1 a
 
 //boolean WM8960::set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 
+boolean WM8960::set_BCLKDIV(uint8_t div)
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,3,0,div);  
+}
+
 boolean WM8960::set_DCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,8,6,setting);
@@ -1127,6 +1132,7 @@ boolean WM8960::set_DCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 
 
 boolean WM8960::set_ALRCGPIO()
 {
+  // This setting should not be changed if ADCs are enabled.
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_2, 6, 1);
 }
 

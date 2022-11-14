@@ -52,7 +52,7 @@ WM8960 codec;
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Example 4 - Speaker");
+  Serial.println("Example 5 - Loopback");
 
   Wire.begin();
 
@@ -67,7 +67,7 @@ void setup()
   codec.enableVREF();
   codec.enableVMID();
 
-  // setup signal flow through the analog audio bypass connections
+  // setup signal flow to the ADC
 
   codec.enable_LMIC();
   codec.enable_RMIC();
@@ -115,11 +115,15 @@ void setup()
   codec.set_SMD(PLL_MODE_FRACTIONAL);
   codec.set_CLKSEL(CLKSEL_PLL);
   codec.set_SYSCLKDIV(SYSCLK_DIV_BY_2);
+  codec.set_BCLKDIV(4);
   codec.set_DCLKDIV(DCLKDIV_16);
   codec.set_PLLN(7);
   codec.set_PLLK(0x86, 0xC2, 0x26); // PLLK=86C226h	
-  codec.set_ADCDIV(0);
-  codec.set_DACDIV(0);
+  //codec.set_ADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.set_DACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+
+  codec.enableMasterMode(); 
+  codec.set_ALRCGPIO(); // note, should not be changed while ADC is enabled.
 
   // enable ADCs and DACs
   codec.enableAdcLeft();
@@ -128,9 +132,8 @@ void setup()
   codec.enableDacRight();
   codec.disableDacMute();
 
-  codec.enableMasterMode();
-  codec.set_ALRCGPIO();
-  codec.enableLoopBack();
+  codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
+  codec.disableDacMute(); // default is "soft mute" on, so we must disable mute to make channels active
 
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
