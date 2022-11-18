@@ -144,9 +144,15 @@
 #define PLLPRESCALE_DIV_1 0
 #define PLLPRESCALE_DIV_2 1
 
-// cladd d clock divide
+// class d clock divide
 #define DCLKDIV_16 7
 
+// word length settings (aka bits per sample)
+// Audio Data Word Length
+#define WL_16BIT 0
+#define WL_20BIT 1
+#define WL_24BIT 2
+#define WL_32BIT 3
 
 class WM8960
 {
@@ -486,6 +492,8 @@ class WM8960
 		boolean set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 		boolean set_ALRCGPIO(); // set LR clock to be the same for ADC and DAC - needed for loopback mode.
 		boolean enableMasterMode();
+		boolean enablePeripheralMode();
+		boolean set_WL(uint8_t word_length);
 
 		// General-purpose register write
 		boolean writeRegister(uint8_t reg, uint16_t value);

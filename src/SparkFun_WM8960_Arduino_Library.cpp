@@ -1140,3 +1140,13 @@ boolean WM8960::enableMasterMode()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 6, 1);
 }
+
+boolean WM8960::enablePeripheralMode()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 6, 0);
+}
+
+boolean WM8960::set_WL(uint8_t word_length)
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_AUDIO_INTERFACE_1,3,2,word_length);  
+}
