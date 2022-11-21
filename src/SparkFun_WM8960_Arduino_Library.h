@@ -207,8 +207,8 @@ class WM8960
 		boolean connect_RMIC2B(); 		// Connect Right Input PGA to Right Input Boost mixer
 		boolean disconnect_RMIC2B();	// Disconnect Right Input PGA to Right Input Boost mixer
 
-		boolean pgaLeftSetVolume(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
-		boolean pgaRightSetVolume(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+		boolean set_LINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+		boolean set_RINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 
 		// Zero Cross prevents zipper sounds on volume changes
 		boolean pgaZeroCrossOn(); // sets both left and right PGAs
@@ -420,8 +420,8 @@ class WM8960
 		// and the class D control reg WM8960_REG_CLASS_D_CONTROL_1 [7:6]
 
 		// Zero Cross prevents zipper sounds on volume changes
-		boolean speakerZeroCrossOn(); // sets both left and right Speaker outputs
-		boolean speakerZeroCrossOff(); // sets both left and right Speaker outputs		
+		boolean enableSpeakerZeroCross(); // sets both left and right Speaker outputs
+		boolean disableSpeakerZeroCross(); // sets both left and right Speaker outputs		
 
 		// DC and AC gain - allows signal to be higher than the DACs swing
 		// (use only if your SPKVDD is high enough to handle a larger signal)

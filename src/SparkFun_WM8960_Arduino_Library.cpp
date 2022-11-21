@@ -280,12 +280,23 @@ boolean WM8960::disconnect_RMIC2B()
   return WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 3, 0);
 }
 
-/*
+boolean WM8960::set_LINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+{
+  if(volume >= 63) volume = 63; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_INPUT_VOLUME,5,0,volume);
+  boolean result2 = WM8960::pgaLeftIPVUSet();
+  return (result1 && result2);
+}
 
-boolean WM8960::pgaLeftSetVolume(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
-boolean WM8960::pgaRightSetVolume(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
-
-*/
+boolean WM8960::set_RINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+{
+  if(volume >= 63) volume = 63; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_INPUT_VOLUME,5,0,volume);
+  boolean result2 = WM8960::pgaRightIPVUSet();
+  return (result1 && result2);
+}
 
 // Zero Cross prevents zipper sounds on volume changes
 // sets both left and right PGAs
@@ -964,22 +975,25 @@ boolean WM8960::setSpeakerVolume(uint8_t volume) // Valid inputs are 47-127. 0-4
   return 0;
 }
 
-
-/*
-		// Zero Cross prevents zipper sounds on volume changes
-boolean WM8960::speakerZeroCrossOn()
+// Zero Cross prevents zipper sounds on volume changes
+// sets both left and right Speaker outputs
+boolean WM8960::enableSpeakerZeroCross()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 1);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 1); // left
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ROUT2_VOLUME, 7, 1); // right
+  return (result1 & result2);
 }
 
- // sets both left and right Speaker outputs
-boolean WM8960::speakerZeroCrossOff()
+boolean WM8960::disableSpeakerZeroCross()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 1);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 0); // left
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ROUT2_VOLUME, 7, 0); // right
+  return (result1 & result2);
 }
 
-*/	
-
+	
 // setSpeakerDcGain
 // DC and AC gain - allows signal to be higher than the DACs swing
 // (use only if your SPKVDD is high enough to handle a larger signal)
