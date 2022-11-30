@@ -686,12 +686,12 @@ boolean WM8960::disableLD2LO()
 
 boolean WM8960::enableRI2RO()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 8, 1);
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 1);
 }
 
 boolean WM8960::disableRI2RO()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 8, 0);
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 0);
 }
 
 boolean WM8960::setRI2ROVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
