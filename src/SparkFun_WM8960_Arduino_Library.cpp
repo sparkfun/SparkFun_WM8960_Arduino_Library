@@ -221,13 +221,53 @@ boolean WM8960::disable_RMICBOOST()
  // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
 boolean WM8960::pgaLeftNonInvSignalSelect(uint8_t signal)
 {
-  return true;
+  // clear LMP2 and LMP3
+  // Necessary because the previous setting could have either set,
+  // and we don't want to confuse the codec.
+  // Only 1 input can be selected.
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 7, 0); // LMP3
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 6, 0); // LMP2
+  boolean result3 = false;
+
+  if(signal == PGAL_LINPUT2)
+  {
+    result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 6, 1); // LMP2
+  }
+  else if(signal == PGAL_LINPUT3)
+  {
+    result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 7, 1); // LMP3
+  }
+  else if(signal == PGAL_VMID)
+  {
+    // don't set any bits. When both LMP2 and LMP3 are cleared, then the signal is set to VMID
+  }
+  return (result1 && result2 && result3);
 }
 
  // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
 boolean WM8960::pgaRightNonInvSignalSelect(uint8_t signal)
 {
-  return true;
+  // clear RMP2 and RMP3
+  // Necessary because the previous setting could have either set,
+  // and we don't want to confuse the codec.
+  // Only 1 input can be selected.
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 7, 0); // RMP3
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 6, 0); // RMP2
+  boolean result3 = false;
+
+  if(signal == PGAR_RINPUT2)
+  {
+    result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 6, 1); // RMP2
+  }
+  else if(signal == PGAR_RINPUT3)
+  {
+    result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 7, 1); // RMP3
+  }
+  else if(signal == PGAR_VMID)
+  {
+    // don't set any bits. When both RMP2 and RMP3 are cleared, then the signal is set to VMID
+  }
+  return (result1 && result2 && result3);
 }
 
 // Connection from each INPUT1 to the inverting input of its PGA
