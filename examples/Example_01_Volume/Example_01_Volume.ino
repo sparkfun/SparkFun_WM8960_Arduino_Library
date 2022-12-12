@@ -90,7 +90,7 @@ void setup()
   codec.setHeadphoneVolume(120);
   delay(5000);
 
-  Serial.println("Volume set to -6dBdB");
+  Serial.println("Volume set to -6dB");
   codec.setHeadphoneVolume(114);
   delay(5000);  
 
