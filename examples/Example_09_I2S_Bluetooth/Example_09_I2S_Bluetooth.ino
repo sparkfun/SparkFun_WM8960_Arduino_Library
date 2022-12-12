@@ -1,16 +1,14 @@
 /******************************************************************************
-  Example_08_I2S_Passthrough.ino
-  Demonstrates reading I2S audio from the ADC, and passing that back to the DAC.
+  Example_09_I2S_Bluetooth.ino
+  Demonstrates how to receive audio via Bluetooth and play it back via I2S to the codec DAC.
   
-  This example sets up analog audio input (on INPUT1s), ADC/DAC enabled as I2S peripheral, sets volume control, and Headphone output on the WM8960 Codec.
+  This example sets up the ESP32 as a bluetooth sink device, with its output set to I2S audio.
+  
+  This example sets up the WM8960 codec as an I2S peripheral, sets volume control, and Headphone output.
 
-  Audio should be connected to both the left and right "INPUT1" inputs, 
-  they are labeled "RIN1" and "LIN1" on the board.
+  A bluetooth device, such as your phone or laptop, can connect to the ESP32 and then begin playing an audio file.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
-  into the ADC. Read the audio from the ADC via I2S.
-  Then send audio immediately back to the DAC via I2S.
-  Then send the output of the DAC to the headphone outs.
+  The ESP32 will send the I2S audio to the DAC of the codec. The DAC is connected to the HP outputs.
 
   Development platform used:
   SparkFun ESP32 IoT Redboard v10
@@ -25,16 +23,7 @@
   5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
   4 ----------- DDT         *aka DAC_DATA/I2S_SDO/"serial data out", this carries the I2S audio data from ESP32 to codec DAC
   16 ---------- BCK         *aka BCLK/I2S_SCK/"bit clock", this is the clock for I2S audio, can be conntrolled via controller or peripheral.
-  17 ---------- ADAT        *aka ADC_DATA/I2S_SD/"serial data in", this carries the I2S audio data from codec's ADC to ESP32 I2S bus.
   25 ---------- DLRC        *aka I2S_WS/LRC/"word select"/"left-right-channel", this toggles for left or right channel data.
-  25 ---------- ALR         *for this example WS is shared for both the ADC WS (ALR) and the DAC WS (DLRC)
-
-  **********************
-  CODEC ------- AUDIO IN
-  **********************
-  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
-  INPUT1 ------ TRS INPUT TIP           *left audio
-  INPUT2 ------ TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
@@ -43,8 +32,9 @@
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
+  Note, once connected and playing a sound file, your bluetooth source device (i.e. your phone) can control volume with its own volume control.
 
-  You can now control the volume of the codecs built in headphone amp using this fuction:
+  You can also control the volume of the codecs built in headphone amp using this fuction:
 
   codec.setHeadphoneVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
 
@@ -57,12 +47,15 @@
   Revision history: version 1.0 2012/07/24 MDG Initial release
   https://github.com/sparkfun/LilyPad_MP3_Player
 
-  This code was created using some modified code from DroneBot Workshop.
-  Specifically, the I2S configuration setup was super helpful to get I2S working.
-  This example has a similar I2S config to what we are using here: Microphone to serial plotter example.
-  Although, here we are doing a full duplex I2S port, in order to do reads and writes.
-  To see the original Drone Workshop code and learn more about I2S in general, please visit:
-  https://dronebotworkshop.com/esp32-i2s/
+  This code was created using some modified code from Phil Schatzmann's Arduino Library:
+  https://github.com/pschatzmann/ESP32-A2DP
+  The I2S configuration information about custom setups in the readme was super helpful to get I2S working.
+  https://github.com/pschatzmann/ESP32-A2DP#readme
+  This example is most similar to Phil Schatzmann's "bt_music_receiver_simple.ino" example.
+  You can find that original code here:  
+  https://github.com/pschatzmann/ESP32-A2DP/blob/main/examples/bt_music_receiver_simple/bt_music_receiver_simple.ino"
+  Although, here we are setting up custom I2S pins and I2S modes to work for our needs.
+  And we are setting up the matching I2S configuration on the WM8960.
 
   Do you like this library? Help support SparkFun. Buy a board!
 
@@ -90,26 +83,19 @@
 #include <SparkFun_WM8960_Arduino_Library.h> //Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
-// Include I2S driver
-#include <driver/i2s.h>
+#include "BluetoothA2DPSink.h" // download library here: https://github.com/pschatzmann/ESP32-A2DP
+BluetoothA2DPSink a2dp_sink;
 
-// Connections to I2S
+// Connections to I2S bus (on the IoT Redboard)
 #define I2S_WS 25
-#define I2S_SD 17
+#define I2S_SD 17 // note, this is not needed for this example, as it only sends data out to the codec's DAC (via I2S_SDO)
 #define I2S_SDO 4
 #define I2S_SCK 16
-
-// Use I2S Processor 0
-#define I2S_PORT I2S_NUM_0
-
-// Define input buffer length
-#define bufferLen 64
-int16_t sBuffer[bufferLen];
 
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Example 8 - I2S Passthough");
+  Serial.println("Example 9 - Bluetooth Audio");
 
   Wire.begin();
 
@@ -125,29 +111,13 @@ void setup()
   // Set up I2S
   i2s_install();
   i2s_setpin();
-  i2s_start(I2S_PORT);
+
+  a2dp_sink.start("myCodec"); // note, you can give your device any name you'd like!
 }
 
 void loop()
 {
-  // Get I2S data and place in data buffer
-  size_t bytesIn = 0;
-  size_t bytesOut = 0;
-  esp_err_t result = i2s_read(I2S_PORT, &sBuffer, bufferLen, &bytesIn, portMAX_DELAY);
-
-  if (result == ESP_OK)
-  {
-    // send what we just received back to the codec
-    esp_err_t result_w = i2s_write(I2S_PORT, &sBuffer, bytesIn, &bytesOut, portMAX_DELAY);
-  }
-  // delayMicroseconds(300); // Only hear to demonstrate how much time you have to do things.
-  // Do not do much in this main loop, or the audio won't pass through correctly.
-  // With default settings (64 samples in buffer), you can spend up to 300 microseconds doing something in between passing each buffer of data
-  // you can tweak the buffer length to get more time if you need it.
-  // when bufferlength is 64, then you get ~300 microseconds
-  // when bufferlength is 128, then you get ~600 microseconds
-  // note, as you increase bufferlength, then you are increasing latency between ADC input to DAC output,
-  // Latency may or may not be desired, depending on the project.
+ // nothing do do here, but you can add more code if you like!
 }
 
 void codec_setup()
@@ -155,40 +125,6 @@ void codec_setup()
   // General setup needed
   codec.enableVREF();
   codec.enableVMID();
-
-  // setup signal flow to the ADC
-
-  codec.enable_LMIC();
-  codec.enable_RMIC();
-
-  // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
-  codec.connect_LMN1();
-  codec.connect_RMN1();
-
-  // disable mutes on PGA inputs (aka INTPUT1)
-  codec.disable_LINMUTE();
-  codec.disable_RINMUTE();
-
-  // set pga volumes
-  codec.set_LINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
-  codec.set_RINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
-
-  // set input boosts to get inputs 1 to the boost mixers
-  codec.set_LMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
-  codec.set_RMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
-
-  // connect from MIC inputs (aka pga output) to boost mixers
-  codec.connect_LMIC2B();
-  codec.connect_RMIC2B();
-
-  // enable boost mixers
-  codec.enable_AINL();
-  codec.enable_AINR();
-
-  // disconnect LB2LO (booster to output mixer (analog bypass)
-  // for this example, we are going to pass audio throught the ADC and DAC
-  codec.disableLB2LO();
-  codec.disableRB2RO();
 
   // connect from DAC outputs to output mixer
   codec.enableLD2LO();
@@ -221,12 +157,9 @@ void codec_setup()
   //codec.enableMasterMode();
   //codec.set_ALRCGPIO(); // note, should not be changed while ADC is enabled.
 
-  // enable ADCs and DACs
-  codec.enableAdcLeft();
-  codec.enableAdcRight();
+  // enable DACs
   codec.enableDacLeft();
   codec.enableDacRight();
-  codec.disableDacMute();
 
   //codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
   codec.disableLoopBack();
@@ -238,34 +171,35 @@ void codec_setup()
   Serial.println("Volume set to +0dB");
   codec.setHeadphoneVolume(120);
 
-  Serial.println("Codec Setup complete. Listen to left/right INPUT1 on Headphone outputs.");
+  Serial.println("Codec Setup complete. Connect via Bluetooth, play music, and listen on Headphone outputs.");
 }
 
 void i2s_install() {
   // Set up I2S Processor configuration
-  const i2s_config_t i2s_config = {
-    .mode = i2s_mode_t(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX),
-    .sample_rate = 44100,
-    .bits_per_sample = i2s_bits_per_sample_t(16),
+  static i2s_config_t i2s_config = {
+    .mode = (i2s_mode_t) (I2S_MODE_MASTER | I2S_MODE_TX),
+    .sample_rate = 44100, // updated automatically by A2DP
+    .bits_per_sample = (i2s_bits_per_sample_t)16,
     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-    .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_I2S_MSB),
-    .intr_alloc_flags = 0,
+    .communication_format = (i2s_comm_format_t) (I2S_COMM_FORMAT_I2S),
+    .intr_alloc_flags = 0, // default interrupt priority
     .dma_buf_count = 8,
-    .dma_buf_len = bufferLen,
-    .use_apll = false
+    .dma_buf_len = 64,
+    .use_apll = true,
+    .tx_desc_auto_clear = true // avoiding noise in case of data unavailability
   };
 
-  i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
+  a2dp_sink.set_i2s_config(i2s_config);
 }
 
 void i2s_setpin() {
   // Set I2S pin configuration
-  const i2s_pin_config_t pin_config = {
+    i2s_pin_config_t my_pin_config = {
     .bck_io_num = I2S_SCK,
     .ws_io_num = I2S_WS,
     .data_out_num = I2S_SDO,
-    .data_in_num = I2S_SD
+    .data_in_num = I2S_PIN_NO_CHANGE
   };
 
-  i2s_set_pin(I2S_PORT, &pin_config);
+  a2dp_sink.set_pin_config(my_pin_config);
 }
