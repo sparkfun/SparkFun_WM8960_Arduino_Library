@@ -5,6 +5,18 @@
   Turns on the micBias, set's it to each available output voltage,
   Then turns it off to demonstrate disable.
 
+  Development platform used:
+  SparkFun ESP32 IoT Redboard v10
+
+  HARDWARE CONNECTIONS
+
+  **********************
+  ESP32 ------- CODEC
+  **********************
+  QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
+  GND --------- GND         *optional, but not a bad idea
+  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
   https://github.com/sparkfun/SparkFun_WM8960_Arduino_Library

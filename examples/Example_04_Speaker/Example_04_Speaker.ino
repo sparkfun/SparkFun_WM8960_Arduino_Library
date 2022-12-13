@@ -14,6 +14,38 @@
 
   codec.setSpeakerVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
 
+  Development platform used:
+  SparkFun ESP32 IoT Redboard v10
+
+  HARDWARE CONNECTIONS
+
+  **********************
+  ESP32 ------- CODEC
+  **********************
+  QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
+  GND --------- GND         *optional, but not a bad idea
+  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+
+  **********************
+  CODEC ------- AUDIO IN
+  **********************
+  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
+  LINPUT1 ----- TRS INPUT TIP           *left audio
+  RINPUT1 ----- TRS INPUT RING1         *right audio
+
+  **********************
+  CODEC -------- AUDIO OUT
+  **********************
+  SL+ --------- Left Speaker +
+  SL- --------- Left Speaker -
+  SR+ --------- Right Speaker +
+  SR- --------- Right Speaker -
+
+  *Note, with a class-d speaker amp like this, you need to connections like above.
+  Each speaker must be connected to its correct + and -.
+  You cannot connect the "-" side of the speaker to GND.
+  You cannot share the "-" side of two speakers (like with common "TRS-wired" headphones).
+
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
   https://github.com/sparkfun/SparkFun_WM8960_Arduino_Library

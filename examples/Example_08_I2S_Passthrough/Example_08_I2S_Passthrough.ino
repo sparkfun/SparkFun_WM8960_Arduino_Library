@@ -33,8 +33,8 @@
   CODEC ------- AUDIO IN
   **********************
   GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
-  INPUT1 ------ TRS INPUT TIP           *left audio
-  INPUT2 ------ TRS INPUT RING1         *right audio
+  LINPUT1 ----- TRS INPUT TIP           *left audio
+  RINPUT1 ----- TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
@@ -42,7 +42,6 @@
   OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" connection for headphone output (aka "HP GND")
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
-
 
   You can now control the volume of the codecs built in headphone amp using this fuction:
 

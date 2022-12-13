@@ -51,8 +51,8 @@
   CODEC ------- AUDIO IN
   **********************
   GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
-  INPUT1 ------ TRS INPUT TIP           *left audio
-  INPUT2 ------ TRS INPUT RING1         *right audio
+  LINPUT1 ----- TRS INPUT TIP           *left audio
+  RINPUT1 ----- TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
