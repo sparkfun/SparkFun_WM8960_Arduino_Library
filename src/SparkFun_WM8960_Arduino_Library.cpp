@@ -468,18 +468,45 @@ boolean WM8960::disableAdcRight()
 }
 
 /*
-
 		// ADC digital volume
 		// note, also needs to handle control of the ADCVU bits (volume update).
 		// valid inputs are 0-255
 		// 0 = mute
 		// 1 = -97dB
 		// ... 0.5dB steps up to
+    // 195 = +0dB
 		// 255 = +30dB
-boolean WM8960::setAdcLeftDigitalVolume(uint8_t volume); 
-boolean WM8960::setAdcRightDigitalVolume(uint8_t volume);
+    */
+boolean WM8960::setAdcLeftDigitalVolume(uint8_t volume)
+{
+  if(volume >= 255) volume = 255; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_ADC_VOLUME,7,0,volume);
+  boolean result2 = WM8960::adcLeftADCVUSet();
+  return (result1 && result2);
+}
+boolean WM8960::setAdcRightDigitalVolume(uint8_t volume)
+{
+  if(volume >= 255) volume = 255; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_ADC_VOLUME,7,0,volume);
+  boolean result2 = WM8960::adcRightADCVUSet();
+  return (result1 && result2);
+}
 
-*/
+// causes left and right input adc digital volumes to be updated
+boolean WM8960::adcLeftADCVUSet()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_LEFT_ADC_VOLUME, 8, 1);
+}
+
+ // causes left and right input adc digital volumes to be updated
+boolean WM8960::adcRightADCVUSet()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_ADC_VOLUME, 8, 1);
+}
+
+
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// ALC
 		/////////////////////////////////////////////////////////

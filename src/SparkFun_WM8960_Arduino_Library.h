@@ -250,9 +250,13 @@ class WM8960
 		// 0 = mute
 		// 1 = -97dB
 		// ... 0.5dB steps up to
+		// 195 = 0dB
 		// 255 = +30dB
 		boolean setAdcLeftDigitalVolume(uint8_t volume); 
 		boolean setAdcRightDigitalVolume(uint8_t volume);
+
+		boolean adcLeftADCVUSet(); // causes left and right input ADC volumes to be updated
+		boolean adcRightADCVUSet(); // causes left and right input ADC volumes to be updated
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// ALC
