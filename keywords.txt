@@ -126,8 +126,8 @@ disableLeftHeadphone	KEYWORD2
 enableHeadphoneStandby	KEYWORD2
 disableHeadphoneStandby	KEYWORD2
 setHeadphoneVolume	KEYWORD2
-headphoneZeroCrossOn	KEYWORD2
-headphoneZeroCrossOff	KEYWORD2	
+enableHeadphoneZeroCross	KEYWORD2
+disableHeadphoneZeroCross	KEYWORD2	
 enableSpeakers	KEYWORD2
 disableSpeakers	KEYWORD2
 enableRightSpeaker	KEYWORD2
@@ -139,7 +139,6 @@ enableSpeakerZeroCross	KEYWORD2
 disableSpeakerZeroCross	KEYWORD2
 setSpeakerDcGain	KEYWORD2
 setSpeakerAcGain	KEYWORD2
-setAudioDataWordLength	KEYWORD2
 enableLoopBack	KEYWORD2
 disableLoopBack	KEYWORD2
 enablePLL	KEYWORD2

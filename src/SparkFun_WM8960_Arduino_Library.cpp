@@ -506,12 +506,9 @@ boolean WM8960::adcRightADCVUSet()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_ADC_VOLUME, 8, 1);
 }
 
-
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// ALC
 		/////////////////////////////////////////////////////////
-
-
 
 		// Automatic Level Control
 		// Note that when the ALC function is enabled, the settings of
@@ -625,19 +622,40 @@ boolean WM8960::disableDacRight()
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 7, 0);
 }
 
-/*
-
 		// DAC digital volume
-		// note, also needs to handle control of the DACVU bits (volume update).
 		// valid inputs are 0-255
 		// 0 = mute
 		// 1 = -127dB
 		// ... 0.5dB steps up to
 		// 255 = 0dB
-boolean WM8960::setDacLeftDigitalVolume(uint8_t volume); 
-boolean WM8960::setDacRightDigitalVolume(uint8_t volume);		
+boolean WM8960::setDacLeftDigitalVolume(uint8_t volume)
+{
+  if(volume >= 255) volume = 255; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_DAC_VOLUME,7,0,volume);
+  boolean result2 = WM8960::dacLeftDACVUSet();
+  return (result1 && result2);
+}
+boolean WM8960::setDacRightDigitalVolume(uint8_t volume)
+{
+  if(volume >= 255) volume = 255; // limit incoming values max
+  if(volume <= 0) volume = 0; // limit incoming values min
+  boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_DAC_VOLUME,7,0,volume);
+  boolean result2 = WM8960::dacRightDACVUSet();
+  return (result1 && result2);
+}
 
-*/
+// causes left and right input dac digital volumes to be updated
+boolean WM8960::dacLeftDACVUSet()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_LEFT_DAC_VOLUME, 8, 1);
+}
+
+ // causes left and right input dac digital volumes to be updated
+boolean WM8960::dacRightDACVUSet()
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_DAC_VOLUME, 8, 1);
+}	
 
 		// DAC mute
 boolean WM8960::enableDacMute()
@@ -649,17 +667,6 @@ boolean WM8960::disableDacMute()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADC_DAC_CTRL_1, 3, 0);
 }
-
-
-
-
-
-
-		// DE-Emphasis
-
-
-
-
 
 // 3D Stereo Enhancement
 // 3D enable/disable
@@ -679,12 +686,6 @@ boolean WM8960::set3dDepth(uint8_t depth) // 0 = 0%, 15 = 100%
   if(depth <= 0) depth = 0; // limit incoming values min
   return WM8960::_writeRegisterMultiBits(WM8960_REG_3D_CONTROL,4,1,depth);
 }
-
-
-
-		// 3D upper/lower cut-off frequencies.
-
-
 
 // DAC output -6dB attentuation enable/disable
 boolean WM8960::enableDac6dbAttenuation()
@@ -826,7 +827,6 @@ boolean WM8960::enableRD2RO()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 8, 1);
 }
 
-
 boolean WM8960::disableRD2RO()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 8, 0);
@@ -855,18 +855,6 @@ boolean WM8960::disableRI2MO()
   return WM8960::_writeRegisterBit(WM8960_REG_MONO_OUT_MIX_2, 7, 0);
 }
 
-/*
-
-// this will disable both connections, thus enable VMID on OUT3
-// note, to enable VMID, you also need to enable OUT3 in the WM8960_REG_PWR_MGMT_2 [1]
-// see next funtion
-boolean WM8960::enableOUT3asVMID()
-{
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
-}
-
-*/
-
 // enables VMID in the WM8960_REG_PWR_MGMT_2 register, and set's it to playback/record settings of 2*50Kohm.
 boolean WM8960::enableVMID()
 {
@@ -874,14 +862,11 @@ boolean WM8960::enableVMID()
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 7, 1);
 }
 
- 
 boolean WM8960::disableVMID()
 {
   WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 8, 0);
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 7, 0);
 }
-
-
 
 /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////// Headphones
@@ -949,31 +934,10 @@ boolean WM8960::setHeadphoneVolume(uint8_t volume) // Valid inputs are 47-127. 0
   if (volume <=0) volume = 0;
 
   // LEFT
-  //boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LOUT1_VOLUME,6,0,volume);
-    uint16_t regvalue = _registerLocalCopy[WM8960_REG_LOUT1_VOLUME]; // Get the local copy of the register
-    regvalue &= (B10000000); // clear bits we care about [6:0] are LOUT1VOL
-
-    regvalue |= volume; // set the bits from in incoming desired volume value
-
-    boolean result1 = WM8960::writeRegister(WM8960_REG_LOUT1_VOLUME, regvalue); // write register
-    if(result1) 
-    {
-      _registerLocalCopy[WM8960_REG_LOUT1_VOLUME] = regvalue; // if successful, update local copy
-    }
-
+    boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LOUT1_VOLUME,6,0,volume);
   // RIGHT
-  //boolean result2 = WM8960::_writeRegisterMultiBits(WM8960_REG_ROUT1_VOLUME,6,0,volume);
-    regvalue = _registerLocalCopy[WM8960_REG_ROUT1_VOLUME]; // Get the local copy of the register
-    regvalue &= (B10000000); // clear bits we care about [6:0] are LOUT1VOL
-
-    regvalue |= volume; // set the bits from in incoming desired volume value
-
-    boolean result2 = WM8960::writeRegister(WM8960_REG_ROUT1_VOLUME, regvalue); // write register
-    if(result2) 
-    {
-      _registerLocalCopy[WM8960_REG_ROUT1_VOLUME] = regvalue; // if successful, update local copy
-    }
-
+    boolean result2 = WM8960::_writeRegisterMultiBits(WM8960_REG_ROUT1_VOLUME,6,0,volume);
+  // UPDATES
     boolean result3 = WM8960::_writeRegisterBit(WM8960_REG_LOUT1_VOLUME, 8, 1); // updated left channel
     boolean result4 = WM8960::_writeRegisterBit(WM8960_REG_ROUT1_VOLUME, 8, 1); // updated right channel
 
@@ -981,26 +945,25 @@ boolean WM8960::setHeadphoneVolume(uint8_t volume) // Valid inputs are 47-127. 0
     {
         return 1;
     }
-  return 0;
+  return 0; 
 }
-
-/*
 
 		// Zero Cross prevents zipper sounds on volume changes
-boolean WM8960::headphoneZeroCrossOn()
+    // sets both left and right Headphone outputs
+boolean WM8960::enableHeadphoneZeroCross()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_LOUT1_VOLUME, 7, 1); // left
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ROUT1_VOLUME, 7, 1); // right
+  return (result1 & result2);
 }
 
- // sets both left and right Headphone outputs
-boolean WM8960::headphoneZeroCrossOff()
+boolean WM8960::disableHeadphoneZeroCross()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_HOLDER, 6, 0);
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_LOUT1_VOLUME, 7, 0); // left
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ROUT1_VOLUME, 7, 0); // right
+  return (result1 & result2);
 }
 
- // sets both left and right Headphone outputs
-		
-*/
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// Speakers
 		/////////////////////////////////////////////////////////
@@ -1080,7 +1043,6 @@ boolean WM8960::setSpeakerVolume(uint8_t volume) // Valid inputs are 47-127. 0-4
 // sets both left and right Speaker outputs
 boolean WM8960::enableSpeakerZeroCross()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 1);
   boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 1); // left
   boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ROUT2_VOLUME, 7, 1); // right
   return (result1 & result2);
@@ -1088,13 +1050,11 @@ boolean WM8960::enableSpeakerZeroCross()
 
 boolean WM8960::disableSpeakerZeroCross()
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 1);
   boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_LOUT2_VOLUME, 7, 0); // left
   boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ROUT2_VOLUME, 7, 0); // right
   return (result1 & result2);
 }
 
-	
 // setSpeakerDcGain
 // DC and AC gain - allows signal to be higher than the DACs swing
 // (use only if your SPKVDD is high enough to handle a larger signal)
@@ -1119,18 +1079,11 @@ boolean WM8960::setSpeakerAcGain(uint8_t gain)
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLASS_D_CONTROL_3,2,0,gain);
 }
 
-
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// Digital audio interface control
 		/////////////////////////////////////////////////////////
 
 		// defaults to I2S, peripheral-mode, 24-bit word length
-		// *Might need to change the WL to match our application. 
-		// *I believe the BT example will need 16-bit WL.
-boolean WM8960::setAudioDataWordLength(uint8_t length) // 0=16bit, 1=20bit, 2=24bit, 3=32bit.
-{
-  return 1;
-}
 
 // Loopback
 // When enabled, the output data from the ADC audio interface is fed directly into the DAC data input.
@@ -1143,8 +1096,6 @@ boolean WM8960::disableLoopBack()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_2, 0, 0);
 }
-
-
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// Clock controls
@@ -1185,12 +1136,10 @@ boolean WM8960::enablePLL()
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 0, 1);
 }
 
-
 boolean WM8960::disablePLL()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 0, 0);
 }
-
 
 boolean WM8960::set_PLLPRESCALE(boolean div)
 {

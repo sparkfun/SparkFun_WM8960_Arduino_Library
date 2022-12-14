@@ -401,8 +401,8 @@ class WM8960
 		// Note, we must also make sure that the outputs are enabled in the WM8960_REG_PWR_MGMT_2 [6:5]
 
 		// Zero Cross prevents zipper sounds on volume changes
-		boolean headphoneZeroCrossOn(); // sets both left and right Headphone outputs
-		boolean headphoneZeroCrossOff(); // sets both left and right Headphone outputs
+		boolean enableHeadphoneZeroCross(); // sets both left and right Headphone outputs
+		boolean enableHeadphoneZeroCross(); // sets both left and right Headphone outputs
 		
 
 		/////////////////////////////////////////////////////////
@@ -442,9 +442,6 @@ class WM8960
 		/////////////////////////////////////////////////////////
 
 		// defaults to I2S, peripheral-mode, 24-bit word length
-		// *Might need to change the WL to match our application. 
-		// *I believe the BT example will need 16-bit WL.
-		boolean setAudioDataWordLength(uint8_t length); // 0=16bit, 1=20bit, 2=24bit, 3=32bit.
 
 		// Loopback
 		// When enabled, the output data from the ADC audio interface is fed directly into the DAC data input.
