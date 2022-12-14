@@ -268,9 +268,12 @@ class WM8960
 		boolean enableAlc(uint8_t mode = ALC_MODE_STEREO); // also sets alc sample rate to match global sample rate.
 		boolean disableAlc();
 
-		boolean setAlcTarget(uint8_t target); // valid inputs are 0-15
+		boolean setAlcTarget(uint8_t target); // valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
 		boolean setAlcDecay(uint8_t decay); // valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
 		boolean setAlcAttack(uint8_t attack); // valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
+		boolean setAlcMaxGain(uint8_t maxGain); // valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
+		boolean setAlcMinGain(uint8_t attack); // valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
+		boolean setAlcHold(uint8_t attack); // valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
 
 		// Peak Limiter
 		boolean enablePeakLimiter();

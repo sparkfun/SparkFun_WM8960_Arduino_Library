@@ -67,6 +67,9 @@ disableAlc	KEYWORD2
 setAlcTarget	KEYWORD2
 setAlcDecay	KEYWORD2
 setAlcAttack	KEYWORD2
+setAlcMaxGain	KEYWORD2
+setAlcMinGain	KEYWORD2
+setAlcHold	KEYWORD2
 enablePeakLimiter	KEYWORD2
 disablePeakLimiter	KEYWORD2
 enableNoiseGate	KEYWORD2

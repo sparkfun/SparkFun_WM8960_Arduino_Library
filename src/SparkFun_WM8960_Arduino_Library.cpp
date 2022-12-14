@@ -531,13 +531,47 @@ boolean WM8960::disableAlc()
   return WM8960::_writeRegisterBit(WM8960_REG_ALC1, 7, 0);
 }
 
-/*
+boolean WM8960::setAlcTarget(uint8_t target) // valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
+{
+  if(target >= 15) target = 15; // limit incoming values max
+  if(target <= 0) target = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC1,3,0,target);
+}
 
-boolean WM8960::setAlcTarget(uint8_t target); // valid inputs are 0-15
-boolean WM8960::setAlcDecay(uint8_t decay); // valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
-boolean WM8960::setAlcAttack(uint8_t attack); // valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
+boolean WM8960::setAlcDecay(uint8_t decay) // valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
+{
+  if(decay >= 10) decay = 10; // limit incoming values max
+  if(decay <= 0) decay = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC3,7,4,decay);
+}
 
-*/
+boolean WM8960::setAlcAttack(uint8_t attack) // valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
+{
+  if(attack >= 10) attack = 10; // limit incoming values max
+  if(attack <= 0) attack = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC3,3,0,attack);
+}
+
+boolean WM8960::setAlcMaxGain(uint8_t maxGain) // valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
+{
+  if(maxGain >= 7) maxGain = 7; // limit incoming values max
+  if(maxGain <= 0) maxGain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC1,6,4,maxGain);
+}
+
+boolean WM8960::setAlcMinGain(uint8_t minGain) // valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
+{
+  if(minGain >= 7) minGain = 7; // limit incoming values max
+  if(minGain <= 0) minGain = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC2,6,4,minGain);
+}
+
+boolean WM8960::setAlcHold(uint8_t hold) // valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
+{
+  if(hold >= 15) hold = 15; // limit incoming values max
+  if(hold <= 0) hold = 0; // limit incoming values min
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC2,3,0,hold);
+}
 
 		// Peak Limiter
 boolean WM8960::enablePeakLimiter()
