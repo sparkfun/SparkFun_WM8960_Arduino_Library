@@ -164,6 +164,8 @@ class WM8960
 		boolean enableVREF(); // necessary for all other functions
 		boolean disableVREF(); // use for turning this off to save power
 
+		boolean reset(); // resets all registers to their default state
+
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// PGA 
 		/////////////////////////////////////////////////////////
@@ -304,6 +306,8 @@ class WM8960
 		boolean setDacLeftDigitalVolume(uint8_t volume); 
 		boolean setDacRightDigitalVolume(uint8_t volume);		
 
+		boolean dacLeftDACVUSet(); // causes left and right input DAC volumes to be updated
+		boolean dacRightDACVUSet(); // causes left and right input DAC volumes to be updated
 
 		// DAC mute
 		boolean enableDacMute();
@@ -402,7 +406,7 @@ class WM8960
 
 		// Zero Cross prevents zipper sounds on volume changes
 		boolean enableHeadphoneZeroCross(); // sets both left and right Headphone outputs
-		boolean enableHeadphoneZeroCross(); // sets both left and right Headphone outputs
+		boolean disableHeadphoneZeroCross(); // sets both left and right Headphone outputs
 		
 
 		/////////////////////////////////////////////////////////
@@ -577,5 +581,64 @@ class WM8960
 			0x0026, // R54 (0x36)
 			0x00e9, // R55 (0x37)
 		};
+
+		const uint16_t _registerDefaults[56] = {
+			0x0097, // R0 (0x00)
+			0x0097, // R1 (0x01)
+			0x0000, // R2 (0x02)
+			0x0000, // R3 (0x03)
+			0x0000, // R4 (0x04)
+			0x0008, // F5 (0x05)
+			0x0000, // R6 (0x06)
+			0x000A, // R7 (0x07)
+			0x01C0, // R8 (0x08)
+			0x0000, // R9 (0x09)
+			0x00FF, // R10 (0x0a)
+			0x00FF, // R11 (0x0b)
+			0x0000, // R12 (0x0C) RESERVED
+			0x0000, // R13 (0x0D) RESERVED
+			0x0000, // R14 (0x0E) RESERVED
+			0x0000, // R15 (0x0F) RESERVED
+			0x0000, // R16 (0x10)
+			0x007B, // R17 (0x11)
+			0x0100, // R18 (0x12)
+			0x0032, // R19 (0x13)
+			0x0000, // R20 (0x14)
+			0x00C3, // R21 (0x15)
+			0x00C3, // R22 (0x16)
+			0x01C0, // R23 (0x17)
+			0x0000, // R24 (0x18)
+			0x0000, // R25 (0x19)
+			0x0000, // R26 (0x1A)
+			0x0000, // R27 (0x1B)
+			0x0000, // R28 (0x1C)
+			0x0000, // R29 (0x1D)
+			0x0000, // R30 (0x1E) RESERVED
+			0x0000, // R31 (0x1F) RESERVED
+			0x0100, // R32 (0x20)
+			0x0100, // R33 (0x21)
+			0x0050, // R34 (0x22)
+			0x0000, // R35 (0x23) RESERVED
+			0x0000, // R36 (0x24) RESERVED
+			0x0050, // R37 (0x25)
+			0x0000, // R38 (0x26)
+			0x0000, // R39 (0x27)
+			0x0000, // R40 (0x28)
+			0x0000, // R41 (0x29)
+			0x0040, // R42 (0x2A)
+			0x0000, // R43 (0x2B)
+			0x0000, // R44 (0x2C)
+			0x0050, // R45 (0x2D)
+			0x0050, // R46 (0x2E)
+			0x0000, // R47 (0x2F)
+			0x0002, // R48 (0x30)
+			0x0037, // R49 (0x31)
+			0x0000, // R50 (0x32) RESERVED
+			0x0080, // R51 (0x33)
+			0x0008, // R52 (0x34)
+			0x0031, // R53 (0x35)
+			0x0026, // R54 (0x36)
+			0x00e9, // R55 (0x37)
+		};		
 };
 #endif

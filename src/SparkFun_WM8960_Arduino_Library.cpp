@@ -47,6 +47,8 @@ boolean WM8960::begin(TwoWire &wirePort)
   	_i2cPort = &wirePort;
   	if (isConnected() == false) // Check for sensor by verifying ACK response
     	return (false); 
+    if (reset() == false) // reset all registers to default values
+      return (false); 
   	return (true); //We're all setup!
 }
 
@@ -147,6 +149,24 @@ boolean WM8960::enableVREF()
 boolean WM8960::disableVREF()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 6, 0);
+}
+
+// reset
+// Use this to reset all registers to their default state
+// Note, this can also be done by cycling power to the device
+// Returns 1 if successful, 0 if something failed (I2C error)
+boolean WM8960::reset()
+{
+  if (WM8960::_writeRegisterBit(WM8960_REG_RESET, 7, 1)) // doesn't really matter which bit we flip, writing anything will cause the reset
+  {
+    // update our local copy of the registers to reflect the reset
+    for(int i = 0 ; i < 56 ; i++)
+    {
+      _registerLocalCopy[i] = _registerDefaults[i]; 
+    }
+    return 1;
+  }
+  return 0;
 }
 
 boolean WM8960::enable_AINL()
