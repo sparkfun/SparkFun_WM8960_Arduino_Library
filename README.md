@@ -32,7 +32,7 @@ Documentation
 Products that use this Library
 --------------
 
-* [BOB-21250](https://www.sparkfun.com/products/21250)- Initial Release
+* [BOB-21250](https://www.sparkfun.com/products/21250) - Initial Release
 
 
 
