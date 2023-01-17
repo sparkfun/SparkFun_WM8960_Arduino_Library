@@ -141,21 +141,21 @@ void codec_setup()
 
   // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
   codec.enablePLL(); // needed for class-d amp clock
-  codec.set_PLLPRESCALE(PLLPRESCALE_DIV_2);
-  codec.set_SMD(PLL_MODE_FRACTIONAL);
-  codec.set_CLKSEL(CLKSEL_PLL);
-  codec.set_SYSCLKDIV(SYSCLK_DIV_BY_2);
-  codec.set_BCLKDIV(4);
-  codec.set_DCLKDIV(DCLKDIV_16);
-  codec.set_PLLN(7);
-  codec.set_PLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
-  //codec.set_ADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.set_DACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
-  codec.set_WL(WL_16BIT);
+  codec.setPLLPRESCALE(PLLPRESCALE_DIV_2);
+  codec.setSMD(PLL_MODE_FRACTIONAL);
+  codec.setCLKSEL(CLKSEL_PLL);
+  codec.setSYSCLKDIV(SYSCLK_DIV_BY_2);
+  codec.setBCLKDIV(4);
+  codec.setDCLKDIV(DCLKDIV_16);
+  codec.setPLLN(7);
+  codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
+  //codec.setADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setDACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  codec.setWL(WL_16BIT);
 
   codec.enablePeripheralMode();
   //codec.enableMasterMode();
-  //codec.set_ALRCGPIO(); // note, should not be changed while ADC is enabled.
+  //codec.setALRCGPIO(); // note, should not be changed while ADC is enabled.
 
   // enable DACs
   codec.enableDacLeft();
@@ -189,7 +189,7 @@ void i2s_install() {
     .tx_desc_auto_clear = true // avoiding noise in case of data unavailability
   };
 
-  a2dp_sink.set_i2s_config(i2s_config);
+  a2dp_sink.seti2s_config(i2s_config);
 }
 
 void i2s_setpin() {
@@ -201,5 +201,5 @@ void i2s_setpin() {
     .data_in_num = I2S_PIN_NO_CHANGE
   };
 
-  a2dp_sink.set_pin_config(my_pin_config);
+  a2dp_sink.setpin_config(my_pin_config);
 }

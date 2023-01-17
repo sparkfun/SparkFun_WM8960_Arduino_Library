@@ -117,37 +117,37 @@ void setup()
 
   // setup signal flow through the analog audio bypass connections
 
-  codec.enable_LMIC();
-  codec.enable_RMIC();
+  codec.enableLMIC();
+  codec.enableRMIC();
   
   // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
-  codec.connect_LMN1();
-  codec.connect_RMN1();
+  codec.connectLMN1();
+  codec.connectRMN1();
 
   // disable mutes on PGA inputs (aka INTPUT1)
-  codec.disable_LINMUTE();
-  codec.disable_RINMUTE();
+  codec.disableLINMUTE();
+  codec.disableRINMUTE();
 
   // set pga volumes
-  codec.set_LINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
-  codec.set_RINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
+  codec.setLINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
+  codec.setRINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
   Serial.println("PGA gain set to +24dB");
 
   // set input boosts to get inputs 1 to the boost mixers
-  codec.set_LMICBOOST(MIC_BOOST_GAIN_0DB); // 0 = 0dB
-  codec.set_RMICBOOST(MIC_BOOST_GAIN_0DB); // 0 = 0dB
+  codec.setLMICBOOST(MIC_BOOST_GAIN_0DB); // 0 = 0dB
+  codec.setRMICBOOST(MIC_BOOST_GAIN_0DB); // 0 = 0dB
   Serial.println("Mic boost stage set to 0dB");
 
   codec.pgaLeftNonInvSignalSelect(PGAL_LINPUT2); // for MIC+ signal of differential mic signal
   codec.pgaRightNonInvSignalSelect(PGAR_RINPUT2); // for MIC+ signal of differential mic signal
   Serial.println("Pga non-inverting inputs set to INPUT2s");
 
-  codec.connect_LMIC2B();
-  codec.connect_RMIC2B();
+  codec.connectLMIC2B();
+  codec.connectRMIC2B();
 
   // enable boost mixers
-  codec.enable_AINL();
-  codec.enable_AINR();
+  codec.enableAINL();
+  codec.enableAINR();
 
   // connect LB2LO (booster to output mixer (analog bypass)
   codec.enableLB2LO();

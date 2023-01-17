@@ -157,32 +157,32 @@ void codec_setup()
 
   // setup signal flow to the ADC
 
-  codec.enable_LMIC();
-  codec.enable_RMIC();
+  codec.enableLMIC();
+  codec.enableRMIC();
 
   // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
-  codec.connect_LMN1();
-  codec.connect_RMN1();
+  codec.connectLMN1();
+  codec.connectRMN1();
 
   // disable mutes on PGA inputs (aka INTPUT1)
-  codec.disable_LINMUTE();
-  codec.disable_RINMUTE();
+  codec.disableLINMUTE();
+  codec.disableRINMUTE();
 
   // set pga volumes
-  codec.set_LINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
-  codec.set_RINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
+  codec.setLINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
+  codec.setRINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
 
   // set input boosts to get inputs 1 to the boost mixers
-  codec.set_LMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
-  codec.set_RMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+  codec.setLMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+  codec.setRMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
 
   // connect from MIC inputs (aka pga output) to boost mixers
-  codec.connect_LMIC2B();
-  codec.connect_RMIC2B();
+  codec.connectLMIC2B();
+  codec.connectRMIC2B();
 
   // enable boost mixers
-  codec.enable_AINL();
-  codec.enable_AINR();
+  codec.enableAINL();
+  codec.enableAINR();
 
   // disconnect LB2LO (booster to output mixer (analog bypass)
   // for this example, we are going to pass audio throught the ADC and DAC
@@ -204,21 +204,21 @@ void codec_setup()
 
   // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
   codec.enablePLL(); // needed for class-d amp clock
-  codec.set_PLLPRESCALE(PLLPRESCALE_DIV_2);
-  codec.set_SMD(PLL_MODE_FRACTIONAL);
-  codec.set_CLKSEL(CLKSEL_PLL);
-  codec.set_SYSCLKDIV(SYSCLK_DIV_BY_2);
-  codec.set_BCLKDIV(4);
-  codec.set_DCLKDIV(DCLKDIV_16);
-  codec.set_PLLN(7);
-  codec.set_PLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
-  //codec.set_ADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.set_DACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
-  codec.set_WL(WL_16BIT);
+  codec.setPLLPRESCALE(PLLPRESCALE_DIV_2);
+  codec.setSMD(PLL_MODE_FRACTIONAL);
+  codec.setCLKSEL(CLKSEL_PLL);
+  codec.setSYSCLKDIV(SYSCLK_DIV_BY_2);
+  codec.setBCLKDIV(4);
+  codec.setDCLKDIV(DCLKDIV_16);
+  codec.setPLLN(7);
+  codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
+  //codec.setADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setDACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  codec.setWL(WL_16BIT);
 
   codec.enablePeripheralMode();
   //codec.enableMasterMode();
-  //codec.set_ALRCGPIO(); // note, should not be changed while ADC is enabled.
+  //codec.setALRCGPIO(); // note, should not be changed while ADC is enabled.
 
   // enable ADCs and DACs
   codec.enableAdcLeft();
@@ -266,5 +266,5 @@ void i2s_setpin() {
     .data_in_num = I2S_SD
   };
 
-  i2s_set_pin(I2S_PORT, &pin_config);
+  i2s_setpin(I2S_PORT, &pin_config);
 }

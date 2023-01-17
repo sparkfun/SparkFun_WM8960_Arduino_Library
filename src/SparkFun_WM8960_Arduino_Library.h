@@ -170,20 +170,20 @@ class WM8960
 		///////////////////////////////////////////////////////// PGA 
 		/////////////////////////////////////////////////////////
 
-		boolean enable_AINL();
-		boolean disable_AINL();
-		boolean enable_AINR();
-		boolean disable_AINR();
+		boolean enableAINL();
+		boolean disableAINL();
+		boolean enableAINR();
+		boolean disableAINR();
 
-		boolean enable_LMIC();
-		boolean disable_LMIC();
-		boolean enable_RMIC();
-		boolean disable_RMIC();
+		boolean enableLMIC();
+		boolean disableLMIC();
+		boolean enableRMIC();
+		boolean disableRMIC();
 
-		boolean enable_LMICBOOST();
-		boolean disable_LMICBOOST();
-		boolean enable_RMICBOOST();
-		boolean disable_RMICBOOST();
+		boolean enableLMICBOOST();
+		boolean disableLMICBOOST();
+		boolean enableRMICBOOST();
+		boolean disableRMICBOOST();
 
 		// PGA input signal select
 		// Each PGA (left and right) has a switch on its non-inverting input.
@@ -198,39 +198,39 @@ class WM8960
 		boolean pgaRightNonInvSignalSelect(uint8_t signal); // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
 
 		// Connection from each INPUT1 to the inverting input of its PGA
-		boolean connect_LMN1(); 		// Connect LINPUT1 to inverting input of Left Input PGA
-		boolean disconnect_LMN1(); 	// Disconnect LINPUT1 from inverting input of Left Input PGA
-		boolean connect_RMN1(); 	// Connect RINPUT1 to inverting input of Right Input PGA
-		boolean disconnect_RMN1(); 	// Disconnect RINPUT1 from inverting input of Right Input PGA	
+		boolean connectLMN1(); 		// Connect LINPUT1 to inverting input of Left Input PGA
+		boolean disconnectLMN1(); 	// Disconnect LINPUT1 from inverting input of Left Input PGA
+		boolean connectRMN1(); 	// Connect RINPUT1 to inverting input of Right Input PGA
+		boolean disconnectRMN1(); 	// Disconnect RINPUT1 from inverting input of Right Input PGA	
 
 		// Connection from output of PGAs to downstream "boost mixers".
-		boolean connect_LMIC2B(); 		// Connect Left Input PGA to Left Input Boost mixer
-		boolean disconnect_LMIC2B();	// Disconnect Left Input PGA to Left Input Boost mixer
-		boolean connect_RMIC2B(); 		// Connect Right Input PGA to Right Input Boost mixer
-		boolean disconnect_RMIC2B();	// Disconnect Right Input PGA to Right Input Boost mixer
+		boolean connectLMIC2B(); 		// Connect Left Input PGA to Left Input Boost mixer
+		boolean disconnectLMIC2B();	// Disconnect Left Input PGA to Left Input Boost mixer
+		boolean connectRMIC2B(); 		// Connect Right Input PGA to Right Input Boost mixer
+		boolean disconnectRMIC2B();	// Disconnect Right Input PGA to Right Input Boost mixer
 
-		boolean set_LINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
-		boolean set_RINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+		boolean setLINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+		boolean setRINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 
 		// Zero Cross prevents zipper sounds on volume changes
-		boolean pgaZeroCrossOn(); // sets both left and right PGAs
-		boolean pgaZeroCrossOff(); // sets both left and right PGAs
+		boolean enablePgaZeroCross(); // sets both left and right PGAs
+		boolean disablePgaZeroCross(); // sets both left and right PGAs
 
-		boolean enable_LINMUTE();
-		boolean disable_LINMUTE();
-		boolean enable_RINMUTE();
-		boolean disable_RINMUTE();
+		boolean enableLINMUTE();
+		boolean disableLINMUTE();
+		boolean enableRINMUTE();
+		boolean disableRINMUTE();
 
 		boolean pgaLeftIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
 		boolean pgaRightIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
 
 		// Boosts
-		boolean set_LMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
-		boolean set_RMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
-		boolean set_LIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-		boolean set_LIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-		boolean set_RIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-		boolean set_RIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...		
+		boolean setLMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
+		boolean setRMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
+		boolean setLIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
+		boolean setLIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
+		boolean setRIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
+		boolean setRIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...		
 
 		// Mic Bias control
 		boolean enableMicBias();
@@ -488,20 +488,20 @@ class WM8960
 		// And now for the functions that will set these registers...
 		boolean enablePLL();
 		boolean disablePLL();
-		boolean set_PLLPRESCALE(boolean div); // valid options are PLLPRESCALE_DIV_1 and PLLPRESCALE_DIV_2
-		boolean set_PLLN(uint8_t n);
-		boolean set_PLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
-		boolean set_SMD(boolean mode); // 0=integer, 1=fractional
-		boolean set_CLKSEL(boolean sel); // 0=MCLK, 1=PLL_output
-		boolean set_SYSCLKDIV(uint8_t div); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
-		boolean set_ADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
-		boolean set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
-		boolean set_BCLKDIV(uint8_t div); // 0100 (4) = sufficiently high for 24bit, div by 4 allows for max word length of 32bit
-		boolean set_DCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
-		boolean set_ALRCGPIO(); // set LR clock to be the same for ADC and DAC - needed for loopback mode.
+		boolean setPLLPRESCALE(boolean div); // valid options are PLLPRESCALE_DIV_1 and PLLPRESCALE_DIV_2
+		boolean setPLLN(uint8_t n);
+		boolean setPLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
+		boolean setSMD(boolean mode); // 0=integer, 1=fractional
+		boolean setCLKSEL(boolean sel); // 0=MCLK, 1=PLL_output
+		boolean setSYSCLKDIV(uint8_t div); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
+		boolean setADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean setDACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean setBCLKDIV(uint8_t div); // 0100 (4) = sufficiently high for 24bit, div by 4 allows for max word length of 32bit
+		boolean setDCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+		boolean setALRCGPIO(); // set LR clock to be the same for ADC and DAC - needed for loopback mode.
 		boolean enableMasterMode();
 		boolean enablePeripheralMode();
-		boolean set_WL(uint8_t word_length);
+		boolean setWL(uint8_t word_length);
 
 		// General-purpose register write
 		boolean writeRegister(uint8_t reg, uint16_t value);

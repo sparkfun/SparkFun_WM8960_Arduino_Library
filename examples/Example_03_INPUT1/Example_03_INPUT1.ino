@@ -98,27 +98,27 @@ void setup()
 
   // setup signal flow through the analog audio bypass connections
 
-  codec.enable_LMIC();
-  codec.enable_RMIC();
+  codec.enableLMIC();
+  codec.enableRMIC();
   
   // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
-  codec.connect_LMN1();
-  codec.connect_RMN1();
+  codec.connectLMN1();
+  codec.connectRMN1();
 
   // disable mutes on PGA inputs (aka INTPUT1)
-  codec.disable_LINMUTE();
-  codec.disable_RINMUTE();
+  codec.disableLINMUTE();
+  codec.disableRINMUTE();
 
   // set input boosts to get inputs 1 to the boost mixers
-  codec.set_LMICBOOST(0); // 0 = 0dB
-  codec.set_RMICBOOST(0); // 0 = 0dB
+  codec.setLMICBOOST(0); // 0 = 0dB
+  codec.setRMICBOOST(0); // 0 = 0dB
 
-  codec.connect_LMIC2B();
-  codec.connect_RMIC2B();
+  codec.connectLMIC2B();
+  codec.connectRMIC2B();
 
   // enable boost mixers
-  codec.enable_AINL();
-  codec.enable_AINR();
+  codec.enableAINL();
+  codec.enableAINR();
 
   // connect LB2LO (booster to output mixer (analog bypass)
   codec.enableLB2LO();

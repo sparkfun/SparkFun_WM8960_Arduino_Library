@@ -169,62 +169,62 @@ boolean WM8960::reset()
   return 0;
 }
 
-boolean WM8960::enable_AINL()
+boolean WM8960::enableAINL()
 { 
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 5, 1);
 }
 
-boolean WM8960::disable_AINL()
+boolean WM8960::disableAINL()
 { 
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 5, 0);
 }
 
-boolean WM8960::enable_AINR()
+boolean WM8960::enableAINR()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 4, 1);
 }
 
-boolean WM8960::disable_AINR()
+boolean WM8960::disableAINR()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 4, 0);
 }
 
-boolean WM8960::enable_LMIC()
+boolean WM8960::enableLMIC()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 1);
 }
 
-boolean WM8960::disable_LMIC()
+boolean WM8960::disableLMIC()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 0);
 }
 
-boolean WM8960::enable_RMIC()
+boolean WM8960::enableRMIC()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 1);
 }
 
-boolean WM8960::disable_RMIC()
+boolean WM8960::disableRMIC()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 0);
 }
 
-boolean WM8960::enable_LMICBOOST()
+boolean WM8960::enableLMICBOOST()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 1);
 }
 
-boolean WM8960::disable_LMICBOOST()
+boolean WM8960::disableLMICBOOST()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 5, 0);
 }
 
-boolean WM8960::enable_RMICBOOST()
+boolean WM8960::enableRMICBOOST()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 1);
 }
 
-boolean WM8960::disable_RMICBOOST()
+boolean WM8960::disableRMICBOOST()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_3, 4, 0);
 }
@@ -291,25 +291,25 @@ boolean WM8960::pgaRightNonInvSignalSelect(uint8_t signal)
 }
 
 // Connection from each INPUT1 to the inverting input of its PGA
-boolean WM8960::connect_LMN1()
+boolean WM8960::connectLMN1()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 8, 1);
 }
 
 // Disconnect LINPUT1 to inverting input of Left Input PGA
-boolean WM8960::disconnect_LMN1()
+boolean WM8960::disconnectLMN1()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 8, 0);
 }
 
 // Connect RINPUT1 from inverting input of Right Input PGA
-boolean WM8960::connect_RMN1()
+boolean WM8960::connectRMN1()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 8, 1);
 }
 
 // Disconnect RINPUT1 to inverting input of Right Input PGA
-boolean WM8960::disconnect_RMN1()
+boolean WM8960::disconnectRMN1()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 8, 0);
 }
@@ -317,30 +317,30 @@ boolean WM8960::disconnect_RMN1()
 // Connections from output of PGAs to downstream "boost mixers".
 
 // Connect Left Input PGA to Left Input Boost mixer
-boolean WM8960::connect_LMIC2B()
+boolean WM8960::connectLMIC2B()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 3, 1);
 }
 
 // Disconnect Left Input PGA to Left Input Boost mixer
-boolean WM8960::disconnect_LMIC2B()
+boolean WM8960::disconnectLMIC2B()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 3, 0);
 }
 
 // Connect Right Input PGA to Right Input Boost mixer
-boolean WM8960::connect_RMIC2B()
+boolean WM8960::connectRMIC2B()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 3, 1);
 }
 
 // Disconnect Right Input PGA to Right Input Boost mixer
-boolean WM8960::disconnect_RMIC2B()
+boolean WM8960::disconnectRMIC2B()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 3, 0);
 }
 
-boolean WM8960::set_LINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+boolean WM8960::setLINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 {
   if(volume >= 63) volume = 63; // limit incoming values max
   if(volume <= 0) volume = 0; // limit incoming values min
@@ -349,7 +349,7 @@ boolean WM8960::set_LINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB s
   return (result1 && result2);
 }
 
-boolean WM8960::set_RINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
+boolean WM8960::setRINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 {
   if(volume >= 63) volume = 63; // limit incoming values max
   if(volume <= 0) volume = 0; // limit incoming values min
@@ -360,35 +360,35 @@ boolean WM8960::set_RINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB s
 
 // Zero Cross prevents zipper sounds on volume changes
 // sets both left and right PGAs
-boolean WM8960::pgaZeroCrossOn()
+boolean WM8960::enablePgaZeroCross()
 {
   if (WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 1) == 0) return 0;
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 1);
 }
 
-boolean WM8960::pgaZeroCrossOff()
+boolean WM8960::disablePgaZeroCross()
 {
   if (WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 0) == 0) return 0;
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 0);
 }
 
-boolean WM8960::enable_LINMUTE()
+boolean WM8960::enableLINMUTE()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 7, 1);
 }
 
-boolean WM8960::disable_LINMUTE()
+boolean WM8960::disableLINMUTE()
 {
   WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 7, 0);
   return WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 8, 1);
 }
 
-boolean WM8960::enable_RINMUTE()
+boolean WM8960::enableRINMUTE()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 7, 1);
 }
 
-boolean WM8960::disable_RINMUTE()
+boolean WM8960::disableRINMUTE()
 {
   WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 7, 0);
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 8, 1);
@@ -409,37 +409,37 @@ boolean WM8960::pgaRightIPVUSet()
 
 // Input Boosts
 
-boolean WM8960::set_LMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+boolean WM8960::setLMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
 {
   if(boost_gain >= 3) boost_gain = 3; // limit incoming values max
   if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ADCL_SIGNAL_PATH,5,4,boost_gain);
 }
-boolean WM8960::set_RMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+boolean WM8960::setRMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
 {
   if(boost_gain >= 3) boost_gain = 3; // limit incoming values max
   if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ADCR_SIGNAL_PATH,5,4,boost_gain);
 }
-boolean WM8960::set_LIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
+boolean WM8960::setLIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
 {
   if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
   if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1,6,4,boost_gain);
 }
-boolean WM8960::set_LIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
+boolean WM8960::setLIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
 {
   if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
   if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1,3,1,boost_gain);
 }
-boolean WM8960::set_RIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
+boolean WM8960::setRIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
 {
   if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
   if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_2,6,4,boost_gain);
 }
-boolean WM8960::set_RIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB	
+boolean WM8960::setRIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB	
 {
   if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
   if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
@@ -1161,17 +1161,17 @@ boolean WM8960::disablePLL()
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_2, 0, 0);
 }
 
-boolean WM8960::set_PLLPRESCALE(boolean div)
+boolean WM8960::setPLLPRESCALE(boolean div)
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PLL_N, 4, div);
 }
 
-boolean WM8960::set_PLLN(uint8_t n)
+boolean WM8960::setPLLN(uint8_t n)
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_N,3,0,n); 
 }
 
-boolean WM8960::set_PLLK(uint8_t one, uint8_t two, uint8_t three) // send each nibble of 24-bit value for value K
+boolean WM8960::setPLLK(uint8_t one, uint8_t two, uint8_t three) // send each nibble of 24-bit value for value K
 {
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_K_1,5,0,one); 
   boolean result2 = WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_K_2,8,0,two); 
@@ -1183,38 +1183,38 @@ boolean WM8960::set_PLLK(uint8_t one, uint8_t two, uint8_t three) // send each n
   return 0;  
 }
 
-boolean WM8960::set_SMD(boolean mode)
+boolean WM8960::setSMD(boolean mode)
 {
   return WM8960::_writeRegisterBit(WM8960_REG_PLL_N, 5, mode);
 }
 
  // 0=integer, 1=fractional
-boolean WM8960::set_CLKSEL(boolean sel)
+boolean WM8960::setCLKSEL(boolean sel)
 {
   return WM8960::_writeRegisterBit(WM8960_REG_CLOCKING_1, 0, sel);
 }
 
  // 0=MCLK, 1=PLL_output
-boolean WM8960::set_SYSCLKDIV(uint8_t div) // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
+boolean WM8960::setSYSCLKDIV(uint8_t div) // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_1,2,1,div);  
 }
 
-//boolean WM8960::set_ADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+//boolean WM8960::setADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 
-//boolean WM8960::set_DACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+//boolean WM8960::setDACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 
-boolean WM8960::set_BCLKDIV(uint8_t div)
+boolean WM8960::setBCLKDIV(uint8_t div)
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,3,0,div);  
 }
 
-boolean WM8960::set_DCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+boolean WM8960::setDCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,8,6,setting);
 }
 
-boolean WM8960::set_ALRCGPIO()
+boolean WM8960::setALRCGPIO()
 {
   // This setting should not be changed if ADCs are enabled.
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_2, 6, 1);
@@ -1230,7 +1230,7 @@ boolean WM8960::enablePeripheralMode()
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 6, 0);
 }
 
-boolean WM8960::set_WL(uint8_t word_length)
+boolean WM8960::setWL(uint8_t word_length)
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_AUDIO_INTERFACE_1,3,2,word_length);  
 }

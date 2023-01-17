@@ -99,12 +99,12 @@ void setup()
   // setup signal flow through the analog audio bypass connections
 
   // set input boosts to get INPUT2 (both left and right) to the boost mixers
-  codec.set_LIN2BOOST(5); // 5 = 0dB
-  codec.set_RIN2BOOST(5); // 5 = 0dB
+  codec.setLIN2BOOST(5); // 5 = 0dB
+  codec.setRIN2BOOST(5); // 5 = 0dB
 
   // enable input boost mixers
-  codec.enable_AINL();
-  codec.enable_AINR();
+  codec.enableAINL();
+  codec.enableAINR();
 
   // connect LB2LO (booster to output mixer [aka analog bypass])
   codec.enableLB2LO();
