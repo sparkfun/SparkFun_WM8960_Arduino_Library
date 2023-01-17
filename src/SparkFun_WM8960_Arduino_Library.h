@@ -494,10 +494,10 @@ class WM8960
 		boolean setSMD(boolean mode); // 0=integer, 1=fractional
 		boolean setCLKSEL(boolean sel); // 0=MCLK, 1=PLL_output
 		boolean setSYSCLKDIV(uint8_t div); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
-		boolean setADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
-		boolean setDACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean setADCDIV(uint8_t div); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+		boolean setDACDIV(uint8_t div); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean setBCLKDIV(uint8_t div); // 0100 (4) = sufficiently high for 24bit, div by 4 allows for max word length of 32bit
-		boolean setDCLKDIV(uint8_t setting); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+		boolean setDCLKDIV(uint8_t div); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 		boolean setALRCGPIO(); // set LR clock to be the same for ADC and DAC - needed for loopback mode.
 		boolean enableMasterMode();
 		boolean enablePeripheralMode();

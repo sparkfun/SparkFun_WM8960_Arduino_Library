@@ -1200,18 +1200,24 @@ boolean WM8960::setSYSCLKDIV(uint8_t div) // (0=divide by 1), (2=div by 2) *1 an
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_1,2,1,div);  
 }
 
-//boolean WM8960::setADCDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+boolean WM8960::setADCDIV(uint8_t div) // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_1,8,6,div);  
+}
 
-//boolean WM8960::setDACDIV(uint8_t setting); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+boolean WM8960::setDACDIV(uint8_t div) // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_1,5,3,div);  
+}
 
 boolean WM8960::setBCLKDIV(uint8_t div)
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,3,0,div);  
 }
 
-boolean WM8960::setDCLKDIV(uint8_t setting) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
+boolean WM8960::setDCLKDIV(uint8_t div) // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
 {
-  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,8,6,setting);
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_CLOCKING_2,8,6,div);
 }
 
 boolean WM8960::setALRCGPIO()
