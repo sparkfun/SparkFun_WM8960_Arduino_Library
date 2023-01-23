@@ -36,8 +36,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#ifndef __SparkFunWM8960_H__
-#define __SparkFunWM8960_H__
+#ifndef __SPARKFUN_WM8960_H__
+#define __SPARKFUN_WM8960_H__
 
 #if (ARDUINO >= 100)
 #include "Arduino.h"
