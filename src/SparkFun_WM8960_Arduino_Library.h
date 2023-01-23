@@ -101,58 +101,58 @@
 #define WM8960_REG_PLL_K_3 0x37
 
 // PGA input selections
-#define PGAL_LINPUT2 0
-#define PGAL_LINPUT3 1
-#define PGAL_VMID 2
-#define PGAR_RINPUT2 0
-#define PGAR_RINPUT3 1
-#define PGAR_VMID 2
+#define WM8960_PGAL_LINPUT2 0
+#define WM8960_PGAL_LINPUT3 1
+#define WM8960_PGAL_VMID 2
+#define WM8960_PGAR_RINPUT2 0
+#define WM8960_PGAR_RINPUT3 1
+#define WM8960_PGAR_VMID 2
 
 // Mic (aka PGA) BOOST gain options
-#define MIC_BOOST_GAIN_0DB 0
-#define MIC_BOOST_GAIN_13DB 1
-#define MIC_BOOST_GAIN_20DB 2
-#define MIC_BOOST_GAIN_29DB 3
+#define WM8960_MIC_BOOST_GAIN_0DB 0
+#define WM8960_MIC_BOOST_GAIN_13DB 1
+#define WM8960_MIC_BOOST_GAIN_20DB 2
+#define WM8960_MIC_BOOST_GAIN_29DB 3
 
 // Mixer 1 and 2 boost gain options
-#define MIXER_BOOST_GAIN_MUTE 0
-#define MIXER_BOOST_GAIN_NEG_12DB 1
-#define MIXER_BOOST_GAIN_NEG_9DB 2
-#define MIXER_BOOST_GAIN_NEG_6DB 3
-#define MIXER_BOOST_GAIN_NEG_3DB 4
-#define MIXER_BOOST_GAIN_0DB 5
-#define MIXER_BOOST_GAIN_3DB 6
-#define MIXER_BOOST_GAIN_6DB 7
+#define WM8960_MIXER_BOOST_GAIN_MUTE 0
+#define WM8960_MIXER_BOOST_GAIN_NEG_12DB 1
+#define WM8960_MIXER_BOOST_GAIN_NEG_9DB 2
+#define WM8960_MIXER_BOOST_GAIN_NEG_6DB 3
+#define WM8960_MIXER_BOOST_GAIN_NEG_3DB 4
+#define WM8960_MIXER_BOOST_GAIN_0DB 5
+#define WM8960_MIXER_BOOST_GAIN_3DB 6
+#define WM8960_MIXER_BOOST_GAIN_6DB 7
 
 // Mic Bias voltage options
-#define MIC_BIAS_VOLTAGE_0_9_AVDD 0
-#define MIC_BIAS_VOLTAGE_0_65_AVDD 1
+#define WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD 0
+#define WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD 1
 
 // Automatic Level Control Modes
-#define ALC_MODE_OFF 0
-#define ALC_MODE_RIGHT_ONLY 1
-#define ALC_MODE_LEFT_ONLY 2
-#define ALC_MODE_STEREO 3
+#define WM8960_ALC_MODE_OFF 0
+#define WM8960_ALC_MODE_RIGHT_ONLY 1
+#define WM8960_ALC_MODE_LEFT_ONLY 2
+#define WM8960_ALC_MODE_STEREO 3
 
 // SYSCLK divide
-#define SYSCLK_DIV_BY_1 0
-#define SYSCLK_DIV_BY_2 2
-#define CLKSEL_MCLK 0
-#define CLKSEL_PLL 1
-#define PLL_MODE_INTEGER 0
-#define PLL_MODE_FRACTIONAL 1
-#define PLLPRESCALE_DIV_1 0
-#define PLLPRESCALE_DIV_2 1
+#define WM8960_SYSCLK_DIV_BY_1 0
+#define WM8960_SYSCLK_DIV_BY_2 2
+#define WM8960_CLKSEL_MCLK 0
+#define WM8960_CLKSEL_PLL 1
+#define WM8960_PLL_MODE_INTEGER 0
+#define WM8960_PLL_MODE_FRACTIONAL 1
+#define WM8960_PLLPRESCALE_DIV_1 0
+#define WM8960_PLLPRESCALE_DIV_2 1
 
 // class d clock divide
-#define DCLKDIV_16 7
+#define WM8960_DCLKDIV_16 7
 
 // word length settings (aka bits per sample)
 // Audio Data Word Length
-#define WL_16BIT 0
-#define WL_20BIT 1
-#define WL_24BIT 2
-#define WL_32BIT 3
+#define WM8960_WL_16BIT 0
+#define WM8960_WL_20BIT 1
+#define WM8960_WL_24BIT 2
+#define WM8960_WL_32BIT 3
 
 class WM8960
 {
@@ -194,8 +194,8 @@ class WM8960
 		//	*You can select between VMIN, RINPUT2 or RINPUT3
 		// 	*Note, the inverting input of PGA_RIGHT is perminantly connected to RINPUT1
 
-		boolean pgaLeftNonInvSignalSelect(uint8_t signal); // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
-		boolean pgaRightNonInvSignalSelect(uint8_t signal); // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
+		boolean pgaLeftNonInvSignalSelect(uint8_t signal); // 3 options: WM8960_PGAL_LINPUT2, WM8960_PGAL_LINPUT3, WM8960_PGAL_VMID
+		boolean pgaRightNonInvSignalSelect(uint8_t signal); // 3 options: WM8960_PGAR_RINPUT2, WM8960_PGAR_RINPUT3, WM8960_PGAR_VMID
 
 		// Connection from each INPUT1 to the inverting input of its PGA
 		boolean connectLMN1(); 		// Connect LINPUT1 to inverting input of Left Input PGA
@@ -225,17 +225,17 @@ class WM8960
 		boolean pgaRightIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
 
 		// Boosts
-		boolean setLMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
-		boolean setRMICBOOST(uint8_t boost_gain); // MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
-		boolean setLIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-		boolean setLIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-		boolean setRIN3BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...
-		boolean setRIN2BOOST(uint8_t boost_gain); // MIXER_BOOST_GAIN_MUTE, MIXER_BOOST_GAIN_NEG_12DB, and so on...		
+		boolean setLMICBOOST(uint8_t boost_gain); // WM8960_MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
+		boolean setRMICBOOST(uint8_t boost_gain); // WM8960_MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
+		boolean setLIN3BOOST(uint8_t boost_gain); // WM8960_MIXER_BOOST_GAIN_MUTE, WM8960_MIXER_BOOST_GAIN_NEG_12DB, and so on...
+		boolean setLIN2BOOST(uint8_t boost_gain); // WM8960_MIXER_BOOST_GAIN_MUTE, WM8960_MIXER_BOOST_GAIN_NEG_12DB, and so on...
+		boolean setRIN3BOOST(uint8_t boost_gain); // WM8960_MIXER_BOOST_GAIN_MUTE, WM8960_MIXER_BOOST_GAIN_NEG_12DB, and so on...
+		boolean setRIN2BOOST(uint8_t boost_gain); // WM8960_MIXER_BOOST_GAIN_MUTE, WM8960_MIXER_BOOST_GAIN_NEG_12DB, and so on...		
 
 		// Mic Bias control
 		boolean enableMicBias();
 		boolean disableMicBias();
-		boolean setMicBiasVoltage(boolean voltage); // MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+		boolean setMicBiasVoltage(boolean voltage); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// ADC
@@ -267,7 +267,7 @@ class WM8960
 		// Automatic Level Control
 		// Note that when the ALC function is enabled, the settings of
 		// registers 0 and 1 (LINVOL, IPVU, LIZC, LINMUTE, RINVOL, RIZC and RINMUTE) are ignored.
-		boolean enableAlc(uint8_t mode = ALC_MODE_STEREO); // also sets alc sample rate to match global sample rate.
+		boolean enableAlc(uint8_t mode = WM8960_ALC_MODE_STEREO); // also sets alc sample rate to match global sample rate.
 		boolean disableAlc();
 
 		boolean setAlcTarget(uint8_t target); // valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
@@ -488,7 +488,7 @@ class WM8960
 		// And now for the functions that will set these registers...
 		boolean enablePLL();
 		boolean disablePLL();
-		boolean setPLLPRESCALE(boolean div); // valid options are PLLPRESCALE_DIV_1 and PLLPRESCALE_DIV_2
+		boolean setPLLPRESCALE(boolean div); // valid options are WM8960_PLLPRESCALE_DIV_1 and WM8960_PLLPRESCALE_DIV_2
 		boolean setPLLN(uint8_t n);
 		boolean setPLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
 		boolean setSMD(boolean mode); // 0=integer, 1=fractional

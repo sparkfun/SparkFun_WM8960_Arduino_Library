@@ -238,7 +238,7 @@ boolean WM8960::disableRMICBOOST()
 		//	*You can select between VMIN, RINPUT2 or RINPUT3
 		// 	*Note, the inverting input of PGA_RIGHT is perminantly connected to RINPUT1
 
- // 3 options: PGAL_LINPUT2, PGAL_LINPUT3, PGAL_VMID
+ // 3 options: WM8960_PGAL_LINPUT2, WM8960_PGAL_LINPUT3, WM8960_PGAL_VMID
 boolean WM8960::pgaLeftNonInvSignalSelect(uint8_t signal)
 {
   // clear LMP2 and LMP3
@@ -249,22 +249,22 @@ boolean WM8960::pgaLeftNonInvSignalSelect(uint8_t signal)
   boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 6, 0); // LMP2
   boolean result3 = false;
 
-  if(signal == PGAL_LINPUT2)
+  if(signal == WM8960_PGAL_LINPUT2)
   {
     result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 6, 1); // LMP2
   }
-  else if(signal == PGAL_LINPUT3)
+  else if(signal == WM8960_PGAL_LINPUT3)
   {
     result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCL_SIGNAL_PATH, 7, 1); // LMP3
   }
-  else if(signal == PGAL_VMID)
+  else if(signal == WM8960_PGAL_VMID)
   {
     // don't set any bits. When both LMP2 and LMP3 are cleared, then the signal is set to VMID
   }
   return (result1 && result2 && result3);
 }
 
- // 3 options: PGAR_RINPUT2, PGAR_RINPUT3, PGAR_VMID
+ // 3 options: WM8960_PGAR_RINPUT2, WM8960_PGAR_RINPUT3, WM8960_PGAR_VMID
 boolean WM8960::pgaRightNonInvSignalSelect(uint8_t signal)
 {
   // clear RMP2 and RMP3
@@ -275,15 +275,15 @@ boolean WM8960::pgaRightNonInvSignalSelect(uint8_t signal)
   boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 6, 0); // RMP2
   boolean result3 = false;
 
-  if(signal == PGAR_RINPUT2)
+  if(signal == WM8960_PGAR_RINPUT2)
   {
     result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 6, 1); // RMP2
   }
-  else if(signal == PGAR_RINPUT3)
+  else if(signal == WM8960_PGAR_RINPUT3)
   {
     result3 = WM8960::_writeRegisterBit(WM8960_REG_ADCR_SIGNAL_PATH, 7, 1); // RMP3
   }
-  else if(signal == PGAR_VMID)
+  else if(signal == WM8960_PGAR_VMID)
   {
     // don't set any bits. When both RMP2 and RMP3 are cleared, then the signal is set to VMID
   }
@@ -449,7 +449,7 @@ boolean WM8960::disableMicBias()
   return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 1, 0);
 }
 
-// MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+// WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
 boolean WM8960::setMicBiasVoltage(boolean voltage)
 {
   return WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 0, voltage);

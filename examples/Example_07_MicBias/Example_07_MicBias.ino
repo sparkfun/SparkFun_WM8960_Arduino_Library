@@ -81,11 +81,11 @@ void setup()
   codec.enableVMID();
 
   codec.enableMicBias();
-  codec.setMicBiasVoltage(MIC_BIAS_VOLTAGE_0_9_AVDD); // MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
   Serial.println("Mic Bias enabled (0.9*AVDD)");
   delay(3000);
 
-  codec.setMicBiasVoltage(MIC_BIAS_VOLTAGE_0_65_AVDD); // MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
   Serial.println("Mic Bias enabled (0.65*AVDD)");
   delay(3000);
 
