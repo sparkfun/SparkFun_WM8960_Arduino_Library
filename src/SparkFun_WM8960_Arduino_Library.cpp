@@ -342,8 +342,7 @@ boolean WM8960::disconnectRMIC2B()
 
 boolean WM8960::setLINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 {
-  if(volume >= 63) volume = 63; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 63) volume = 63; // limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_INPUT_VOLUME,5,0,volume);
   boolean result2 = WM8960::pgaLeftIPVUSet();
   return (result1 && result2);
@@ -351,8 +350,7 @@ boolean WM8960::setLINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB st
 
 boolean WM8960::setRINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 {
-  if(volume >= 63) volume = 63; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 63) volume = 63; // limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_INPUT_VOLUME,5,0,volume);
   boolean result2 = WM8960::pgaRightIPVUSet();
   return (result1 && result2);
@@ -411,38 +409,32 @@ boolean WM8960::pgaRightIPVUSet()
 
 boolean WM8960::setLMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
 {
-  if(boost_gain >= 3) boost_gain = 3; // limit incoming values max
-  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  if(boost_gain > 3) boost_gain = 3; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ADCL_SIGNAL_PATH,5,4,boost_gain);
 }
 boolean WM8960::setRMICBOOST(uint8_t boost_gain) // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
 {
-  if(boost_gain >= 3) boost_gain = 3; // limit incoming values max
-  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  if(boost_gain > 3) boost_gain = 3; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ADCR_SIGNAL_PATH,5,4,boost_gain);
 }
 boolean WM8960::setLIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
 {
-  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
-  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  if(boost_gain > 7) boost_gain = 7; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1,6,4,boost_gain);
 }
 boolean WM8960::setLIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
 {
-  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
-  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  if(boost_gain > 7) boost_gain = 7; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1,3,1,boost_gain);
 }
 boolean WM8960::setRIN3BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB
 {
-  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
-  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  if(boost_gain > 7) boost_gain = 7; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_2,6,4,boost_gain);
 }
 boolean WM8960::setRIN2BOOST(uint8_t boost_gain) // 0-7, 0 = Mute, 1 = -12dB ... 3dB steps ... 7 = +6dB	
 {
-  if(boost_gain >= 7) boost_gain = 7; // limit incoming values max
-  if(boost_gain <= 0) boost_gain = 0; // limit incoming values min
+  if(boost_gain > 7) boost_gain = 7; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_2,3,1,boost_gain);
 }
 
@@ -499,16 +491,14 @@ boolean WM8960::disableAdcRight()
     */
 boolean WM8960::setAdcLeftDigitalVolume(uint8_t volume)
 {
-  if(volume >= 255) volume = 255; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 255) volume = 255; // limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_ADC_VOLUME,7,0,volume);
   boolean result2 = WM8960::adcLeftADCVUSet();
   return (result1 && result2);
 }
 boolean WM8960::setAdcRightDigitalVolume(uint8_t volume)
 {
-  if(volume >= 255) volume = 255; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 255) volume = 255; // limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_ADC_VOLUME,7,0,volume);
   boolean result2 = WM8960::adcRightADCVUSet();
   return (result1 && result2);
@@ -550,43 +540,37 @@ boolean WM8960::disableAlc()
 
 boolean WM8960::setAlcTarget(uint8_t target) // valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
 {
-  if(target >= 15) target = 15; // limit incoming values max
-  if(target <= 0) target = 0; // limit incoming values min
+  if(target > 15) target = 15; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC1,3,0,target);
 }
 
 boolean WM8960::setAlcDecay(uint8_t decay) // valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
 {
-  if(decay >= 10) decay = 10; // limit incoming values max
-  if(decay <= 0) decay = 0; // limit incoming values min
+  if(decay > 10) decay = 10; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC3,7,4,decay);
 }
 
 boolean WM8960::setAlcAttack(uint8_t attack) // valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
 {
-  if(attack >= 10) attack = 10; // limit incoming values max
-  if(attack <= 0) attack = 0; // limit incoming values min
+  if(attack > 10) attack = 10; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC3,3,0,attack);
 }
 
 boolean WM8960::setAlcMaxGain(uint8_t maxGain) // valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
 {
-  if(maxGain >= 7) maxGain = 7; // limit incoming values max
-  if(maxGain <= 0) maxGain = 0; // limit incoming values min
+  if(maxGain > 7) maxGain = 7; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC1,6,4,maxGain);
 }
 
 boolean WM8960::setAlcMinGain(uint8_t minGain) // valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
 {
-  if(minGain >= 7) minGain = 7; // limit incoming values max
-  if(minGain <= 0) minGain = 0; // limit incoming values min
+  if(minGain > 7) minGain = 7; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC2,6,4,minGain);
 }
 
 boolean WM8960::setAlcHold(uint8_t hold) // valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
 {
-  if(hold >= 15) hold = 15; // limit incoming values max
-  if(hold <= 0) hold = 0; // limit incoming values min
+  if(hold > 15) hold = 15; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_ALC2,3,0,hold);
 }
 
@@ -650,16 +634,14 @@ boolean WM8960::disableDacRight()
 		// 255 = 0dB
 boolean WM8960::setDacLeftDigitalVolume(uint8_t volume)
 {
-  if(volume >= 255) volume = 255; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 255) volume = 255; // limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_DAC_VOLUME,7,0,volume);
   boolean result2 = WM8960::dacLeftDACVUSet();
   return (result1 && result2);
 }
 boolean WM8960::setDacRightDigitalVolume(uint8_t volume)
 {
-  if(volume >= 255) volume = 255; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 255) volume = 255; // limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_DAC_VOLUME,7,0,volume);
   boolean result2 = WM8960::dacRightDACVUSet();
   return (result1 && result2);
@@ -702,8 +684,7 @@ boolean WM8960::disable3d()
 
 boolean WM8960::set3dDepth(uint8_t depth) // 0 = 0%, 15 = 100%
 {
-  if(depth >= 15) depth = 15; // limit incoming values max
-  if(depth <= 0) depth = 0; // limit incoming values min
+  if(depth > 15) depth = 15; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_3D_CONTROL,4,1,depth);
 }
 
@@ -772,8 +753,7 @@ boolean WM8960::disableLI2LO()
 
 boolean WM8960::setLI2LOVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
 {
-  if(volume >= 7) volume = 7; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 7) volume = 7; // limit incoming values max
   volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_OUT_MIX_1,6,4,volume);
 }
@@ -790,8 +770,7 @@ boolean WM8960::disableLB2LO()
 
 boolean WM8960::setLB2LOVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
 {
-  if(volume >= 7) volume = 7; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 7) volume = 7; // limit incoming values max
   volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_BYPASS_1,6,4,volume);
 }
@@ -818,8 +797,7 @@ boolean WM8960::disableRI2RO()
 
 boolean WM8960::setRI2ROVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
 {
-  if(volume >= 7) volume = 7; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 7) volume = 7; // limit incoming values max
   volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_OUT_MIX_2,6,4,volume);
 }
@@ -836,8 +814,7 @@ boolean WM8960::disableRB2RO()
 
 boolean WM8960::setRB2ROVOL(uint8_t volume) // 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
 {
-  if(volume >= 7) volume = 7; // limit incoming values max
-  if(volume <= 0) volume = 0; // limit incoming values min
+  if(volume > 7) volume = 7; // limit incoming values max
   volume = 7 - volume; // flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_BYPASS_2,6,4,volume);
 }
@@ -950,8 +927,7 @@ boolean WM8960::setHeadphoneVolume(uint8_t volume) // Valid inputs are 47-127. 0
   // if successful, save locally.
 
   // limit inputs
-  if (volume >= 127) volume = 127;
-  if (volume <=0) volume = 0;
+  if (volume > 127) volume = 127;
 
   // LEFT
     boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LOUT1_VOLUME,6,0,volume);
@@ -1041,8 +1017,7 @@ boolean WM8960::setSpeakerVolume(uint8_t volume) // Valid inputs are 47-127. 0-4
 	// and the class D control reg WM8960_REG_CLASS_D_CONTROL_1 [7:6]
 
   // limit inputs
-  if (volume >= 127) volume = 127;
-  if (volume <=0) volume = 0;
+  if (volume > 127) volume = 127;
 
   // LEFT
     boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LOUT2_VOLUME,6,0,volume);
@@ -1082,8 +1057,7 @@ boolean WM8960::disableSpeakerZeroCross()
 // 0 = +0dB (1.0x boost) ... up to ... 5 = +5.1dB (1.8x boost)
 boolean WM8960::setSpeakerDcGain(uint8_t gain)
 {
-  if(gain >= 5) gain = 5; // limit incoming values max
-  if(gain <= 0) gain = 0; // limit incoming values min
+  if(gain > 5) gain = 5; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLASS_D_CONTROL_3,5,3,gain);
 }
 
@@ -1094,8 +1068,7 @@ boolean WM8960::setSpeakerDcGain(uint8_t gain)
 // 0 = +0dB (1.0x boost) ... up to ... 5 = +5.1dB (1.8x boost)
 boolean WM8960::setSpeakerAcGain(uint8_t gain)
 {
-  if(gain >= 5) gain = 5; // limit incoming values max
-  if(gain <= 0) gain = 0; // limit incoming values min
+  if(gain > 5) gain = 5; // limit incoming values max
   return WM8960::_writeRegisterMultiBits(WM8960_REG_CLASS_D_CONTROL_3,2,0,gain);
 }
 
