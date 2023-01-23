@@ -460,7 +460,7 @@ boolean WM8960::disableMicBias()
 // MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
 boolean WM8960::setMicBiasVoltage(boolean voltage)
 {
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 0, voltage);
+  return WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 0, voltage);
 }
 
 		/////////////////////////////////////////////////////////
