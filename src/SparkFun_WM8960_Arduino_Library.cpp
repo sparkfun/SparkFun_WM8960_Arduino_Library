@@ -81,8 +81,8 @@ boolean WM8960::writeRegister(uint8_t reg, uint16_t value)
   _i2cPort->write(control_byte_2);                     // reamining 8 bits of data
   result = _i2cPort->endTransmission();
   if (result == 0)
-     return 1;
-  return 0;
+     return true;
+  return false;
 }
 
 // writeRegisterBit
@@ -100,9 +100,9 @@ boolean WM8960::_writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, bo
     if (WM8960::writeRegister(registerAddress, regvalue)) // write modified value to device
     {
         _registerLocalCopy[registerAddress] = regvalue; // if successful, update local copy
-        return 1;
+        return true;
     }
-  return 0;
+  return false;
 }
 
 // writeRegisterMultiBits
@@ -126,9 +126,9 @@ boolean WM8960::_writeRegisterMultiBits(uint8_t registerAddress, uint8_t setting
   if (WM8960::writeRegister(registerAddress, regvalue)) // write modified value to device
   {
       _registerLocalCopy[registerAddress] = regvalue; // if successful, update local copy
-      return 1;
+      return true;
   }
-  return 0;
+  return false;
 }
 
 // enableVREF
@@ -164,9 +164,9 @@ boolean WM8960::reset()
     {
       _registerLocalCopy[i] = _registerDefaults[i]; 
     }
-    return 1;
+    return true;
   }
-  return 0;
+  return false;
 }
 
 boolean WM8960::enableAINL()
@@ -360,13 +360,13 @@ boolean WM8960::setRINVOL(uint8_t volume) // 0-63, (0 = -17.25dB) <<-- 0.75dB st
 // sets both left and right PGAs
 boolean WM8960::enablePgaZeroCross()
 {
-  if (WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 1) == 0) return 0;
+  if (WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 1) == 0) return false;
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 1);
 }
 
 boolean WM8960::disablePgaZeroCross()
 {
-  if (WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 0) == 0) return 0;
+  if (WM8960::_writeRegisterBit(WM8960_REG_LEFT_INPUT_VOLUME, 6, 0) == 0) return false;
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_INPUT_VOLUME, 6, 0);
 }
 
@@ -527,14 +527,14 @@ boolean WM8960::enableAlc(uint8_t mode)
 {
   boolean bit8 = (mode>>1);
   boolean bit7 = (mode & B00000001);
-  if (WM8960::_writeRegisterBit(WM8960_REG_ALC1, 8, bit8) == 0) return 0;
+  if (WM8960::_writeRegisterBit(WM8960_REG_ALC1, 8, bit8) == 0) return false;
   return WM8960::_writeRegisterBit(WM8960_REG_ALC1, 7, bit7);
 }
 
  // also sets alc sample rate to match global sample rate.
 boolean WM8960::disableAlc()
 {
-  if (WM8960::_writeRegisterBit(WM8960_REG_ALC1, 8, 0) == 0) return 0;
+  if (WM8960::_writeRegisterBit(WM8960_REG_ALC1, 8, 0) == 0) return false;
   return WM8960::_writeRegisterBit(WM8960_REG_ALC1, 7, 0);
 }
 
@@ -939,9 +939,9 @@ boolean WM8960::setHeadphoneVolume(uint8_t volume) // Valid inputs are 47-127. 0
 
     if (result1 && result2 && result3 && result4) // if all I2C sommands Ack'd, then...
     {
-        return 1;
+        return true;
     }
-  return 0; 
+  return false; 
 }
 
 		// Zero Cross prevents zipper sounds on volume changes
@@ -1029,9 +1029,9 @@ boolean WM8960::setSpeakerVolume(uint8_t volume) // Valid inputs are 47-127. 0-4
 
     if (result1 && result2 && result3 && result4) // if all I2C sommands Ack'd, then...
     {
-        return 1;
+        return true;
     }
-  return 0;
+  return false;
 }
 
 // Zero Cross prevents zipper sounds on volume changes
@@ -1151,9 +1151,9 @@ boolean WM8960::setPLLK(uint8_t one, uint8_t two, uint8_t three) // send each ni
   boolean result3 = WM8960::_writeRegisterMultiBits(WM8960_REG_PLL_K_3,8,0,three); 
   if (result1 && result2 && result3) // if all I2C sommands Ack'd, then...
   {
-    return 1;
+    return true;
   }
-  return 0;  
+  return false;  
 }
 
 boolean WM8960::setSMD(boolean mode)
