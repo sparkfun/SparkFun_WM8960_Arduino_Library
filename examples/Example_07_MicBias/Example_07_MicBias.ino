@@ -1,9 +1,18 @@
 /******************************************************************************
   Example _07_MicBias.ino
-  Demonstrates Mic Bias feature of WM8960 Codec.
+  This example demonstrates control of the mic bias feature of WM8960 Codec.
 
-  Turns on the micBias, set's it to each available output voltage,
-  Then turns it off to demonstrate disable.
+  Electret Mics are powered with a mic bias voltage applied to their signal line - 
+  usually with a 2.2K resistor in series. This Codec can provide a clean mic bias.
+  
+  This example turns on the mic bias, set's it to each available output voltage,
+  and then turns it off to demonstrate disable.
+
+  Measure the voltage with a multimeter to verfy you are getting the correct
+  voltages you desire on mic bias.
+
+  You can later use this mic bias voltage to power an electret mic in a more 
+  advanced example (example 14).
 
   Development platform used:
   SparkFun ESP32 IoT Redboard v10
