@@ -96,17 +96,17 @@ void setup()
   codec.enableVREF();
   codec.enableVMID();
   
-  // setup signal flow through the analog audio bypass connections
-  codec.enableLOMIX(); // enable left output mixer
-  codec.enableLI2LO(); // enable bypass connection from Left INPUT3 to Left output mixer, note, the default gain on this input (LI2LOVOL) is -15dB
-  codec.setLI2LOVOL(7); // sets volume control between "left input" to "left output mixer"
+  // Setup signal flow through the analog audio bypass connections
+  codec.enableLOMIX(); // Enable left output mixer
+  codec.enableLI2LO(); // Enable bypass connection from Left INPUT3 to Left output mixer, note, the default gain on this input (LI2LOVOL) is -15dB
+  codec.setLI2LOVOL(7); // Sets volume control between "left input" to "left output mixer"
   
-  codec.enableROMIX(); // now for the right channel of INPUT3
+  codec.enableROMIX(); // Now for the right channel of INPUT3
   codec.enableRI2RO();
   codec.setRI2ROVOL(7);
   
   codec.enableHeadphones();
-  codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
+  codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +6dB (max)");
   codec.setHeadphoneVolume(127); // 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
@@ -129,5 +129,5 @@ void setup()
 
 void loop()
 {
-  // nothing to see here.
+  // Nothing to see here.
 }

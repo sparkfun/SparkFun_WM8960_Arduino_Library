@@ -96,30 +96,30 @@ void setup()
   codec.enableVREF();
   codec.enableVMID();
 
-  // setup signal flow through the analog audio bypass connections
+  // Setup signal flow through the analog audio bypass connections
 
-  // set input boosts to get INPUT2 (both left and right) to the boost mixers
+  // Set input boosts to get INPUT2 (both left and right) to the boost mixers
   codec.setLIN2BOOST(5); // 5 = 0dB
   codec.setRIN2BOOST(5); // 5 = 0dB
 
-  // enable input boost mixers
+  // Enable input boost mixers
   codec.enableAINL();
   codec.enableAINR();
 
-  // connect LB2LO (booster to output mixer [aka analog bypass])
+  // Connect LB2LO (booster to output mixer [aka analog bypass])
   codec.enableLB2LO();
   codec.enableRB2RO();
 
-  // set gainstage between boost mixer and output mixers (analog bypass)
+  // Set gainstage between boost mixer and output mixers (analog bypass)
   codec.setLB2LOVOL(7); // 7 = 0dB
   codec.setRB2ROVOL(7); // 7 = 0dB
 
-  // enable output mixers
+  // Enable output mixers
   codec.enableLOMIX();
   codec.enableROMIX();
   
   codec.enableHeadphones();
-  codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
+  codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +0dB");
   codec.setHeadphoneVolume(120);
@@ -129,5 +129,5 @@ void setup()
 
 void loop()
 {
-  // nothing to see here.
+  // Nothing to see here.
 }

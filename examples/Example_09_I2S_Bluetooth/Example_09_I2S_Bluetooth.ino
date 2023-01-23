@@ -83,12 +83,12 @@
 #include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
-#include "BluetoothA2DPSink.h" // download library here: https://github.com/pschatzmann/ESP32-A2DP
+#include "BluetoothA2DPSink.h" // Download library here: https://github.com/pschatzmann/ESP32-A2DP
 BluetoothA2DPSink a2dp_sink;
 
 // Connections to I2S bus (on the IoT Redboard)
 #define I2S_WS 25
-#define I2S_SD 17 // note, this is not needed for this example, as it only sends data out to the codec's DAC (via I2S_SDO)
+#define I2S_SD 17 // Note, this is not needed for this example, as it only sends data out to the codec's DAC (via I2S_SDO)
 #define I2S_SDO 4
 #define I2S_SCK 16
 
@@ -112,12 +112,12 @@ void setup()
   i2s_install();
   i2s_setpin();
 
-  a2dp_sink.start("myCodec"); // note, you can give your device any name you'd like!
+  a2dp_sink.start("myCodec"); // Note, you can give your device any name you'd like!
 }
 
 void loop()
 {
- // nothing do do here, but you can add more code if you like!
+ // Nothing do do here, but you can add more code if you like!
 }
 
 void codec_setup()
@@ -126,21 +126,21 @@ void codec_setup()
   codec.enableVREF();
   codec.enableVMID();
 
-  // connect from DAC outputs to output mixer
+  // Connect from DAC outputs to output mixer
   codec.enableLD2LO();
   codec.enableRD2RO();
 
-  // set gainstage between booster mixer and output mixer
-  // for this loopback example, we are going to keep these as low as they go
+  // Set gainstage between booster mixer and output mixer
+  // For this loopback example, we are going to keep these as low as they go
   codec.setLB2LOVOL(0); // 0 = -21dB
   codec.setRB2ROVOL(0); // 0 = -21dB
 
-  // enable output mixers
+  // Enable output mixers
   codec.enableLOMIX();
   codec.enableROMIX();
 
   // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
-  codec.enablePLL(); // needed for class-d amp clock
+  codec.enablePLL(); // Needed for class-d amp clock
   codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
   codec.setSMD(WM8960_PLL_MODE_FRACTIONAL);
   codec.setCLKSEL(WM8960_CLKSEL_PLL);
@@ -149,24 +149,24 @@ void codec_setup()
   codec.setDCLKDIV(WM8960_DCLKDIV_16);
   codec.setPLLN(7);
   codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
-  //codec.setADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.setDACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
   codec.setWL(WM8960_WL_16BIT);
 
   codec.enablePeripheralMode();
   //codec.enableMasterMode();
-  //codec.setALRCGPIO(); // note, should not be changed while ADC is enabled.
+  //codec.setALRCGPIO(); // Note, should not be changed while ADC is enabled.
 
-  // enable DACs
+  // Enable DACs
   codec.enableDacLeft();
   codec.enableDacRight();
 
   //codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
   codec.disableLoopBack();
-  codec.disableDacMute(); // default is "soft mute" on, so we must disable mute to make channels active
+  codec.disableDacMute(); // Default is "soft mute" on, so we must disable mute to make channels active
 
   codec.enableHeadphones();
-  codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
+  codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +0dB");
   codec.setHeadphoneVolume(120);
@@ -178,15 +178,15 @@ void i2s_install() {
   // Set up I2S Processor configuration
   static i2s_config_t i2s_config = {
     .mode = (i2s_mode_t) (I2S_MODE_MASTER | I2S_MODE_TX),
-    .sample_rate = 44100, // updated automatically by A2DP
+    .sample_rate = 44100, // Updated automatically by A2DP
     .bits_per_sample = (i2s_bits_per_sample_t)16,
     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
     .communication_format = (i2s_comm_format_t) (I2S_COMM_FORMAT_I2S),
-    .intr_alloc_flags = 0, // default interrupt priority
+    .intr_alloc_flags = 0, // Default interrupt priority
     .dma_buf_count = 8,
     .dma_buf_len = 64,
     .use_apll = true,
-    .tx_desc_auto_clear = true // avoiding noise in case of data unavailability
+    .tx_desc_auto_clear = true // Avoiding noise in case of data unavailability
   };
 
   a2dp_sink.seti2s_config(i2s_config);

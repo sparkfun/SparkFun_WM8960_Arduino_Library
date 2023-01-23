@@ -115,54 +115,54 @@ void setup()
   codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
   Serial.println("Mic Bias enabled (0.9*AVDD)");
 
-  // setup signal flow through the analog audio bypass connections
+  // Setup signal flow through the analog audio bypass connections
 
   codec.enableLMIC();
   codec.enableRMIC();
   
-  // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
+  // Connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
   codec.connectLMN1();
   codec.connectRMN1();
 
-  // disable mutes on PGA inputs (aka INTPUT1)
+  // Disable mutes on PGA inputs (aka INTPUT1)
   codec.disableLINMUTE();
   codec.disableRINMUTE();
 
-  // set pga volumes
+  // Set pga volumes
   codec.setLINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
   codec.setRINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
   Serial.println("PGA gain set to +24dB");
 
-  // set input boosts to get inputs 1 to the boost mixers
+  // Set input boosts to get inputs 1 to the boost mixers
   codec.setLMICBOOST(WM8960_MIC_BOOST_GAIN_0DB); // 0 = 0dB
   codec.setRMICBOOST(WM8960_MIC_BOOST_GAIN_0DB); // 0 = 0dB
   Serial.println("Mic boost stage set to 0dB");
 
-  codec.pgaLeftNonInvSignalSelect(WM8960_PGAL_LINPUT2); // for MIC+ signal of differential mic signal
-  codec.pgaRightNonInvSignalSelect(WM8960_PGAR_RINPUT2); // for MIC+ signal of differential mic signal
+  codec.pgaLeftNonInvSignalSelect(WM8960_PGAL_LINPUT2); // For MIC+ signal of differential mic signal
+  codec.pgaRightNonInvSignalSelect(WM8960_PGAR_RINPUT2); // For MIC+ signal of differential mic signal
   Serial.println("Pga non-inverting inputs set to INPUT2s");
 
   codec.connectLMIC2B();
   codec.connectRMIC2B();
 
-  // enable boost mixers
+  // Enable boost mixers
   codec.enableAINL();
   codec.enableAINR();
 
-  // connect LB2LO (booster to output mixer (analog bypass)
+  // Connect LB2LO (booster to output mixer (analog bypass)
   codec.enableLB2LO();
   codec.enableRB2RO();
 
-  // set gainstage between booster mixer and output mixer
+  // Set gainstage between booster mixer and output mixer
   codec.setLB2LOVOL(7); // 7 = 0dB
   codec.setRB2ROVOL(7); // 7 = 0dB
 
-  // enable output mixers
+  // Enable output mixers
   codec.enableLOMIX();
   codec.enableROMIX();
   
   codec.enableHeadphones();
-  codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
+  codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Headphone output buffer volume set to +6dB (max)");
   codec.setHeadphoneVolume(127); // 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
@@ -172,5 +172,5 @@ void setup()
 
 void loop()
 {
-  // nothing to see here.
+  // Nothing to see here.
 }

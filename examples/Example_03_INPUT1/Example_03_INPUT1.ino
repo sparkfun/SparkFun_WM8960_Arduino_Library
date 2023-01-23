@@ -96,44 +96,44 @@ void setup()
   codec.enableVREF();
   codec.enableVMID();
 
-  // setup signal flow through the analog audio bypass connections
+  // Setup signal flow through the analog audio bypass connections
 
   codec.enableLMIC();
   codec.enableRMIC();
   
-  // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
+  // Connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
   codec.connectLMN1();
   codec.connectRMN1();
 
-  // disable mutes on PGA inputs (aka INTPUT1)
+  // Disable mutes on PGA inputs (aka INTPUT1)
   codec.disableLINMUTE();
   codec.disableRINMUTE();
 
-  // set input boosts to get inputs 1 to the boost mixers
+  // Set input boosts to get inputs 1 to the boost mixers
   codec.setLMICBOOST(0); // 0 = 0dB
   codec.setRMICBOOST(0); // 0 = 0dB
 
   codec.connectLMIC2B();
   codec.connectRMIC2B();
 
-  // enable boost mixers
+  // Enable boost mixers
   codec.enableAINL();
   codec.enableAINR();
 
-  // connect LB2LO (booster to output mixer (analog bypass)
+  // Connect LB2LO (booster to output mixer (analog bypass)
   codec.enableLB2LO();
   codec.enableRB2RO();
 
-  // set gainstage between booster mixer and output mixer
+  // Set gainstage between booster mixer and output mixer
   codec.setLB2LOVOL(7); // 7 = 0dB
   codec.setRB2ROVOL(7); // 7 = 0dB
 
-  // enable output mixers
+  // Enable output mixers
   codec.enableLOMIX();
   codec.enableROMIX();
   
   codec.enableHeadphones();
-  codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
+  codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +0dB");
   codec.setHeadphoneVolume(120);
@@ -143,5 +143,5 @@ void setup()
 
 void loop()
 {
-  // nothing to see here.
+  // Nothing to see here.
 }

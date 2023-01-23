@@ -136,16 +136,16 @@ void loop()
 
   if (result == ESP_OK)
   {
-    // send what we just received back to the codec
+    // Send what we just received back to the codec
     esp_err_t result_w = i2s_write(I2S_PORT, &sBuffer, bytesIn, &bytesOut, portMAX_DELAY);
   }
-  // delayMicroseconds(300); // Only hear to demonstrate how much time you have to do things.
+  // DelayMicroseconds(300); // Only hear to demonstrate how much time you have to do things.
   // Do not do much in this main loop, or the audio won't pass through correctly.
   // With default settings (64 samples in buffer), you can spend up to 300 microseconds doing something in between passing each buffer of data
-  // you can tweak the buffer length to get more time if you need it.
-  // when bufferlength is 64, then you get ~300 microseconds
-  // when bufferlength is 128, then you get ~600 microseconds
-  // note, as you increase bufferlength, then you are increasing latency between ADC input to DAC output,
+  // You can tweak the buffer length to get more time if you need it.
+  // When bufferlength is 64, then you get ~300 microseconds
+  // When bufferlength is 128, then you get ~600 microseconds
+  // Note, as you increase bufferlength, then you are increasing latency between ADC input to DAC output,
   // Latency may or may not be desired, depending on the project.
 }
 
@@ -155,55 +155,55 @@ void codec_setup()
   codec.enableVREF();
   codec.enableVMID();
 
-  // setup signal flow to the ADC
+  // Setup signal flow to the ADC
 
   codec.enableLMIC();
   codec.enableRMIC();
 
-  // connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
+  // Connect from INPUT1 to "n" (aka inverting) inputs of PGAs.
   codec.connectLMN1();
   codec.connectRMN1();
 
-  // disable mutes on PGA inputs (aka INTPUT1)
+  // Disable mutes on PGA inputs (aka INTPUT1)
   codec.disableLINMUTE();
   codec.disableRINMUTE();
 
-  // set pga volumes
+  // Set pga volumes
   codec.setLINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
   codec.setRINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
 
-  // set input boosts to get inputs 1 to the boost mixers
+  // Set input boosts to get inputs 1 to the boost mixers
   codec.setLMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
   codec.setRMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
 
-  // connect from MIC inputs (aka pga output) to boost mixers
+  // Connect from MIC inputs (aka pga output) to boost mixers
   codec.connectLMIC2B();
   codec.connectRMIC2B();
 
-  // enable boost mixers
+  // Enable boost mixers
   codec.enableAINL();
   codec.enableAINR();
 
-  // disconnect LB2LO (booster to output mixer (analog bypass)
-  // for this example, we are going to pass audio throught the ADC and DAC
+  // Disconnect LB2LO (booster to output mixer (analog bypass)
+  // For this example, we are going to pass audio throught the ADC and DAC
   codec.disableLB2LO();
   codec.disableRB2RO();
 
-  // connect from DAC outputs to output mixer
+  // Connect from DAC outputs to output mixer
   codec.enableLD2LO();
   codec.enableRD2RO();
 
-  // set gainstage between booster mixer and output mixer
-  // for this loopback example, we are going to keep these as low as they go
+  // Set gainstage between booster mixer and output mixer
+  // For this loopback example, we are going to keep these as low as they go
   codec.setLB2LOVOL(0); // 0 = -21dB
   codec.setRB2ROVOL(0); // 0 = -21dB
 
-  // enable output mixers
+  // Enable output mixers
   codec.enableLOMIX();
   codec.enableROMIX();
 
   // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
-  codec.enablePLL(); // needed for class-d amp clock
+  codec.enablePLL(); // Needed for class-d amp clock
   codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
   codec.setSMD(WM8960_PLL_MODE_FRACTIONAL);
   codec.setCLKSEL(WM8960_CLKSEL_PLL);
@@ -212,15 +212,15 @@ void codec_setup()
   codec.setDCLKDIV(WM8960_DCLKDIV_16);
   codec.setPLLN(7);
   codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
-  //codec.setADCDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.setDACDIV(0); // default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
   codec.setWL(WM8960_WL_16BIT);
 
   codec.enablePeripheralMode();
   //codec.enableMasterMode();
-  //codec.setALRCGPIO(); // note, should not be changed while ADC is enabled.
+  //codec.setALRCGPIO(); // Note, should not be changed while ADC is enabled.
 
-  // enable ADCs and DACs
+  // Enable ADCs and DACs
   codec.enableAdcLeft();
   codec.enableAdcRight();
   codec.enableDacLeft();
@@ -229,10 +229,10 @@ void codec_setup()
 
   //codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
   codec.disableLoopBack();
-  codec.disableDacMute(); // default is "soft mute" on, so we must disable mute to make channels active
+  codec.disableDacMute(); // Default is "soft mute" on, so we must disable mute to make channels active
 
   codec.enableHeadphones();
-  codec.enableOUT3MIX(); // provides VMID as buffer for headphone ground
+  codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +0dB");
   codec.setHeadphoneVolume(120);

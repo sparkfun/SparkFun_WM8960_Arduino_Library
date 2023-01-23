@@ -48,7 +48,7 @@
 #include <Wire.h>
 
 // I2C address (7-bit format for Wire library)
-#define WM8960_ADDR 0x1A // npote the DS shows address as 0x34h (which is 0x1A shifted left 1 bit, and then includes the appended "0" (aka write bit).)
+#define WM8960_ADDR 0x1A // Npote the DS shows address as 0x34h (which is 0x1A shifted left 1 bit, and then includes the appended "0" (aka write bit).)
 
 // WM8960 register addresses
 #define WM8960_REG_LEFT_INPUT_VOLUME 0x00
@@ -144,10 +144,10 @@
 #define WM8960_PLLPRESCALE_DIV_1 0
 #define WM8960_PLLPRESCALE_DIV_2 1
 
-// class d clock divide
+// Class d clock divide
 #define WM8960_DCLKDIV_16 7
 
-// word length settings (aka bits per sample)
+// Word length settings (aka bits per sample)
 // Audio Data Word Length
 #define WM8960_WL_16BIT 0
 #define WM8960_WL_20BIT 1
@@ -161,10 +161,10 @@ class WM8960
 		boolean begin(TwoWire &wirePort = Wire);
 		boolean isConnected();
 
-		boolean enableVREF(); // necessary for all other functions
-		boolean disableVREF(); // use for turning this off to save power
+		boolean enableVREF(); // Necessary for all other functions
+		boolean disableVREF(); // Use for turning this off to save power
 
-		boolean reset(); // resets all registers to their default state
+		boolean reset(); // Resets all registers to their default state
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// PGA 
@@ -213,16 +213,16 @@ class WM8960
 		boolean setRINVOL(uint8_t volume); // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 
 		// Zero Cross prevents zipper sounds on volume changes
-		boolean enablePgaZeroCross(); // sets both left and right PGAs
-		boolean disablePgaZeroCross(); // sets both left and right PGAs
+		boolean enablePgaZeroCross(); // Sets both left and right PGAs
+		boolean disablePgaZeroCross(); // Sets both left and right PGAs
 
 		boolean enableLINMUTE();
 		boolean disableLINMUTE();
 		boolean enableRINMUTE();
 		boolean disableRINMUTE();
 
-		boolean pgaLeftIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
-		boolean pgaRightIPVUSet(); // causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
+		boolean pgaLeftIPVUSet(); // Causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
+		boolean pgaRightIPVUSet(); // Causes left and right input PGA volumes to be updated (LINVOL and RINVOL)
 
 		// Boosts
 		boolean setLMICBOOST(uint8_t boost_gain); // WM8960_MIC_BOOST_GAIN_0DB or _13DB, _20DB, _29DB
@@ -247,8 +247,8 @@ class WM8960
 		boolean disableAdcRight();
 
 		// ADC digital volume
-		// note, also needs to handle control of the ADCVU bits (volume update).
-		// valid inputs are 0-255
+		// Note, also needs to handle control of the ADCVU bits (volume update).
+		// Valid inputs are 0-255
 		// 0 = mute
 		// 1 = -97dB
 		// ... 0.5dB steps up to
@@ -257,8 +257,8 @@ class WM8960
 		boolean setAdcLeftDigitalVolume(uint8_t volume); 
 		boolean setAdcRightDigitalVolume(uint8_t volume);
 
-		boolean adcLeftADCVUSet(); // causes left and right input ADC volumes to be updated
-		boolean adcRightADCVUSet(); // causes left and right input ADC volumes to be updated
+		boolean adcLeftADCVUSet(); // Causes left and right input ADC volumes to be updated
+		boolean adcRightADCVUSet(); // Causes left and right input ADC volumes to be updated
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// ALC
@@ -266,16 +266,16 @@ class WM8960
 
 		// Automatic Level Control
 		// Note that when the ALC function is enabled, the settings of
-		// registers 0 and 1 (LINVOL, IPVU, LIZC, LINMUTE, RINVOL, RIZC and RINMUTE) are ignored.
-		boolean enableAlc(uint8_t mode = WM8960_ALC_MODE_STEREO); // also sets alc sample rate to match global sample rate.
+		// Registers 0 and 1 (LINVOL, IPVU, LIZC, LINMUTE, RINVOL, RIZC and RINMUTE) are ignored.
+		boolean enableAlc(uint8_t mode = WM8960_ALC_MODE_STEREO); // Also sets alc sample rate to match global sample rate.
 		boolean disableAlc();
 
-		boolean setAlcTarget(uint8_t target); // valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
-		boolean setAlcDecay(uint8_t decay); // valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
-		boolean setAlcAttack(uint8_t attack); // valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
-		boolean setAlcMaxGain(uint8_t maxGain); // valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
-		boolean setAlcMinGain(uint8_t attack); // valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
-		boolean setAlcHold(uint8_t attack); // valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
+		boolean setAlcTarget(uint8_t target); // Valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
+		boolean setAlcDecay(uint8_t decay); // Valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
+		boolean setAlcAttack(uint8_t attack); // Valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
+		boolean setAlcMaxGain(uint8_t maxGain); // Valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
+		boolean setAlcMinGain(uint8_t attack); // Valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
+		boolean setAlcHold(uint8_t attack); // Valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
 
 		// Peak Limiter
 		boolean enablePeakLimiter();
@@ -290,15 +290,15 @@ class WM8960
 		///////////////////////////////////////////////////////// DAC
 		/////////////////////////////////////////////////////////
 
-		// enable/disble each channel
+		// Enable/disble each channel
 		boolean enableDacLeft();
 		boolean disableDacLeft();
 		boolean enableDacRight();
 		boolean disableDacRight();
 
 		// DAC digital volume
-		// note, also needs to handle control of the DACVU bits (volume update).
-		// valid inputs are 0-255
+		// Note, also needs to handle control of the DACVU bits (volume update).
+		// Valid inputs are 0-255
 		// 0 = mute
 		// 1 = -127dB
 		// ... 0.5dB steps up to
@@ -306,8 +306,8 @@ class WM8960
 		boolean setDacLeftDigitalVolume(uint8_t volume); 
 		boolean setDacRightDigitalVolume(uint8_t volume);		
 
-		boolean dacLeftDACVUSet(); // causes left and right input DAC volumes to be updated
-		boolean dacRightDACVUSet(); // causes left and right input DAC volumes to be updated
+		boolean dacLeftDACVUSet(); // Causes left and right input DAC volumes to be updated
+		boolean dacRightDACVUSet(); // Causes left and right input DAC volumes to be updated
 
 		// DAC mute
 		boolean enableDacMute();
@@ -331,12 +331,12 @@ class WM8960
 		///////////////////////////////////////////////////////// OUTPUT mixers
 		/////////////////////////////////////////////////////////
 
-		// what's connected to what? Oh so many options...
+		// What's connected to what? Oh so many options...
 		// LOMIX	Left Output Mixer
 		// ROMIX	Right Output Mixer
 		// OUT3MIX		Mono Output Mixer
 
-		// enable/disable left and right output mixers
+		// Enable/disable left and right output mixers
 		boolean enableLOMIX();
 		boolean disableLOMIX();
 		boolean enableROMIX();
@@ -344,8 +344,8 @@ class WM8960
 		boolean enableOUT3MIX();
 		boolean disableOUT3MIX();
 
-		// enable/disable audio path connections/vols to/from output mixers
-		// see datasheet page 35 for a nice image of all the connections.
+		// Enable/disable audio path connections/vols to/from output mixers
+		// See datasheet page 35 for a nice image of all the connections.
 
 		boolean enableLI2LO();
 		boolean disableLI2LO();
@@ -370,15 +370,15 @@ class WM8960
 		boolean disableRD2RO();
 
 		// Mono Output mixer. 
-		// note, for capless HPs, we'll want this to output a buffered VMID.
-		// to do this, we need to disable both of these connections.
+		// Note, for capless HPs, we'll want this to output a buffered VMID.
+		// To do this, we need to disable both of these connections.
 		boolean enableLI2MO();
 		boolean disableLI2MO();
 		boolean enableRI2MO();
 		boolean disableRI2MO();
-		boolean enableOUT3asVMID(); // this will disable both connections, thus enable VMID on OUT3
-		// note, to enable VMID, you also need to enable OUT3 in the WM8960_REG_PWR_MGMT_2 [1]
-		boolean enableVMID(); // enables VMID in the WM8960_REG_PWR_MGMT_1 register, and set's it to playback/record settings of 2*50Kohm.
+		boolean enableOUT3asVMID(); // This will disable both connections, thus enable VMID on OUT3
+		// Note, to enable VMID, you also need to enable OUT3 in the WM8960_REG_PWR_MGMT_2 [1]
+		boolean enableVMID(); // Enables VMID in the WM8960_REG_PWR_MGMT_1 register, and set's it to playback/record settings of 2*50Kohm.
 		boolean disableVMID();
 
 		/////////////////////////////////////////////////////////
@@ -397,16 +397,16 @@ class WM8960
 		boolean disableHeadphoneStandby();
 
 		// Although you can control each headphone output independently, here we are
-		// going to assume you want both left and right to do the same thing.
+		// Going to assume you want both left and right to do the same thing.
 		// Set volume
 		boolean setHeadphoneVolume(uint8_t volume); // Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
-		// updates both left and right channels
-		// handles the OUT1VU (volume update) bit control, so that it happens at the same time on both channels.
+		// Updates both left and right channels
+		// Handles the OUT1VU (volume update) bit control, so that it happens at the same time on both channels.
 		// Note, we must also make sure that the outputs are enabled in the WM8960_REG_PWR_MGMT_2 [6:5]
 
 		// Zero Cross prevents zipper sounds on volume changes
-		boolean enableHeadphoneZeroCross(); // sets both left and right Headphone outputs
-		boolean disableHeadphoneZeroCross(); // sets both left and right Headphone outputs
+		boolean enableHeadphoneZeroCross(); // Sets both left and right Headphone outputs
+		boolean disableHeadphoneZeroCross(); // Sets both left and right Headphone outputs
 		
 
 		/////////////////////////////////////////////////////////
@@ -422,21 +422,21 @@ class WM8960
 		boolean disableLeftSpeaker();
 
 		// Although you can control each Speaker output independently, here we are
-		// going to assume you want both left and right to do the same thing.
+		// Going to assume you want both left and right to do the same thing.
 		// Set volume
 		boolean setSpeakerVolume(uint8_t volume); // Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
-		// updates both left and right channels
-		// handles the SPKVU (volume update) bit control, so that it happens at the same time on both channels.
+		// Updates both left and right channels
+		// Handles the SPKVU (volume update) bit control, so that it happens at the same time on both channels.
 		// Note, we must also make sure that the outputs are enabled in the WM8960_REG_PWR_MGMT_2 [4:3]
-		// and the class D control reg WM8960_REG_CLASS_D_CONTROL_1 [7:6]
+		// And the class D control reg WM8960_REG_CLASS_D_CONTROL_1 [7:6]
 
 		// Zero Cross prevents zipper sounds on volume changes
-		boolean enableSpeakerZeroCross(); // sets both left and right Speaker outputs
-		boolean disableSpeakerZeroCross(); // sets both left and right Speaker outputs		
+		boolean enableSpeakerZeroCross(); // Sets both left and right Speaker outputs
+		boolean disableSpeakerZeroCross(); // Sets both left and right Speaker outputs		
 
 		// DC and AC gain - allows signal to be higher than the DACs swing
 		// (use only if your SPKVDD is high enough to handle a larger signal)
-		// valid inputs are 0-5
+		// Valid inputs are 0-5
 		// 0 = +0dB (1.0x boost) ... up to ... 5 = +5.1dB (1.8x boost)
 		boolean setSpeakerDcGain(uint8_t gain);
 		boolean setSpeakerAcGain(uint8_t gain);
@@ -445,7 +445,7 @@ class WM8960
 		///////////////////////////////////////////////////////// Digital audio interface control
 		/////////////////////////////////////////////////////////
 
-		// defaults to I2S, peripheral-mode, 24-bit word length
+		// Defaults to I2S, peripheral-mode, 24-bit word length
 
 		// Loopback
 		// When enabled, the output data from the ADC audio interface is fed directly into the DAC data input.
@@ -460,7 +460,7 @@ class WM8960
 		// Our MCLK (an external clock on the SFE breakout board) is 24.0MHz.
 		// According to table 40 (DS pg 58), we want SYSCLK to be 11.2896 for a SR of 44.1KHz
 		// To get that Desired Output (SYSCLK), we need the following settings on the PLL stuff.
-		// as found on table 45 (ds pg 61).
+		// As found on table 45 (ds pg 61).
 		// PRESCALE DIVIDE (PLLPRESCALE): 2
 		// POSTSCALE DVIDE (SYSCLKDIV[1:0]): 2
 		// FIXED POST-DIVIDE: 4
@@ -468,7 +468,7 @@ class WM8960
 		// N: 7h
 		// K: 86C226h
 
-		// example at bottom of table 46, shows that we should be in fractional mode for a 44.1KHz.
+		// Example at bottom of table 46, shows that we should be in fractional mode for a 44.1KHz.
 
 		// In terms of registers, this is what we want for 44.1KHz
 		// PLLEN=1			(PLL enable)
@@ -488,9 +488,9 @@ class WM8960
 		// And now for the functions that will set these registers...
 		boolean enablePLL();
 		boolean disablePLL();
-		boolean setPLLPRESCALE(boolean div); // valid options are WM8960_PLLPRESCALE_DIV_1 and WM8960_PLLPRESCALE_DIV_2
+		boolean setPLLPRESCALE(boolean div); // Valid options are WM8960_PLLPRESCALE_DIV_1 and WM8960_PLLPRESCALE_DIV_2
 		boolean setPLLN(uint8_t n);
-		boolean setPLLK(uint8_t one, uint8_t two, uint8_t three); // send each nibble of 24-bit value for value K
+		boolean setPLLK(uint8_t one, uint8_t two, uint8_t three); // Send each nibble of 24-bit value for value K
 		boolean setSMD(boolean mode); // 0=integer, 1=fractional
 		boolean setCLKSEL(boolean sel); // 0=MCLK, 1=PLL_output
 		boolean setSYSCLKDIV(uint8_t div); // (0=divide by 1), (2=div by 2) *1 and 3 are "reserved"
@@ -498,7 +498,7 @@ class WM8960
 		boolean setDACDIV(uint8_t div); // 000 = SYSCLK / (1.0*256). See ds pg 57 for other options
 		boolean setBCLKDIV(uint8_t div); // 0100 (4) = sufficiently high for 24bit, div by 4 allows for max word length of 32bit
 		boolean setDCLKDIV(uint8_t div); // Class D amp, 111= SYSCLK/16, so 11.2896MHz/16 = 705.6KHz
-		boolean setALRCGPIO(); // set LR clock to be the same for ADC and DAC - needed for loopback mode.
+		boolean setALRCGPIO(); // Set LR clock to be the same for ADC and DAC - needed for loopback mode.
 		boolean enableMasterMode();
 		boolean enablePeripheralMode();
 		boolean setWL(uint8_t word_length);
@@ -517,12 +517,12 @@ class WM8960
 		// This means we must keep a local copy of all the register values
 		// We will instantiate with default values
 		// As we write to the device, we will also make sure
-		// to update our local copy as well, stored here in this array.
+		// To update our local copy as well, stored here in this array.
 		// Each register is 9-bits, so we will store them as a uint16_t
 		// They are in order from R0-R55, and we even keep blank spots for the
 		// "reserved" registers. This way we can use the register address macro defines above
-		// to easiy access each local copy of each register.
-		// example... _registerLocalCopy[WM8960_REG_LEFT_INPUT_VOLUME]
+		// To easiy access each local copy of each register.
+		// Example... _registerLocalCopy[WM8960_REG_LEFT_INPUT_VOLUME]
 		uint16_t _registerLocalCopy[56] = {
 			0x0097, // R0 (0x00)
 			0x0097, // R1 (0x01)
