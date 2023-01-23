@@ -80,7 +80,7 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> //Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
 #include "BluetoothA2DPSink.h" // download library here: https://github.com/pschatzmann/ESP32-A2DP
@@ -102,7 +102,7 @@ void setup()
   if (codec.begin() == false) //Begin communication over I2C
   {
     Serial.println("The device did not respond. Please check wiring.");
-    while (1); //Freeze
+    while (1); // Freeze
   }
   Serial.println("Device is connected properly.");
 
