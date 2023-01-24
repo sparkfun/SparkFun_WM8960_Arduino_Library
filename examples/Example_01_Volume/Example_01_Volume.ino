@@ -99,11 +99,11 @@ void setup()
   // Setup signal flow through the analog audio bypass connections
   codec.enableLOMIX(); // Enable left output mixer
   codec.enableLI2LO(); // Enable bypass connection from Left INPUT3 to Left output mixer, note, the default gain on this input (LI2LOVOL) is -15dB
-  codec.setLI2LOVOL(7); // Sets volume control between "left input" to "left output mixer"
+  codec.setLI2LOVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); // Sets volume control between "left input" to "left output mixer"
   
   codec.enableROMIX(); // Now for the right channel of INPUT3
   codec.enableRI2RO();
-  codec.setRI2ROVOL(7);
+  codec.setRI2ROVOL(WM8960_OUTPUT_MIXER_GAIN_0DB);
   
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground

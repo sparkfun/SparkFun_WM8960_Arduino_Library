@@ -809,11 +809,10 @@ boolean WM8960::disableLI2LO()
   return WM8960::_writeRegisterBit(WM8960_REG_LEFT_OUT_MIX_1, 7, 0);
 }
 
-// 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
+// Valid inputs are 0-7. 0 = 0dB ...3dB steps... 7 = -21dB
 boolean WM8960::setLI2LOVOL(uint8_t volume) 
 {
   if(volume > 7) volume = 7; // Limit incoming values max
-  volume = 7 - volume; // Flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_OUT_MIX_1,6,4,volume);
 }
 
@@ -827,11 +826,10 @@ boolean WM8960::disableLB2LO()
   return WM8960::_writeRegisterBit(WM8960_REG_BYPASS_1, 7, 0);
 }
 
-// 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
+// Valid inputs are 0-7. 0 = 0dB ...3dB steps... 7 = -21dB
 boolean WM8960::setLB2LOVOL(uint8_t volume) 
 {
   if(volume > 7) volume = 7; // Limit incoming values max
-  volume = 7 - volume; // Flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_BYPASS_1,6,4,volume);
 }
 
@@ -855,11 +853,10 @@ boolean WM8960::disableRI2RO()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_OUT_MIX_2, 7, 0);
 }
 
-// 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
+// Valid inputs are 0-7. 0 = 0dB ...3dB steps... 7 = -21dB
 boolean WM8960::setRI2ROVOL(uint8_t volume) 
 {
   if(volume > 7) volume = 7; // Limit incoming values max
-  volume = 7 - volume; // Flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_OUT_MIX_2,6,4,volume);
 }
 
@@ -873,11 +870,10 @@ boolean WM8960::disableRB2RO()
   return WM8960::_writeRegisterBit(WM8960_REG_BYPASS_2, 7, 0);
 }
 
-// 0-7, 0 = -21dB, ... 3dB steps ... 7 = 0dB
+// Valid inputs are 0-7. 0 = 0dB ...3dB steps... 7 = -21dB
 boolean WM8960::setRB2ROVOL(uint8_t volume) 
 {
   if(volume > 7) volume = 7; // Limit incoming values max
-  volume = 7 - volume; // Flip it so 0 = lowest volume and 7 = highest volume
   return WM8960::_writeRegisterMultiBits(WM8960_REG_BYPASS_2,6,4,volume);
 }
 

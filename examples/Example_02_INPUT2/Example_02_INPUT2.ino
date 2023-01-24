@@ -99,8 +99,8 @@ void setup()
   // Setup signal flow through the analog audio bypass connections
 
   // Set input boosts to get INPUT2 (both left and right) to the boost mixers
-  codec.setLIN2BOOST(5); // 5 = 0dB
-  codec.setRIN2BOOST(5); // 5 = 0dB
+  codec.setLIN2BOOST(WM8960_BOOST_MIXER_GAIN_0DB);
+  codec.setRIN2BOOST(WM8960_BOOST_MIXER_GAIN_0DB);
 
   // Enable input boost mixers
   codec.enableAINL();
@@ -111,8 +111,8 @@ void setup()
   codec.enableRB2RO();
 
   // Set gainstage between boost mixer and output mixers (analog bypass)
-  codec.setLB2LOVOL(7); // 7 = 0dB
-  codec.setRB2ROVOL(7); // 7 = 0dB
+  codec.setLB2LOVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
+  codec.setRB2ROVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
 
   // Enable output mixers
   codec.enableLOMIX();

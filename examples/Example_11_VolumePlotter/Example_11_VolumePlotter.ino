@@ -182,8 +182,8 @@ void codec_setup()
   codec.setRINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
 
   // Set input boosts to get inputs 1 to the boost mixers
-  codec.setLMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
-  codec.setRMICBOOST(0); // 0-3, 0 = +0dB, 1 = +13dB, 2 = +20dB, 3 = +29dB
+  codec.setLMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
+  codec.setRMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
 
   // Connect from MIC inputs (aka pga output) to boost mixers
   codec.connectLMIC2B();
@@ -202,8 +202,8 @@ void codec_setup()
   codec.disableRD2RO();
 
   // Set gainstage between booster mixer and output mixer
-  codec.setLB2LOVOL(7); // 0 = -21dB, 7 = 0dB
-  codec.setRB2ROVOL(7); // 0 = -21dB, 7 = 0dB
+  codec.setLB2LOVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
+  codec.setRB2ROVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
 
   // Enable output mixers
   codec.enableLOMIX();

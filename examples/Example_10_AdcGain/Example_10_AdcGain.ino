@@ -157,8 +157,8 @@ void codec_setup()
   codec.disableRINMUTE();
 
   // Set input boosts to get inputs 1 to the boost mixers
-  codec.setLMICBOOST(0); // 0 = 0dB
-  codec.setRMICBOOST(0); // 0 = 0dB
+  codec.setLMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
+  codec.setRMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
 
   codec.connectLMIC2B();
   codec.connectRMIC2B();
@@ -178,8 +178,8 @@ void codec_setup()
 
   // Set gainstage between booster mixer and output mixer
   // For this loopback example, we are going to keep these as low as they go
-  codec.setLB2LOVOL(0); // 0 = -21dB
-  codec.setRB2ROVOL(0); // 0 = -21dB
+  codec.setLB2LOVOL(WM8960_OUTPUT_MIXER_GAIN_NEG_21DB); 
+  codec.setRB2ROVOL(WM8960_OUTPUT_MIXER_GAIN_NEG_21DB);
 
   // Enable output mixers
   codec.enableLOMIX();

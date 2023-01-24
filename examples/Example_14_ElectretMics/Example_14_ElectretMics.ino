@@ -134,8 +134,8 @@ void setup()
   Serial.println("PGA gain set to +24dB");
 
   // Set input boosts to get inputs 1 to the boost mixers
-  codec.setLMICBOOST(WM8960_MIC_BOOST_GAIN_0DB); // 0 = 0dB
-  codec.setRMICBOOST(WM8960_MIC_BOOST_GAIN_0DB); // 0 = 0dB
+  codec.setLMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
+  codec.setRMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
   Serial.println("Mic boost stage set to 0dB");
 
   codec.pgaLeftNonInvSignalSelect(WM8960_PGAL_LINPUT2); // For MIC+ signal of differential mic signal
@@ -154,8 +154,8 @@ void setup()
   codec.enableRB2RO();
 
   // Set gainstage between booster mixer and output mixer
-  codec.setLB2LOVOL(7); // 7 = 0dB
-  codec.setRB2ROVOL(7); // 7 = 0dB
+  codec.setLB2LOVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
+  codec.setRB2ROVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
 
   // Enable output mixers
   codec.enableLOMIX();

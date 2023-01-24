@@ -132,8 +132,8 @@ void codec_setup()
 
   // Set gainstage between booster mixer and output mixer
   // For this loopback example, we are going to keep these as low as they go
-  codec.setLB2LOVOL(0); // 0 = -21dB
-  codec.setRB2ROVOL(0); // 0 = -21dB
+  codec.setLB2LOVOL(WM8960_OUTPUT_MIXER_GAIN_NEG_21DB); 
+  codec.setRB2ROVOL(WM8960_OUTPUT_MIXER_GAIN_NEG_21DB);
 
   // Enable output mixers
   codec.enableLOMIX();
