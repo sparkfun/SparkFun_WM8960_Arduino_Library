@@ -214,7 +214,7 @@ void codec_setup()
 
 
   Serial.println("Headphopne Amp Volume set to +0dB");
-  codec.setHeadphoneVolume(120);
+  codec.setHeadphoneVolumeDB(0.00);
 
   Serial.println("Codec setup complete. Listen to left/right INPUT1 on Headphone outputs.");
 }

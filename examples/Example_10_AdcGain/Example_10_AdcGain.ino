@@ -26,7 +26,7 @@
 
   You can also control the volume of the codecs built in headphone amp using this fuction:
 
-  codec.setHeadphoneVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
   SparkFun ESP32 IoT Redboard v10
@@ -215,7 +215,7 @@ void codec_setup()
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Headphopne Amp Volume set to +0dB");
-  codec.setHeadphoneVolume(120);
+  codec.setHeadphoneVolumeDB(0.00);
 
   Serial.println("Codec setup complete. Listen to left/right INPUT1 on Headphone outputs.");
 }

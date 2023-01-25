@@ -22,7 +22,7 @@
 
   You can now control the volume of the codecs built in headphone buffers using this fuction:
 
-  codec.setHeadphoneVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
   SparkFun ESP32 IoT Redboard v10
@@ -129,8 +129,8 @@ void setup()
   codec.disableRINMUTE();
 
   // Set pga volumes
-  codec.setLINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
-  codec.setRINVOL(57); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
+  codec.setLINVOLDB(24.00); // Valid options are -17.25dB to +30.00dB
+  codec.setRINVOLDB(24.00); // Valid options are -17.25dB to +30.00dB
   Serial.println("PGA gain set to +24dB");
 
   // Set input boosts to get inputs 1 to the boost mixers

@@ -36,7 +36,7 @@
 
   You can also control the volume of the codecs built in headphone amp using this fuction:
 
-  codec.setHeadphoneVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
@@ -169,7 +169,7 @@ void codec_setup()
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +0dB");
-  codec.setHeadphoneVolume(120);
+  codec.setHeadphoneVolumeDB(0.00);
 
   Serial.println("Codec Setup complete. Connect via Bluetooth, play music, and listen on Headphone outputs.");
 }
@@ -189,7 +189,7 @@ void i2s_install() {
     .tx_desc_auto_clear = true // Avoiding noise in case of data unavailability
   };
 
-  a2dp_sink.seti2s_config(i2s_config);
+  a2dp_sink.set_i2s_config(i2s_config);
 }
 
 void i2s_setpin() {
@@ -201,5 +201,5 @@ void i2s_setpin() {
     .data_in_num = I2S_PIN_NO_CHANGE
   };
 
-  a2dp_sink.setpin_config(my_pin_config);
+  a2dp_sink.set_pin_config(my_pin_config);
 }

@@ -14,7 +14,7 @@
 
   You can now control the volume of the codecs built in headphone buffers using this fuction:
 
-  codec.setHeadphoneVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
   SparkFun ESP32 IoT Redboard v10
@@ -108,20 +108,20 @@ void setup()
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
-  Serial.println("Volume set to +6dB (max)");
-  codec.setHeadphoneVolume(127); // 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  Serial.println("Volume set to +6.00dB (max)");
+  codec.setHeadphoneVolumeDB(6.00);
   delay(5000);
 
-  Serial.println("Volume set to +0dB");
-  codec.setHeadphoneVolume(120);
+  Serial.println("Volume set to +0.00dB");
+  codec.setHeadphoneVolumeDB(0.00);
   delay(5000);
 
-  Serial.println("Volume set to -6dB");
-  codec.setHeadphoneVolume(114);
+  Serial.println("Volume set to -12.00dB");
+  codec.setHeadphoneVolumeDB(-12.00);
   delay(5000);  
 
-  Serial.println("Volume set to mute");
-  codec.setHeadphoneVolume(47);
+  Serial.println("Volume set to -74.00dB, aka MUTE");
+  codec.setHeadphoneVolumeDB(-74.00);
   delay(5000);
 
   Serial.println("Example complete. Hit Reset to try again.");

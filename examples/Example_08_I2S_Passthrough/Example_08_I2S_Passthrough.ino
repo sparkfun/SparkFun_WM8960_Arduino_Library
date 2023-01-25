@@ -45,7 +45,7 @@
 
   You can now control the volume of the codecs built in headphone amp using this fuction:
 
-  codec.setHeadphoneVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
@@ -169,8 +169,8 @@ void codec_setup()
   codec.disableRINMUTE();
 
   // Set pga volumes
-  codec.setLINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
-  codec.setRINVOL(23); // (valid options are 0-63) 0 = -17.25dB, 23 = +0dB, 63 = +30dB
+  codec.setLINVOLDB(0.00); // Valid options are -17.25dB to +30dB (0.75dB steps)
+  codec.setRINVOLDB(0.00); // Valid options are -17.25dB to +30dB (0.75dB steps)
 
   // Set input boosts to get inputs 1 to the boost mixers
   codec.setLMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
@@ -235,7 +235,7 @@ void codec_setup()
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Volume set to +0dB");
-  codec.setHeadphoneVolume(120);
+  codec.setHeadphoneVolumeDB(0.00);
 
   Serial.println("Codec Setup complete. Listen to left/right INPUT1 on Headphone outputs.");
 }
@@ -266,5 +266,5 @@ void i2s_setpin() {
     .data_in_num = I2S_SD
   };
 
-  i2s_setpin(I2S_PORT, &pin_config);
+  I2S_set_pin(I2S_PORT, &pin_config);
 }

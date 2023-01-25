@@ -176,6 +176,20 @@
 #define WM8960_WL_24BIT 2
 #define WM8960_WL_32BIT 3
 
+// Gain mins, maxes, offsets and step-sizes for all the amps within the codec.
+#define WM8960_PGA_GAIN_MIN -17.25
+#define WM8960_PGA_GAIN_MAX 30.00
+#define WM8960_PGA_GAIN_OFFSET 17.25
+#define WM8960_PGA_GAIN_STEPSIZE 0.75
+#define WM8960_HP_GAIN_MIN -73.00
+#define WM8960_HP_GAIN_MAX 6.00
+#define WM8960_HP_GAIN_OFFSET 121.00
+#define WM8960_HP_GAIN_STEPSIZE 1.00
+#define WM8960_SPEAKER_GAIN_MIN -73.00
+#define WM8960_SPEAKER_GAIN_MAX 6.00
+#define WM8960_SPEAKER_GAIN_OFFSET 121.00
+#define WM8960_SPEAKER_GAIN_STEPSIZE 1.00
+
 class WM8960
 {
 	public:
@@ -254,9 +268,11 @@ class WM8960
 
 		// 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 		boolean setLINVOL(uint8_t volume); 
+		boolean setLINVOLDB(float dB);
 
 		// 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 		boolean setRINVOL(uint8_t volume); 
+		boolean setRINVOLDB(float dB);
 
 		// Zero Cross prevents zipper sounds on volume changes
 		boolean enablePgaZeroCross(); // Sets both left and right PGAs
@@ -517,6 +533,19 @@ class WM8960
 		// Sets both left and right Headphone outputs
 		boolean enableHeadphoneZeroCross(); 
 		boolean disableHeadphoneZeroCross();
+
+		// Set headphone volume dB
+		// Sets the volume of the headphone output buffer amp to a speicified
+		// dB value passed in as a float argument.
+		// Valid dB settings are -74.0 up to +6.0
+		// User input will be rounded to nearest whole integer
+		// -74 (or lower) = MUTE
+		// -73 = -73dB (MIN)
+		// ... 1dB steps ...
+		// 0 = 0dB
+		// ... 1dB steps ...
+		// 6 = +6dB  (MAX)
+		boolean setHeadphoneVolumeDB(float dB);
 		
 
 		/////////////////////////////////////////////////////////
@@ -543,6 +572,8 @@ class WM8960
 		// the same time on both channels. Note, we must also make sure that the 
 		// outputs are enabled in the WM8960_REG_PWR_MGMT_2 [4:3]
 		// And the class D control reg WM8960_REG_CLASS_D_CONTROL_1 [7:6]
+
+		boolean setSpeakerVolumeDB(float dB);
 
 		// Zero Cross prevents zipper sounds on volume changes
 		// Sets both left and right Speaker outputs
@@ -653,6 +684,7 @@ class WM8960
 		uint8_t _deviceAddress = WM8960_ADDR;
 		boolean _writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, boolean bitValue);
 		boolean _writeRegisterMultiBits(uint8_t registerAddress, uint8_t settingMsbNum, uint8_t settingLsbNum, uint8_t setting);
+		uint8_t convertDBtoSetting(float dB, float offset, float stepSize);
 
 		// The WM8960 does not support I2C reads
 		// This means we must keep a local copy of all the register values

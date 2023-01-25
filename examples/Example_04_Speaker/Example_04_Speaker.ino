@@ -12,7 +12,7 @@
 
   You can now control the volume of the codecs built in class-d amp using this fuction:
 
-  codec.setSpeakerVolume(120); Valid inputs are 47-127. 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setSpeakerVolumeDB(6.00); Valid inputs are -73.00 to 6.00 (1.00 dB steps)
 
   Development platform used:
   SparkFun ESP32 IoT Redboard v10
@@ -149,7 +149,7 @@ void setup()
   codec.enableSpeakers();
 
   Serial.println("Volume set to +0dB");
-  codec.setSpeakerVolume(120);
+  codec.setSpeakerVolumeDB(0.00);
 
   Serial.println("Example complete. Listen to left/right INPUT1 on Speaker outputs.");
 }

@@ -387,6 +387,22 @@ boolean WM8960::setLINVOL(uint8_t volume)
   return (result1 && result2);
 }
 
+// setLINVOLDB
+// Sets the volume of the PGA input buffer amp to a specified dB value 
+// passed in as a float argument.
+// Valid dB settings are -17.25 up to +30.00
+// -17.25 = -17.25dB (MIN)
+// ... 0.75dB steps ...
+// 30.00 = +30.00dB  (MAX)
+boolean WM8960::setLINVOLDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setLINVOL()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_PGA_GAIN_OFFSET, WM8960_PGA_GAIN_STEPSIZE);
+
+  return WM8960::setLINVOL(volume);
+}
+
 // 0-63, (0 = -17.25dB) <<-- 0.75dB steps -->> (63 = +30dB)
 boolean WM8960::setRINVOL(uint8_t volume) 
 {
@@ -394,6 +410,22 @@ boolean WM8960::setRINVOL(uint8_t volume)
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_INPUT_VOLUME,5,0,volume);
   boolean result2 = WM8960::pgaRightIPVUSet();
   return (result1 && result2);
+}
+
+// setRINVOLDB
+// Sets the volume of the PGA input buffer amp to a specified dB value 
+// passed in as a float argument.
+// Valid dB settings are -17.25 up to +30.00
+// -17.25 = -17.25dB (MIN)
+// ... 0.75dB steps ...
+// 30.00 = +30.00dB  (MAX)
+boolean WM8960::setRINVOLDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setRINVOL()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_PGA_GAIN_OFFSET, WM8960_PGA_GAIN_STEPSIZE);
+
+  return WM8960::setRINVOL(volume);
 }
 
 // Zero Cross prevents zipper sounds on volume changes
@@ -542,14 +574,12 @@ boolean WM8960::disableAdcRight()
 
 boolean WM8960::setAdcLeftDigitalVolume(uint8_t volume)
 {
-  if(volume > 255) volume = 255; // Limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_ADC_VOLUME,7,0,volume);
   boolean result2 = WM8960::adcLeftADCVUSet();
   return (result1 && result2);
 }
 boolean WM8960::setAdcRightDigitalVolume(uint8_t volume)
 {
-  if(volume > 255) volume = 255; // Limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_ADC_VOLUME,7,0,volume);
   boolean result2 = WM8960::adcRightADCVUSet();
   return (result1 && result2);
@@ -1009,6 +1039,28 @@ boolean WM8960::setHeadphoneVolume(uint8_t volume)
   return false; 
 }
 
+// Set headphone volume dB
+// Sets the volume of the headphone output buffer amp to a specified dB value 
+// passed in as a float argument.
+// Valid dB settings are -74.0 up to +6.0
+// Note, we are accepting float arguments here, in order to keep it consistent
+// with other volume setting functions in this library that can do partial dB
+// values (such as the PGA, ADC and DAC gains).
+// -74 (or lower) = MUTE
+// -73 = -73dB (MIN)
+// ... 1dB steps ...
+// 0 = 0dB
+// ... 1dB steps ...
+// 6 = +6dB  (MAX)
+boolean WM8960::setHeadphoneVolumeDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setHeadphoneVolume()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_HP_GAIN_OFFSET, WM8960_HP_GAIN_STEPSIZE);
+
+  return WM8960::setHeadphoneVolume(volume);
+}
+
 // Zero Cross prevents zipper sounds on volume changes
 // Sets both left and right Headphone outputs
 boolean WM8960::enableHeadphoneZeroCross()
@@ -1123,6 +1175,28 @@ boolean WM8960::setSpeakerVolume(uint8_t volume)
         return true;
     }
   return false;
+}
+
+// Set speaker volume dB
+// Sets the volume of the class-d speaker output amp to a specified dB value 
+// passed in as a float argument.
+// Valid dB settings are -74.0 up to +6.0
+// Note, we are accepting float arguments here, in order to keep it consistent
+// with other volume setting functions in this library that can do partial dB
+// values (such as the PGA, ADC and DAC gains).
+// -74 (or lower) = MUTE
+// -73 = -73dB (MIN)
+// ... 1dB steps ...
+// 0 = 0dB
+// ... 1dB steps ...
+// 6 = +6dB  (MAX)
+boolean WM8960::setSpeakerVolumeDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setSpeakerVolume()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_SPEAKER_GAIN_OFFSET, WM8960_SPEAKER_GAIN_STEPSIZE);
+
+  return WM8960::setSpeakerVolume(volume);
 }
 
 // Zero Cross prevents zipper sounds on volume changes
@@ -1317,4 +1391,34 @@ boolean WM8960::enablePeripheralMode()
 boolean WM8960::setWL(uint8_t word_length)
 {
   return WM8960::_writeRegisterMultiBits(WM8960_REG_AUDIO_INTERFACE_1,3,2,word_length);  
+}
+
+// convertDBtoSetting
+// This function will take in a dB value (as a float), and return the 
+// corresponding volume setting necessary.
+// For example, Headphone volume control goes from 47-120.
+// While PGA gain control is from 0-63.
+// The offset values allow for proper conversion.
+//
+// dB - float value of dB
+//
+// offset - the differnce from lowest dB value to lowest setting value
+//
+// stepSize - the dB step for each setting (aka the "resolution" of the setting)
+// This is 0.75dB for the PGAs, 0.5 for ADC/DAC, and 1dB for most other amps.
+uint8_t WM8960::convertDBtoSetting(float dB, float offset, float stepSize)
+{
+  // Adjust for offset
+  // Offset is the number that gets us from the minimum dB option of an amp
+  // up to the minimum setting value in the register.
+  dB = dB + offset; 
+
+  // Find out how many steps we are above the minimum (at this point, our 
+  // minimum is "0". Note, because dB comes in as a float, the result of this 
+  // division (volume) can be a partial number. We will round that next.
+  float volume = dB / stepSize;
+
+  volume = round(volume); // round to the nearest setting value.
+
+  return (uint8_t)volume; // cast from float to unsigned 8-bit integer.
 }
