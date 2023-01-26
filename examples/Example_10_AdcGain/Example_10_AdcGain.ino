@@ -227,7 +227,7 @@ void codec_setup()
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
-  Serial.println("Headphopne Amp Volume set to +0dB");
+  Serial.println("Headphone Amp Volume set to +0dB");
   codec.setHeadphoneVolumeDB(0.00);
 
   Serial.println("Codec setup complete. Listen to left/right INPUT1 on Headphone outputs.");
