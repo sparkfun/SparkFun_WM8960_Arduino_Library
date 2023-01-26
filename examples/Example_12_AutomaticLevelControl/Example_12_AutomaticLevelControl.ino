@@ -76,14 +76,10 @@
 	refer to the WM8960 datasheet at:
 	https://github.com/sparkfun/SparkFun_Audio_Codec_Breakout_WM8960/blob/main/Documents/WM8960_datasheet_v4.2.pdf
 
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  This code is released under the [MIT License](http://opensource.org/licenses/MIT).
+  Please review the LICENSE.md file included with this example. If you have any questions 
+  or concerns with licensing, please contact techsupport@sparkfun.com.
+  Distributed as-is; no warranty is given.
 ******************************************************************************/
 
 #include <Wire.h>
