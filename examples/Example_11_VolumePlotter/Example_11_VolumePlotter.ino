@@ -26,7 +26,7 @@
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
   5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
-  16 ---------- BCK         *aka BCLK/I2S_SCK/"bit clock", this is the clock for I2S audio, can be conntrolled via controller or peripheral.
+  16 ---------- BCK         *aka BCLK/I2S_SCK/"bit clock", this is the clock for I2S audio, can be controlled via controller or peripheral.
   17 ---------- ADAT        *aka ADC_DATA/I2S_SD/"serial data in", this carries the I2S audio data from codec's ADC to ESP32 I2S bus.
   25 ---------- ALR        *aka I2S_WS/LRC/"word select"/"left-right-channel", this toggles for left or right channel data.
 
