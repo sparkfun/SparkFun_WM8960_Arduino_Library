@@ -189,6 +189,14 @@
 #define WM8960_SPEAKER_GAIN_MAX 6.00
 #define WM8960_SPEAKER_GAIN_OFFSET 121.00
 #define WM8960_SPEAKER_GAIN_STEPSIZE 1.00
+#define WM8960_ADC_GAIN_MIN -97.00
+#define WM8960_ADC_GAIN_MAX 30.00
+#define WM8960_ADC_GAIN_OFFSET 97.50
+#define WM8960_ADC_GAIN_STEPSIZE 0.50
+#define WM8960_DAC_GAIN_MIN -97.00
+#define WM8960_DAC_GAIN_MAX 30.00
+#define WM8960_DAC_GAIN_OFFSET 97.50
+#define WM8960_DAC_GAIN_STEPSIZE 0.50
 
 class WM8960
 {
@@ -338,6 +346,8 @@ class WM8960
 		// 255 = +30dB
 		boolean setAdcLeftDigitalVolume(uint8_t volume); 
 		boolean setAdcRightDigitalVolume(uint8_t volume);
+		boolean setAdcLeftDigitalVolumeDB(float dB); 
+		boolean setAdcRightDigitalVolumeDB(float dB);
 
 		// Causes left and right input ADC volumes to be updated
 		boolean adcLeftADCVUSet(); 
@@ -407,7 +417,9 @@ class WM8960
 		// ... 0.5dB steps up to
 		// 255 = 0dB
 		boolean setDacLeftDigitalVolume(uint8_t volume); 
-		boolean setDacRightDigitalVolume(uint8_t volume);		
+		boolean setDacRightDigitalVolume(uint8_t volume);	
+		boolean setDacLeftDigitalVolumeDB(float dB); 
+		boolean setDacRightDigitalVolumeDB(float dB);	
 
 		// Causes left and right input DAC volumes to be updated
 		boolean dacLeftDACVUSet(); 
@@ -684,7 +696,7 @@ class WM8960
 		uint8_t _deviceAddress = WM8960_ADDR;
 		boolean _writeRegisterBit(uint8_t registerAddress, uint8_t bitNumber, boolean bitValue);
 		boolean _writeRegisterMultiBits(uint8_t registerAddress, uint8_t settingMsbNum, uint8_t settingLsbNum, uint8_t setting);
-		uint8_t convertDBtoSetting(float dB, float offset, float stepSize);
+		uint8_t convertDBtoSetting(float dB, float offset, float stepSize, float minDB, float maxDB);
 
 		// The WM8960 does not support I2C reads
 		// This means we must keep a local copy of all the register values

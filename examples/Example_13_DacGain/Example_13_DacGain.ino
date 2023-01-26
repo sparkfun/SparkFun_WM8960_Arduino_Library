@@ -1,31 +1,35 @@
 /******************************************************************************
   Example_13_DacGain.ino
-  Demonstrates how to control the volume using the codec's DAC digital volume control.
+  Demonstrates how to control the volume using the codec's DAC digital volume 
+  control.
 
   Attach a potentiomenter to GND/A0/3V3 to actively adjust the setting.
 
-  This example sets up the codec for nalog audio input (on INPUT1s), ADC/DAC Loopback, sets hp volume, and Headphone output on the WM8960 Codec.
+  This example sets up the codec for analog audio input (on INPUT1s), ADC/DAC 
+  Loopback, sets hp volume, and Headphone output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
-  into the ADC. Turn on Loopback (so ADC is feed directly to DAC).
+  This example will pass your audio source through the mixers and gain stages 
+  of the codec into the ADC. Turn on Loopback (so ADC is feed directly to DAC).
   Then send the output of the DAC to the headphone outs.
 
-  We will use the gain stage at the DAC to control the volume of the signal. This is capable of more precision,
-  with values from 0-255.
+  We will use the gain stage at the DAC to control the volume of the signal. 
+  This is capable of more precision, with 255 available settings.
 
-		// DAC digital volume
-		// Valid inputs are 0-255
-		// 0 = mute
-		// 1 = -127dB
-		// ... 0.5dB steps up to
-		// 255 = 0dB
+  ** DAC digital volume
+  ** Valid dB settings are -97.00 up to +30.0 (0.5dB steps)
+  ** -97.50 (or lower) = MUTE
+  ** -97.00 = -97.00dB (MIN)
+  ** ... 0.5dB steps ...
+  ** 30.00 = +30.00dB  (MAX)
 
-  You can also control the volume of the codecs built in headphone amp using this function:
+  You can also control the volume of the codecs built in headphone amp using 
+  this function:
 
-  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, 
+  (1.00dB steps).
 
   Development platform used:
   SparkFun ESP32 IoT RedBoard v10
@@ -37,7 +41,7 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
 
   **********************
   ESP32 -------- POTENTIOMTER (aka blue little trimpot)
@@ -49,14 +53,14 @@
   **********************
   CODEC ------- AUDIO IN
   **********************
-  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
+  GND --------- TRS INPUT SLEEVE        *ground for line level input
   LINPUT1 ----- TRS INPUT TIP           *left audio
   RINPUT1 ----- TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
   **********************
-  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" connection for headphone output (aka "HP GND")
+  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" (aka "HP GND")
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
@@ -96,7 +100,7 @@
 #include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
-long userInputA0 = 0; // Used to store incoming potentiometer settings to set DAC digital volume setting
+long userInputA0 = 0; // Used to store incoming potentiometer settings to set ADC digital volume setting
 
 void setup()
 {
@@ -117,21 +121,25 @@ void setup()
 
 void loop()
 {
-  for (int i = 0 ; i < 250 ; i ++) // Take a bunch of readings and average them, to smooth out the value
+  // Take a bunch of readings and average them, to smooth out the value
+  for (int i = 0 ; i < 250 ; i ++) 
   {
     userInputA0 += analogRead(A0);
     delay(1);
   }
-  userInputA0 /= 250;
 
-  // Map it from 0-4096, to a value that is acceptable in the DAC digital volume control (0-255)
-  int dacVol = map(userInputA0, 0, 4096, 255, 0);
+  // After taking a bunch of samples, divide down to the average single reading
+  userInputA0 /= 250; 
 
-  Serial.print("dacVol: ");
-  Serial.println(dacVol);
+  // Map it from 0-4096, to a dB value that is acceptable in the DAC digital 
+  // volume control (-97.50 [MUTE] to +30dB)
+  float dacVolumeDB = mapFloats((float)userInputA0, 0.00, 4096.00, 30.00, -97.50);
+
+  Serial.print("dacVolumeDB: ");
+  Serial.println(dacVolumeDB);
   
-  codec.setDacLeftDigitalVolume(dacVol); // 0 = mute, 1 = -127dB <<-- 0.5dB steps -->> 255 = +0dB
-  codec.setDacRightDigitalVolume(dacVol); // 0 = mute, 1 = -127dB <<-- 0.5dB steps -->> 255 = +0dB
+  codec.setDacLeftDigitalVolumeDB(dacVolumeDB); // -97.50 to +30.00dB
+  codec.setDacRightDigitalVolumeDB(dacVolumeDB); // -97.50 to +30.00dB
 
   delay(50);
 }
@@ -217,4 +225,23 @@ void codec_setup()
   codec.setHeadphoneVolumeDB(0.00);
 
   Serial.println("Codec setup complete. Listen to left/right INPUT1 on Headphone outputs.");
+}
+
+// mapFloat
+// This function is the same as the Arduino map() function, but it can accept
+// and return float values. We need this to handle dB values which are floats
+//
+// value: the number to map.
+//
+// fromLow: the lower bound of the value’s current range.
+//
+// fromHigh: the upper bound of the value’s current range.
+//
+// toLow: the lower bound of the value’s target range.
+//
+// toHigh: the upper bound of the value’s target range.
+
+float mapFloats(float value, float fromLow, float fromHigh, float toLow, float toHigh)
+{
+  return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 }

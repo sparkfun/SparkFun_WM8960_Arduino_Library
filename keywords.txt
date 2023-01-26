@@ -64,6 +64,8 @@ enableAdcRight	KEYWORD2
 disableAdcRight	KEYWORD2
 setAdcLeftDigitalVolume	KEYWORD2 
 setAdcRightDigitalVolume	KEYWORD2
+setAdcLeftDigitalVolumeDB	KEYWORD2 
+setAdcRightDigitalVolumeDB	KEYWORD2
 enableAlc	KEYWORD2
 disableAlc	KEYWORD2
 setAlcTarget	KEYWORD2
@@ -82,7 +84,9 @@ disableDacLeft	KEYWORD2
 enableDacRight	KEYWORD2
 disableDacRight	KEYWORD2
 setDacLeftDigitalVolume	KEYWORD2 
-setDacRightDigitalVolume	KEYWORD2		
+setDacRightDigitalVolume	KEYWORD2	
+setDacLeftDigitalVolumeDB	KEYWORD2 
+setDacRightDigitalVolumeDB	KEYWORD2	
 enableDacMute	KEYWORD2
 disableDacMute	KEYWORD2
 enable3d	KEYWORD2

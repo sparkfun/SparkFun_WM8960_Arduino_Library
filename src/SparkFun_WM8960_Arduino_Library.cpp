@@ -398,7 +398,7 @@ boolean WM8960::setLINVOLDB(float dB)
 {
   // Create an unsigned integer volume setting variable we can send to 
   // setLINVOL()
-  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_PGA_GAIN_OFFSET, WM8960_PGA_GAIN_STEPSIZE);
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_PGA_GAIN_OFFSET, WM8960_PGA_GAIN_STEPSIZE, WM8960_PGA_GAIN_MIN, WM8960_PGA_GAIN_MAX);
 
   return WM8960::setLINVOL(volume);
 }
@@ -423,7 +423,7 @@ boolean WM8960::setRINVOLDB(float dB)
 {
   // Create an unsigned integer volume setting variable we can send to 
   // setRINVOL()
-  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_PGA_GAIN_OFFSET, WM8960_PGA_GAIN_STEPSIZE);
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_PGA_GAIN_OFFSET, WM8960_PGA_GAIN_STEPSIZE, WM8960_PGA_GAIN_MIN, WM8960_PGA_GAIN_MAX);
 
   return WM8960::setRINVOL(volume);
 }
@@ -597,6 +597,32 @@ boolean WM8960::adcRightADCVUSet()
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_ADC_VOLUME, 8, 1);
 }
 
+// ADC digital volume DB
+// Sets the volume of the ADC to a specified dB value passed in as a float 
+// argument.
+// Valid dB settings are -97.00 up to +30.0 (0.5dB steps)
+// -97.50 (or lower) = MUTE
+// -97.00 = -97.00dB (MIN)
+// ... 0.5dB steps ...
+// 30.00 = +30.00dB  (MAX)
+
+boolean WM8960::setAdcLeftDigitalVolumeDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setAdcLeftDigitalVolume()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_ADC_GAIN_OFFSET, WM8960_ADC_GAIN_STEPSIZE, WM8960_ADC_GAIN_MIN, WM8960_ADC_GAIN_MAX);
+
+  return WM8960::setAdcLeftDigitalVolume(volume);
+}
+boolean WM8960::setAdcRightDigitalVolumeDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setAdcRightDigitalVolume()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_ADC_GAIN_OFFSET, WM8960_ADC_GAIN_STEPSIZE, WM8960_ADC_GAIN_MIN, WM8960_ADC_GAIN_MAX);
+
+  return WM8960::setAdcRightDigitalVolume(volume);
+}
+
 /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////// ALC
 /////////////////////////////////////////////////////////
@@ -722,14 +748,13 @@ boolean WM8960::disableDacRight()
 // 255 = 0dB
 boolean WM8960::setDacLeftDigitalVolume(uint8_t volume)
 {
-  if(volume > 255) volume = 255; // Limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_LEFT_DAC_VOLUME,7,0,volume);
   boolean result2 = WM8960::dacLeftDACVUSet();
   return (result1 && result2);
 }
+
 boolean WM8960::setDacRightDigitalVolume(uint8_t volume)
 {
-  if(volume > 255) volume = 255; // Limit incoming values max
   boolean result1 = WM8960::_writeRegisterMultiBits(WM8960_REG_RIGHT_DAC_VOLUME,7,0,volume);
   boolean result2 = WM8960::dacRightDACVUSet();
   return (result1 && result2);
@@ -746,6 +771,33 @@ boolean WM8960::dacRightDACVUSet()
 {
   return WM8960::_writeRegisterBit(WM8960_REG_RIGHT_DAC_VOLUME, 8, 1);
 }	
+
+// DAC digital volume DB
+// Sets the volume of the DAC to a specified dB value passed in as a float 
+// argument.
+// Valid dB settings are -97.00 up to +30.0 (0.5dB steps)
+// -97.50 (or lower) = MUTE
+// -97.00 = -97.00dB (MIN)
+// ... 0.5dB steps ...
+// 30.00 = +30.00dB  (MAX)
+
+boolean WM8960::setDacLeftDigitalVolumeDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setDacLeftDigitalVolume()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_DAC_GAIN_OFFSET, WM8960_DAC_GAIN_STEPSIZE, WM8960_DAC_GAIN_MIN, WM8960_DAC_GAIN_MAX);
+
+  return WM8960::setDacLeftDigitalVolume(volume);
+}
+
+boolean WM8960::setDacRightDigitalVolumeDB(float dB)
+{
+  // Create an unsigned integer volume setting variable we can send to 
+  // setDacRightDigitalVolume()
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_DAC_GAIN_OFFSET, WM8960_DAC_GAIN_STEPSIZE, WM8960_DAC_GAIN_MIN, WM8960_DAC_GAIN_MAX);
+
+  return WM8960::setDacRightDigitalVolume(volume);
+}
 
 // DAC mute
 boolean WM8960::enableDacMute()
@@ -1056,7 +1108,7 @@ boolean WM8960::setHeadphoneVolumeDB(float dB)
 {
   // Create an unsigned integer volume setting variable we can send to 
   // setHeadphoneVolume()
-  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_HP_GAIN_OFFSET, WM8960_HP_GAIN_STEPSIZE);
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_HP_GAIN_OFFSET, WM8960_HP_GAIN_STEPSIZE, WM8960_HP_GAIN_MIN, WM8960_HP_GAIN_MAX);
 
   return WM8960::setHeadphoneVolume(volume);
 }
@@ -1194,7 +1246,7 @@ boolean WM8960::setSpeakerVolumeDB(float dB)
 {
   // Create an unsigned integer volume setting variable we can send to 
   // setSpeakerVolume()
-  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_SPEAKER_GAIN_OFFSET, WM8960_SPEAKER_GAIN_STEPSIZE);
+  uint8_t volume = WM8960::convertDBtoSetting(dB, WM8960_SPEAKER_GAIN_OFFSET, WM8960_SPEAKER_GAIN_STEPSIZE, WM8960_SPEAKER_GAIN_MIN, WM8960_SPEAKER_GAIN_MAX);
 
   return WM8960::setSpeakerVolume(volume);
 }
@@ -1406,8 +1458,35 @@ boolean WM8960::setWL(uint8_t word_length)
 //
 // stepSize - the dB step for each setting (aka the "resolution" of the setting)
 // This is 0.75dB for the PGAs, 0.5 for ADC/DAC, and 1dB for most other amps.
-uint8_t WM8960::convertDBtoSetting(float dB, float offset, float stepSize)
+//
+// minDB - float of minimum dB setting allowed, note this is not mute on the 
+// amp. "True mute" is always one stepSize lower.
+//
+// maxDB - float of maximum dB setting allowed. If you send anything higher, it
+// will be limited to this max value.
+uint8_t WM8960::convertDBtoSetting(float dB, float offset, float stepSize, float minDB, float maxDB)
 {
+  // Limit incoming dB values to acceptable range. Note, the minimum limit we
+  // want to limit this too is actually one step lower than the minDB, because
+  // that is still an acceptable dB level (it is actually "true mute").
+  // Note, the PGA amp does not have a "true mute" setting available, so we 
+  // must check for its unique minDB of -17.25.
+
+  // Limit max. This is the same for all amps.
+  if (dB > maxDB) dB = maxDB;
+
+  // PGA amp doesn't have mute setting, so minDB should be limited to minDB
+  // Let's check for the PGAs unique minDB (-17.25) to know we are currently
+  // converting a PGA setting.
+  if(minDB == WM8960_PGA_GAIN_MIN) 
+  {
+    if (dB < minDB) dB = minDB;
+  }
+  else // Not PGA. All other amps have a mute setting below minDb
+  {
+    if (dB < (minDB - stepSize)) dB = (minDB - stepSize);
+  }
+
   // Adjust for offset
   // Offset is the number that gets us from the minimum dB option of an amp
   // up to the minimum setting value in the register.
@@ -1419,6 +1498,10 @@ uint8_t WM8960::convertDBtoSetting(float dB, float offset, float stepSize)
   float volume = dB / stepSize;
 
   volume = round(volume); // round to the nearest setting value.
+
+  // Serial debug (optional)
+  // Serial.print("\t");
+  // Serial.print((uint8_t)volume);
 
   return (uint8_t)volume; // cast from float to unsigned 8-bit integer.
 }
