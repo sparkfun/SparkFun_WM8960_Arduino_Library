@@ -220,12 +220,12 @@ void codec_setup()
   codec.enablePgaZeroCross(); 
 
   codec.enableAlc(WM8960_ALC_MODE_STEREO);
-  codec.setAlcTarget(11); // Valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
-  codec.setAlcDecay(3); // Valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
-  codec.setAlcAttack(2); // Valid inputs are 0-10, 0 = 6ms, 1 = 12ms, 2 = 24ms, ... 10 = 6.14seconds
-  codec.setAlcMaxGain(7); // Valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
-  codec.setAlcMinGain(0); // Valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
-  codec.setAlcHold(0); // Valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
+  codec.setAlcTarget(WM8960_ALC_TARGET_LEVEL_NEG_6DB);
+  codec.setAlcDecay(WM8960_ALC_DECAY_TIME_192MS);
+  codec.setAlcAttack(WM8960_ALC_ATTACK_TIME_24MS); 
+  codec.setAlcMaxGain(WM8960_ALC_MAX_GAIN_LEVEL_30DB);
+  codec.setAlcMinGain(WM8960_ALC_MIN_GAIN_LEVEL_NEG_17_25DB);
+  codec.setAlcHold(WM8960_ALC_HOLD_TIME_0MS);
 
   Serial.println("Headphopne Amp Volume set to +0dB");
   codec.setHeadphoneVolumeDB(0.00);
