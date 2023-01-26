@@ -1,16 +1,18 @@
 /******************************************************************************
   Example_04_Speaker.ino
-  Demonstrates analog audio input (on INPUT1s), sets volume control, and Speaker output on the WM8960 Codec.
+  Demonstrates analog audio input (on INPUT1s), sets volume control, and Speaker 
+  output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
-  using all of the analog bypass paths.
+  This example will pass your audio source through the mixers and gain stages of 
+  the codec using all of the analog bypass paths.
 
   It will output the sound on the Speaker outputs. 
 
-  You can now control the volume of the codecs built in class-d amp using this function:
+  You can now control the volume of the codecs built in class-d amp using this 
+  function:
 
   codec.setSpeakerVolumeDB(6.00); Valid inputs are -73.00 to 6.00 (1.00 dB steps)
 
@@ -24,12 +26,12 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
 
   **********************
   CODEC ------- AUDIO IN
   **********************
-  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
+  GND --------- TRS INPUT SLEEVE        *ground for line level input
   LINPUT1 ----- TRS INPUT TIP           *left audio
   RINPUT1 ----- TRS INPUT RING1         *right audio
 
@@ -44,7 +46,8 @@
   *Note, with a class-d speaker amp like this, you need to connections like above.
   Each speaker must be connected to its correct + and -.
   You cannot connect the "-" side of the speaker to GND.
-  You cannot share the "-" side of two speakers (like with common "TRS-wired" headphones).
+  You cannot share the "-" side of two speakers (like with common "TRS-wired" 
+  headphones).
 
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
@@ -79,7 +82,8 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
 void setup()
@@ -136,7 +140,8 @@ void setup()
   codec.enableLOMIX();
   codec.enableROMIX();
   
-  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
+  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d 
+  // freq at 705.6kHz
   codec.enablePLL(); // Needed for class-d amp clock
   codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
   codec.setSMD(WM8960_PLL_MODE_FRACTIONAL);

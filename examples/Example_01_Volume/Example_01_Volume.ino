@@ -1,20 +1,23 @@
 /******************************************************************************
   Example_01_Volume.ino
-  Demonstrates analog audio input, volume control, and headphone output on the WM8960 Codec.
+  Demonstrates analog audio input, volume control, and headphone output on the 
+  WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT3" inputs, 
   they are labeled "RIN3" and "LIN3" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
-  using all of the analog bypass paths.
+  This example will pass your audio source through the mixers and gain stages 
+  of the codec using all of the analog bypass paths.
 
   It will output the sound on the headphone outputs. 
-  It is setup to do a capless headphone setup, so connect your headphones ground to "OUT3" 
-  and this provides a buffered VMID.
+  It is setup to do a capless headphone setup, so connect your headphones ground 
+  to "OUT3"vand this provides a buffered VMID.
 
-  You can now control the volume of the codecs built in headphone buffers using this function:
+  You can now control the volume of the codecs built in headphone buffers using 
+  this function:
 
-  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, 
+  (1.00dB steps).
 
   Development platform used:
   SparkFun ESP32 IoT RedBoard v10
@@ -26,19 +29,19 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
 
   **********************
   CODEC ------- AUDIO IN
   **********************
-  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
+  GND --------- TRS INPUT SLEEVE        *ground for line level input
   LINPUT3 ----- TRS INPUT TIP           *left audio
   RINPUT3 ----- TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
   **********************
-  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" connection for headphone output (aka "HP GND")
+  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" (aka "HP GND")
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
@@ -75,7 +78,8 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
 void setup()
@@ -97,9 +101,16 @@ void setup()
   codec.enableVMID();
   
   // Setup signal flow through the analog audio bypass connections
-  codec.enableLOMIX(); // Enable left output mixer
-  codec.enableLI2LO(); // Enable bypass connection from Left INPUT3 to Left output mixer, note, the default gain on this input (LI2LOVOL) is -15dB
-  codec.setLI2LOVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); // Sets volume control between "left input" to "left output mixer"
+
+  // Enable left output mixer
+  codec.enableLOMIX(); 
+
+  // Enable bypass connection from Left INPUT3 to Left output mixer, note, the 
+  // default gain on this input (LI2LOVOL) is -15dB
+  codec.enableLI2LO(); 
+
+  // Sets volume control between "left input" to "left output mixer"
+  codec.setLI2LOVOL(WM8960_OUTPUT_MIXER_GAIN_0DB); 
   
   codec.enableROMIX(); // Now for the right channel of INPUT3
   codec.enableRI2RO();

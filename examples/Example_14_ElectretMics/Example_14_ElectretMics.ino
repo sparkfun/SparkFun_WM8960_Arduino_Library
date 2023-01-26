@@ -1,28 +1,35 @@
 /******************************************************************************
   Example_14_ElectretMics.ino
-  Demonstrates electret microphone analog audio input (on INPUT1/INPUT2 as "pseudo-differential MIC configuration"), 
-  Sets the PGA gain, sets the non-inverting pga input to INPUT2s, sets volume control, and headphone output on the WM8960 Codec.
+  Demonstrates electret microphone analog audio input (on INPUT1/INPUT2 as 
+  "pseudo-differential MIC configuration"). Sets the PGA gain, sets the 
+  non-inverting pga input to INPUT2s, sets volume control, and headphone output 
+  on the WM8960 Codec.
 
-  Note, most of the examples in this library set all gain stages at 0dB, but for this electret mic example,
-  we need a bit more gain on the initial input stage (the PGA), so we set it to +24dB (aka "57" as the argument to the function).
+  Note, most of the examples in this library set all gain stages at 0dB, but for 
+  this electret mic example, we need a bit more gain on the initial input stage 
+  (the PGA), so we set it to +24dB (aka "57" as the argument to the function).
   We are also bumping up the headphone output gainstage to max, +6dB (aka "127").
 
   Electret mics should be connected to left and right inputs. 
 
-  MicBias should be provided to the "+" side of each mic via an in-series 2.2K resistor.
+  MicBias should be provided to the "+" side of each mic via an in-series 2.2K 
+  resistor.
 
-  The Mic "-" should be connected to each INPUT2. Note, this is also GND in this example, but enables a "psuedo-differential setup"
+  The Mic "-" should be connected to each INPUT2. Note, this is also GND in this 
+  example, but enables a "psuedo-differential setup"
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
-  using all of the analog bypass paths.
+  This example will pass your audio source through the mixers and gain stages of 
+  the codec using all of the analog bypass paths.
 
   It will output the sound on the headphone outputs. 
-  It is setup to do a capless headphone setup, so connet your headphones ground to "OUT3" 
-  and this provides a buffered VMID.
+  It is setup to do a capless headphone setup, so connet your headphones ground 
+  to "OUT3" and this provides a buffered VMID.
 
-  You can now control the volume of the codecs built in headphone buffers using this function:
+  You can now control the volume of the codecs built in headphone buffers using 
+  this function:
 
-  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, 
+  (1.00dB steps).
 
   Development platform used:
   SparkFun ESP32 IoT RedBoard v10
@@ -36,7 +43,7 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
 
   **********************
   CODEC ------- AUDIO IN (ELECTRET MICS)
@@ -53,7 +60,7 @@
   **********************
   CODEC -------- AUDIO OUT
   **********************
-  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" connection for headphone output (aka "HP GND")
+  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" (aka "HP GND")
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
@@ -90,7 +97,8 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
 void setup()
@@ -112,7 +120,10 @@ void setup()
   codec.enableVMID();
 
   codec.enableMicBias();
-  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+
+  // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or 
+  // WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD); 
   Serial.println("Mic Bias enabled (0.9*AVDD)");
 
   // Setup signal flow through the analog audio bypass connections
@@ -138,8 +149,11 @@ void setup()
   codec.setRMICBOOST(WM8960_MIC_BOOST_GAIN_0DB);
   Serial.println("Mic boost stage set to 0dB");
 
-  codec.pgaLeftNonInvSignalSelect(WM8960_PGAL_LINPUT2); // For MIC+ signal of differential mic signal
-  codec.pgaRightNonInvSignalSelect(WM8960_PGAR_RINPUT2); // For MIC+ signal of differential mic signal
+  // For MIC+ signal of differential mic signal
+  codec.pgaLeftNonInvSignalSelect(WM8960_PGAL_LINPUT2); 
+
+  // For MIC+ signal of differential mic signal
+  codec.pgaRightNonInvSignalSelect(WM8960_PGAR_RINPUT2); 
   Serial.println("Pga non-inverting inputs set to INPUT2s");
 
   codec.connectLMIC2B();
@@ -165,7 +179,7 @@ void setup()
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   Serial.println("Headphone output buffer volume set to +6dB (max)");
-  codec.setHeadphoneVolume(127); // 0-47 = mute, 48 = -73dB, ... 1dB steps ... , 127 = +6dB
+  codec.setHeadphoneVolumeDB(6.00);
 
   Serial.println("Example complete. Listen to Electret mics on headphone outputs.");
 }

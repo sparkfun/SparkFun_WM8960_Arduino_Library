@@ -2,15 +2,16 @@
   Example_08_I2S_Passthrough.ino
   Demonstrates reading I2S audio from the ADC, and passing that back to the DAC.
   
-  This example sets up analog audio input (on INPUT1s), ADC/DAC enabled as I2S peripheral, sets volume control, and Headphone output on the WM8960 Codec.
+  This example sets up analog audio input (on INPUT1s), ADC/DAC enabled as I2S 
+  peripheral, sets volume control, and Headphone output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec
-  into the ADC. Read the audio from the ADC via I2S.
-  Then send audio immediately back to the DAC via I2S.
-  Then send the output of the DAC to the headphone outs.
+  This example will pass your audio source through the mixers and gain stages of 
+  the codec into the ADC. Read the audio from the ADC via I2S. Then send audio 
+  immediately back to the DAC via I2S. Then send the output of the DAC to the 
+  headphone outs.
 
   Development platform used:
   SparkFun ESP32 IoT RedBoard v10
@@ -22,7 +23,7 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
   4 ----------- DDT         *aka DAC_DATA/I2S_SDO/"serial data out", this carries the I2S audio data from ESP32 to codec DAC
   16 ---------- BCK         *aka BCLK/I2S_SCK/"bit clock", this is the clock for I2S audio, can be conntrolled via controller or peripheral.
   17 ---------- ADAT        *aka ADC_DATA/I2S_SD/"serial data in", this carries the I2S audio data from codec's ADC to ESP32 I2S bus.
@@ -32,20 +33,22 @@
   **********************
   CODEC ------- AUDIO IN
   **********************
-  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
+  GND --------- TRS INPUT SLEEVE        *ground for line level input
   LINPUT1 ----- TRS INPUT TIP           *left audio
   RINPUT1 ----- TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
   **********************
-  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" connection for headphone output (aka "HP GND")
+  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" (aka "HP GND")
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
-  You can now control the volume of the codecs built in headphone amp using this fuction:
+  You can now control the volume of the codecs built in headphone amp using this 
+  fuction:
 
-  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
+  codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, 
+  (1.00dB steps).
 
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
@@ -58,9 +61,10 @@
 
   This code was created using some modified code from DroneBot Workshop.
   Specifically, the I2S configuration setup was super helpful to get I2S working.
-  This example has a similar I2S config to what we are using here: Microphone to serial plotter example.
-  Although, here we are doing a full duplex I2S port, in order to do reads and writes.
-  To see the original Drone Workshop code and learn more about I2S in general, please visit:
+  This example has a similar I2S config to what we are using here: Microphone to 
+  serial plotter example. Although, here we are doing a full duplex I2S port, in 
+  order to do reads and writes. To see the original Drone Workshop code and 
+  learn more about I2S in general, please visit:
   https://dronebotworkshop.com/esp32-i2s/
 
   Do you like this library? Help support SparkFun. Buy a board!
@@ -86,7 +90,8 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
 // Include I2S driver
@@ -139,13 +144,16 @@ void loop()
     // Send what we just received back to the codec
     esp_err_t result_w = i2s_write(I2S_PORT, &sBuffer, bytesIn, &bytesOut, portMAX_DELAY);
   }
-  // DelayMicroseconds(300); // Only hear to demonstrate how much time you have to do things.
+  // DelayMicroseconds(300); // Only hear to demonstrate how much time you have 
+  // to do things.
   // Do not do much in this main loop, or the audio won't pass through correctly.
-  // With default settings (64 samples in buffer), you can spend up to 300 microseconds doing something in between passing each buffer of data
+  // With default settings (64 samples in buffer), you can spend up to 300 
+  // microseconds doing something in between passing each buffer of data
   // You can tweak the buffer length to get more time if you need it.
   // When bufferlength is 64, then you get ~300 microseconds
   // When bufferlength is 128, then you get ~600 microseconds
-  // Note, as you increase bufferlength, then you are increasing latency between ADC input to DAC output,
+  // Note, as you increase bufferlength, then you are increasing latency between 
+  // ADC input to DAC output.
   // Latency may or may not be desired, depending on the project.
 }
 
@@ -202,7 +210,8 @@ void codec_setup()
   codec.enableLOMIX();
   codec.enableROMIX();
 
-  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
+  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d 
+  // freq at 705.6kHz
   codec.enablePLL(); // Needed for class-d amp clock
   codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
   codec.setSMD(WM8960_PLL_MODE_FRACTIONAL);
@@ -212,8 +221,8 @@ void codec_setup()
   codec.setDCLKDIV(WM8960_DCLKDIV_16);
   codec.setPLLN(7);
   codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h
-  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz)
+  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz)
   codec.setWL(WM8960_WL_16BIT);
 
   codec.enablePeripheralMode();
@@ -229,7 +238,9 @@ void codec_setup()
 
   //codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
   codec.disableLoopBack();
-  codec.disableDacMute(); // Default is "soft mute" on, so we must disable mute to make channels active
+
+  // Default is "soft mute" on, so we must disable mute to make channels active
+  codec.disableDacMute(); 
 
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground

@@ -2,8 +2,9 @@
   Example_07_MicBias.ino
   This example demonstrates control of the mic bias feature of WM8960 Codec.
 
-  Electret Mics are powered with a mic bias voltage applied to their signal line - 
-  usually with a 2.2K resistor in series. This Codec can provide a clean mic bias.
+  Electret Mics are powered with a mic bias voltage applied to their signal 
+  line - usually with a 2.2K resistor in series. This Codec can provide a clean 
+  mic bias.
   
   This example turns on the mic bias, set's it to each available output voltage,
   and then turns it off to demonstrate disable.
@@ -24,7 +25,7 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
 
   Pete Lewis @ SparkFun Electronics
   October 14th, 2022
@@ -59,7 +60,8 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
 void setup()
@@ -81,11 +83,16 @@ void setup()
   codec.enableVMID();
 
   codec.enableMicBias();
-  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+
+  // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or 
+  // WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD); 
   Serial.println("Mic Bias enabled (0.9*AVDD)");
   delay(3000);
 
-  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD); // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+  // WM8960_MIC_BIAS_VOLTAGE_0_9_AVDD (0.9*AVDD) or 
+  // WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD (0.65*AVDD)
+  codec.setMicBiasVoltage(WM8960_MIC_BIAS_VOLTAGE_0_65_AVDD); 
   Serial.println("Mic Bias enabled (0.65*AVDD)");
   delay(3000);
 

@@ -1,20 +1,25 @@
 /******************************************************************************
   Example_12_AutomaticLevelControl.ino
-  Demonstrates how to use the automatic level control feature of the WM8960 Codec.
+  Demonstrates how to use the automatic level control feature of the WM8960 
+  Codec.
 
-  Attach a potentiomenter to GND/A0/3V3 to actively adjust the ALC target setting.
+  Attach a potentiomenter to GND/A0/3V3 to actively adjust the ALC target 
+  setting.
 
-  This example sets up the codec for analog audio input (on INPUT1s), ADC/DAC Loopback, sets hp volume, and Headphone output on the WM8960 Codec.
+  This example sets up the codec for analog audio input (on INPUT1s), ADC/DAC 
+  Loopback, sets hp volume, and Headphone output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
+  This example will pass your audio source through the mixers and gain stages of 
+  the codec 
   into the ADC. Turn on Loopback (so ADC is feed directly to DAC).
   Then send the output of the DAC to the headphone outs.
 
-  We will use the user input via potentiometer on A0 to set the ALC target value.
-  The ALC will adjust the gain of the pga input buffer to try and keep the signal level at the target.
+  We will use the user input via potentiometer on A0 to set the ALC target 
+  value. The ALC will adjust the gain of the pga input buffer to try and keep 
+  the signal level at the target.
 
   Development platform used:
   SparkFun ESP32 IoT RedBoard v10
@@ -26,7 +31,7 @@
   **********************
   QWIIC ------- QWIIC       *Note this connects GND/3.3V/SDA/SCL
   GND --------- GND         *optional, but not a bad idea
-  5V ---------- VIN         *needed for source of codec's onboard AVDD (3.3V vreg)
+  5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
 
   **********************
   ESP32 -------- POTENTIOMTER (aka blue little trimpot)
@@ -38,14 +43,14 @@
   **********************
   CODEC ------- AUDIO IN
   **********************
-  GND --------- TRS INPUT SLEEVE        *ground connection for line level input via TRS breakout
+  GND --------- TRS INPUT SLEEVE        *ground for line level input
   LINPUT1 ----- TRS INPUT TIP           *left audio
   RINPUT1 ----- TRS INPUT RING1         *right audio
 
   **********************
   CODEC -------- AUDIO OUT
   **********************
-  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" connection for headphone output (aka "HP GND")
+  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" (aka "HP GND")
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
@@ -82,10 +87,13 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
-long userInputA0 = 0; // Used to store incoming potentiometer settings to set ADC digital volume setting
+// Used to store incoming potentiometer settings to set ADC digital volume 
+// setting
+long userInputA0 = 0; 
 
 void setup()
 {
@@ -106,7 +114,8 @@ void setup()
 
 void loop()
 {
-  for (int i = 0 ; i < 250 ; i ++) // Take a bunch of readings and average them, to smooth out the value
+  // Take a bunch of readings and average them, to smooth out the value
+  for (int i = 0 ; i < 250 ; i ++) 
   {
     userInputA0 += analogRead(A0);
     delay(1);
@@ -172,7 +181,8 @@ void codec_setup()
   codec.enableLOMIX();
   codec.enableROMIX();
 
-  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
+  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d 
+  // freq at 705.6kHz
   codec.enablePLL(); // Needed for class-d amp clock
   codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
   codec.setSMD(WM8960_PLL_MODE_FRACTIONAL);
@@ -182,8 +192,8 @@ void codec_setup()
   codec.setDCLKDIV(WM8960_DCLKDIV_16);
   codec.setPLLN(7);
   codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h	
-  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz)
+  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz)
 
   codec.enableMasterMode(); 
   codec.setALRCGPIO(); // Note, should not be changed while ADC is enabled.
@@ -196,14 +206,19 @@ void codec_setup()
   codec.disableDacMute();
 
   codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
-  codec.disableDacMute(); // Default is "soft mute" on, so we must disable mute to make channels active
+
+  // Default is "soft mute" on, so we must disable mute to make channels active
+  codec.disableDacMute(); 
 
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
 
   // Automatic Level control stuff
-  codec.enablePgaZeroCross(); // Only allows pga gain stages at a "zero crossover" point in audio stream. 
+
+  // Only allows pga gain stages at a "zero crossover" point in audio stream.   
   // Minimizes "zipper" noise when chaning gains.
+  codec.enablePgaZeroCross(); 
+
   codec.enableAlc(WM8960_ALC_MODE_STEREO);
   codec.setAlcTarget(11); // Valid inputs are 0-15, 0 = -22.5dB FS, ... 1.5dB steps ... , 15 = -1.5dB FS
   codec.setAlcDecay(3); // Valid inputs are 0-10, 0 = 24ms, 1 = 48ms, ... 10 = 24.58seconds
@@ -211,7 +226,6 @@ void codec_setup()
   codec.setAlcMaxGain(7); // Valid inputs are 0-7, 0 = -12dB, ... 7 = +30dB
   codec.setAlcMinGain(0); // Valid inputs are 0-7, 0 = -17.25dB, ... 7 = +24.75dB
   codec.setAlcHold(0); // Valid inputs are 0-15, 0 = 0ms, ... 15 = 43.691s
-
 
   Serial.println("Headphopne Amp Volume set to +0dB");
   codec.setHeadphoneVolumeDB(0.00);

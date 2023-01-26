@@ -60,7 +60,7 @@
   **********************
   CODEC -------- AUDIO OUT
   **********************
-  OUT3 --------- TRS OUTPUT SLEEVE          *buffered "vmid" (aka "HP GND")
+  OUT3 --------- TRS OUTPUT SLEEVE          
   HPL ---------- TRS OUTPUT TIP             *left HP output
   HPR ---------- TRS OUTPUT RING1           *right HP output
 
@@ -97,10 +97,13 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFun_WM8960_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_WM8960
+#include <SparkFun_WM8960_Arduino_Library.h> 
+// Click here to get the library: http://librarymanager/All#SparkFun_WM8960
 WM8960 codec;
 
-long userInputA0 = 0; // Used to store incoming potentiometer settings to set ADC digital volume setting
+// Used to store incoming potentiometer settings to set ADC digital volume 
+// setting
+long userInputA0 = 0; 
 
 void setup()
 {
@@ -192,7 +195,8 @@ void codec_setup()
   codec.enableLOMIX();
   codec.enableROMIX();
 
-  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d freq at 705.6kHz
+  // CLOCK STUFF, These settings will get you 44.1KHz sample rate, and class-d 
+  // freq at 705.6kHz
   codec.enablePLL(); // Needed for class-d amp clock
   codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
   codec.setSMD(WM8960_PLL_MODE_FRACTIONAL);
@@ -202,8 +206,8 @@ void codec_setup()
   codec.setDCLKDIV(WM8960_DCLKDIV_16);
   codec.setPLLN(7);
   codec.setPLLK(0x86, 0xC2, 0x26); // PLLK=86C226h	
-  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
-  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz), so no need to write this.
+  //codec.setADCDIV(0); // Default is 000 (what we need for 44.1KHz)
+  //codec.setDACDIV(0); // Default is 000 (what we need for 44.1KHz)
 
   codec.enableMasterMode(); 
   codec.setALRCGPIO(); // Note, should not be changed while ADC is enabled.
@@ -216,7 +220,9 @@ void codec_setup()
   codec.disableDacMute();
 
   codec.enableLoopBack(); // Loopback sends ADC data directly into DAC
-  codec.disableDacMute(); // Default is "soft mute" on, so we must disable mute to make channels active
+
+  // Default is "soft mute" on, so we must disable mute to make channels active
+  codec.disableDacMute(); 
 
   codec.enableHeadphones();
   codec.enableOUT3MIX(); // Provides VMID as buffer for headphone ground
