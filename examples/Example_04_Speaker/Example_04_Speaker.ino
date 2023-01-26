@@ -1,5 +1,5 @@
 /******************************************************************************
-  Example _04_Speaker.ino
+  Example_04_Speaker.ino
   Demonstrates analog audio input (on INPUT1s), sets volume control, and Speaker output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
@@ -10,12 +10,12 @@
 
   It will output the sound on the Speaker outputs. 
 
-  You can now control the volume of the codecs built in class-d amp using this fuction:
+  You can now control the volume of the codecs built in class-d amp using this function:
 
   codec.setSpeakerVolumeDB(6.00); Valid inputs are -73.00 to 6.00 (1.00 dB steps)
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

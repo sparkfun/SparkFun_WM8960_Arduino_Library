@@ -23,12 +23,12 @@
 		// ... 0.5dB steps up to
 		// 255 = 0dB
 
-  You can also control the volume of the codecs built in headphone amp using this fuction:
+  You can also control the volume of the codecs built in headphone amp using this function:
 
   codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

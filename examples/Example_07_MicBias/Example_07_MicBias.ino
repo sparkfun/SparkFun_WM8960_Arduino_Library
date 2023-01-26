@@ -1,5 +1,5 @@
 /******************************************************************************
-  Example _07_MicBias.ino
+  Example_07_MicBias.ino
   This example demonstrates control of the mic bias feature of WM8960 Codec.
 
   Electret Mics are powered with a mic bias voltage applied to their signal line - 
@@ -15,7 +15,7 @@
   advanced example (example 14).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

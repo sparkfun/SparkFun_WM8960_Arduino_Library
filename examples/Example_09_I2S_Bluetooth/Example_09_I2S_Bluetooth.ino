@@ -11,7 +11,7 @@
   The ESP32 will send the I2S audio to the DAC of the codec. The DAC is connected to the HP outputs.
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

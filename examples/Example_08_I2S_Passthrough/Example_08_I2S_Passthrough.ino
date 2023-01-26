@@ -7,13 +7,13 @@
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
+  This example will pass your audio source through the mixers and gain stages of the codec
   into the ADC. Read the audio from the ADC via I2S.
   Then send audio immediately back to the DAC via I2S.
   Then send the output of the DAC to the headphone outs.
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

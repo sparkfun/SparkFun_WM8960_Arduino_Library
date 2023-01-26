@@ -1,5 +1,5 @@
 /******************************************************************************
-  Example _14_ElectretMics.ino
+  Example_14_ElectretMics.ino
   Demonstrates electret microphone analog audio input (on INPUT1/INPUT2 as "pseudo-differential MIC configuration"), 
   Sets the PGA gain, sets the non-inverting pga input to INPUT2s, sets volume control, and headphone output on the WM8960 Codec.
 
@@ -20,12 +20,12 @@
   It is setup to do a capless headphone setup, so connet your headphones ground to "OUT3" 
   and this provides a buffered VMID.
 
-  You can now control the volume of the codecs built in headphone buffers using this fuction:
+  You can now control the volume of the codecs built in headphone buffers using this function:
 
   codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
   See Datasheet page 25 for electret mic hardware hookup example diagrams.

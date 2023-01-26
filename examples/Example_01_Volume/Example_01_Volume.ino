@@ -1,5 +1,5 @@
 /******************************************************************************
-  Example _01_Volume.ino
+  Example_01_Volume.ino
   Demonstrates analog audio input, volume control, and headphone output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT3" inputs, 
@@ -9,15 +9,15 @@
   using all of the analog bypass paths.
 
   It will output the sound on the headphone outputs. 
-  It is setup to do a capless headphone setup, so connet your headphones ground to "OUT3" 
+  It is setup to do a capless headphone setup, so connect your headphones ground to "OUT3" 
   and this provides a buffered VMID.
 
-  You can now control the volume of the codecs built in headphone buffers using this fuction:
+  You can now control the volume of the codecs built in headphone buffers using this function:
 
   codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

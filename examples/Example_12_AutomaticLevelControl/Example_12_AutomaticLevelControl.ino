@@ -17,7 +17,7 @@
   The ALC will adjust the gain of the pga input buffer to try and keep the signal level at the target.
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

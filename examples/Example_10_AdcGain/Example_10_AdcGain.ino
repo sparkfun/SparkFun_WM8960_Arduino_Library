@@ -4,7 +4,7 @@
 
   Attach a potentiomenter to GND/A0/3V3 to actively adjust the setting.
 
-  This example sets up the codec for nalog audio input (on INPUT1s), ADC/DAC Loopback, sets hp volume, and Headphone output on the WM8960 Codec.
+  This example sets up the codec for analog audio input (on INPUT1s), ADC/DAC Loopback, sets hp volume, and Headphone output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
@@ -24,12 +24,12 @@
 		// 195 = +0dB
 		// 255 = +30dB
 
-  You can also control the volume of the codecs built in headphone amp using this fuction:
+  You can also control the volume of the codecs built in headphone amp using this function:
 
   codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

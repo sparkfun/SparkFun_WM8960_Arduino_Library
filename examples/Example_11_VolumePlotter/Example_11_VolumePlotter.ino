@@ -13,7 +13,7 @@
   The analog bypass paths is also setup, so your audio will pass through the codec and playback on HP outs.
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

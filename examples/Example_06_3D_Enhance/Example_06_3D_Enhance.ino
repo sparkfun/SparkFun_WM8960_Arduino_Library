@@ -1,5 +1,5 @@
 /******************************************************************************
-  Example _06_3D_Enhance.ino
+  Example_06_3D_Enhance.ino
   Demonstrates 3D Enhance feature of WM8960 Codec.
 
   Toggles on/off 3D Enhance every 5 seconds, so you can hear the difference.
@@ -14,16 +14,16 @@
   Audio should be connected to both the left and right "INPUT1" inputs, 
   they are labeled "RIN1" and "LIN1" on the board.
 
-  This example will pass your audio source through the mixers and gain stages of the codec 
+  This example will pass your audio source through the mixers and gain stages of the codec
   into the ADC. Turn on Loopback (so ADC is feed directly to DAC).
   Then send the output of the DAC to the headphone outs.
 
-  You can now control the volume of the codecs built in headphone amp using this fuction:
+  You can now control the volume of the codecs built in headphone amp using this function:
 
   codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 

@@ -1,5 +1,5 @@
 /******************************************************************************
-  Example _05_Loopback.ino
+  Example_05_Loopback.ino
   Demonstrates analog audio input (on INPUT1s), ADC/DAC Loopback, sets volume control, and Headphone output on the WM8960 Codec.
 
   Audio should be connected to both the left and right "INPUT1" inputs, 
@@ -9,12 +9,12 @@
   into the ADC. Turn on Loopback (so ADC is feed directly to DAC).
   Then send the output of the DAC to the headphone outs.
 
-  You can now control the volume of the codecs built in headphone amp using this fuction:
+  You can now control the volume of the codecs built in headphone amp using this function:
 
   codec.setHeadphoneVolumeDB(6.00); Valid inputs are -74.00 (MUTE) up to +6.00, (1.00dB steps).
 
   Development platform used:
-  SparkFun ESP32 IoT Redboard v10
+  SparkFun ESP32 IoT RedBoard v10
 
   HARDWARE CONNECTIONS
 
