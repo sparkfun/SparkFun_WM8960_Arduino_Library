@@ -273,5 +273,5 @@ void i2s_setpin() {
     .data_in_num = I2S_SD
   };
 
-  I2S_set_pin(I2S_PORT, &pin_config);
+  i2s_set_pin(I2S_PORT, &pin_config);
 }
