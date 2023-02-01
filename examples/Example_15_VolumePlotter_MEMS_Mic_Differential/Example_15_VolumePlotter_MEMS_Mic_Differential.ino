@@ -38,15 +38,15 @@
   5V ---------- VIN         *needed to power codec's onboard AVDD (3.3V vreg)
   16 ---------- BCK         *aka BCLK/I2S_SCK/"bit clock", this is the clock for I2S audio, can be controlled via controller or peripheral.
   17 ---------- ADAT        *aka ADC_DATA/I2S_SD/"serial data in", this carries the I2S audio data from codec's ADC to ESP32 I2S bus.
-  25 ---------- ALR        *aka I2S_WS/LRC/"word select"/"left-right-channel", this toggles for left or right channel data.
+  25 ---------- ALR         *aka I2S_WS/LRC/"word select"/"left-right-channel", this toggles for left or right channel data.
 
   **********************
   CODEC ------- MIC IN
   **********************
   GND --------- GND        *Ground
   AVDD -------- VCC        *3.3V (default on the Codec breakout)
-  LINPUT1 ----- OUT-       *Mic signal "+"
-  LINPUT2 ----- OUT+       *Mic signal "-"
+  LINPUT1 ----- OUT-       *Mic signal "-"
+  LINPUT2 ----- OUT+       *Mic signal "+"
 
   **********************
   CODEC -------- AUDIO OUT
