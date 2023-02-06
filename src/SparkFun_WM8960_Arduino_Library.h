@@ -166,6 +166,21 @@
 #define WM8960_WL_24BIT 2
 #define WM8960_WL_32BIT 3
 
+// Additional Digital Audio Interface controls
+// LRP (aka left-right-polarity)
+// Right, left and I2S modes – LRCLK polarity 
+// 0 = normal LRCLK polarity 
+// 1 = inverted LRCLK polarity 
+#define WM8960_LR_POLARITY_NORMAL 0
+#define WM8960_LR_POLARITY_INVERT 1
+
+// ALRSWAP (aka ADC left/right swap)
+// Left/Right ADC channel swap
+// 1 = Swap left and right ADC data in audio interface
+// 0 = Output left and right data as normal 
+#define WM8960_ALRSWAP_NORMAL 0
+#define WM8960_ALRSWAP_SWAP 1
+
 // Gain mins, maxes, offsets and step-sizes for all the amps within the codec.
 #define WM8960_PGA_GAIN_MIN -17.25
 #define WM8960_PGA_GAIN_MAX 30.00
@@ -763,6 +778,10 @@ class WM8960
 		boolean enablePeripheralMode();
 
 		boolean setWL(uint8_t word_length);
+
+		boolean setLRP(boolean polarity);
+
+		boolean setALRSWAP(boolean swap);
 
 		// General-purpose register write
 		boolean writeRegister(uint8_t reg, uint16_t value);

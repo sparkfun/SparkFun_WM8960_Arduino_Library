@@ -1441,6 +1441,16 @@ boolean WM8960::setWL(uint8_t word_length)
   return WM8960::_writeRegisterMultiBits(WM8960_REG_AUDIO_INTERFACE_1,3,2,word_length);  
 }
 
+boolean WM8960::setLRP(boolean polarity)
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 4, polarity);
+}
+
+boolean WM8960::setALRSWAP(boolean swap)
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 8, swap);
+}
+
 // convertDBtoSetting
 // This function will take in a dB value (as a float), and return the 
 // corresponding volume setting necessary.
