@@ -254,7 +254,7 @@ void i2s_install() {
     .sample_rate = 44100,
     .bits_per_sample = i2s_bits_per_sample_t(16),
     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-    .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_I2S_MSB),
+    .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_STAND_I2S_MSB),
     .intr_alloc_flags = 0,
     .dma_buf_count = 8,
     .dma_buf_len = bufferLen,
