@@ -139,6 +139,12 @@ void loop()
   {
     // Send what we just received back to the codec
     esp_err_t result_w = i2s_write(I2S_PORT, &sBuffer, bytesIn, &bytesOut, portMAX_DELAY);
+
+    // If there was an I2S write error, let us know on the serial terminal
+    if (result_w != ESP_OK)
+    {
+      Serial.print("I2S write error.");
+    }
   }
   // DelayMicroseconds(300); // Only hear to demonstrate how much time you have 
   // to do things.
@@ -249,16 +255,20 @@ void codec_setup()
 
 void i2s_install() {
   // Set up I2S Processor configuration
-  const i2s_config_t i2s_config = {
+  const i2s_driver_config_t i2s_config = {
     .mode = i2s_mode_t(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX),
     .sample_rate = 44100,
     .bits_per_sample = i2s_bits_per_sample_t(16),
     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-    .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_STAND_I2S_MSB),
+    .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_STAND_MSB),
     .intr_alloc_flags = 0,
     .dma_buf_count = 8,
     .dma_buf_len = bufferLen,
-    .use_apll = false
+    .use_apll = false,
+    .tx_desc_auto_clear = false,
+    .fixed_mclk = 0,
+    .mclk_multiple = i2s_mclk_multiple_t(I2S_MCLK_MULTIPLE_DEFAULT),
+    .bits_per_chan = i2s_bits_per_chan_t(I2S_BITS_PER_CHAN_DEFAULT)
   };
 
   i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
@@ -267,6 +277,7 @@ void i2s_install() {
 void i2s_setpin() {
   // Set I2S pin configuration
   const i2s_pin_config_t pin_config = {
+    .mck_io_num = I2S_PIN_NO_CHANGE,
     .bck_io_num = I2S_SCK,
     .ws_io_num = I2S_WS,
     .data_out_num = I2S_SDO,
