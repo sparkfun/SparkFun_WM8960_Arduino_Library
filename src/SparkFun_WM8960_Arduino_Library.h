@@ -304,6 +304,23 @@
 #define WM8960_VMIDSEL_2X250KOHM 2
 #define WM8960_VMIDSEL_2X5KOHM 3
 
+// VREF to Analogue Output Resistance
+// (Disabled Outputs)
+// 0 = 500 VMID to output
+// 1 = 20k VMID to output 
+#define WM8960_VROI_500 0
+#define WM8960_VROI_20K 1
+
+// Analogue Bias Optimisation
+// 00 = Reserved
+// 01 = Increased bias current optimized for
+// AVDD=2.7V
+// 1X = Lowest bias current, optimized for
+// AVDD=3.3V 
+
+#define WM8960_VSEL_INCREASED_BIAS_CURRENT 1
+#define WM8960_VSEL_LOWEST_BIAS_CURRENT 3
+
 class WM8960
 {
 	public:
@@ -796,6 +813,10 @@ class WM8960
 		boolean setLRP(boolean polarity);
 
 		boolean setALRSWAP(boolean swap);
+
+		boolean setVROI(boolean setting);
+
+		boolean setVSEL(uint8_t setting);
 
 		// General-purpose register write
 		boolean writeRegister(uint8_t reg, uint16_t value);
