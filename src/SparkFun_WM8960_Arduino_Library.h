@@ -298,6 +298,11 @@
 #define WM8960_SPEAKER_BOOST_GAIN_4_5DB 4
 #define WM8960_SPEAKER_BOOST_GAIN_5_1DB 5
 
+// VMIDSEL settings
+#define WM8960_VMIDSEL_DISABLED 0
+#define WM8960_VMIDSEL_2X50KOHM 1
+#define WM8960_VMIDSEL_2X250KOHM 2
+#define WM8960_VMIDSEL_2X5KOHM 3
 
 class WM8960
 {
@@ -613,6 +618,7 @@ class WM8960
 		// playback/record settings of 2*50Kohm.
 		boolean enableVMID(); 
 		boolean disableVMID();
+		boolean setVMID(uint8_t setting = WM8960_VMIDSEL_2X50KOHM);
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// Headphones
