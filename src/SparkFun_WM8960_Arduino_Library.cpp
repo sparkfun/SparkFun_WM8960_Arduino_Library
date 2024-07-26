@@ -990,16 +990,29 @@ boolean WM8960::disableRI2MO()
 
 // Enables VMID in the WM8960_REG_PWR_MGMT_2 register, and set's it to 
 // playback/record settings of 2*50Kohm.
+// Note, this function is only hear for backwards compatibility with the
+// original releases of this library. It is recommended to use the
+// setVMID() function instead.
 boolean WM8960::enableVMID()
 {
-  WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 8, 1);
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 7, 1);
+  return WM8960::setVMID(WM8960_VMIDSEL_2X50KOHM);
 }
 
 boolean WM8960::disableVMID()
 {
-  WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 8, 0);
-  return WM8960::_writeRegisterBit(WM8960_REG_PWR_MGMT_1, 7, 0);
+  return WM8960::setVMID(WM8960_VMIDSEL_DISABLED);
+}
+
+// setVMID
+// Sets the VMID signal to one of three possible settings.
+// 4 options:
+// WM8960_VMIDSEL_DISABLED
+// WM8960_VMIDSEL_2X50KOHM (playback / record)
+// WM8960_VMIDSEL_2X250KOHM (for low power / standby)
+// WM8960_VMIDSEL_2X5KOHM (for fast start-up)
+boolean WM8960::setVMID(uint8_t setting)
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_PWR_MGMT_1, 8, 7, setting);
 }
 
 /////////////////////////////////////////////////////////
