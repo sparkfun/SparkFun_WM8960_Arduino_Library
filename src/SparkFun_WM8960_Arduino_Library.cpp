@@ -1464,6 +1464,16 @@ boolean WM8960::setALRSWAP(boolean swap)
   return WM8960::_writeRegisterBit(WM8960_REG_AUDIO_INTERFACE_1, 8, swap);
 }
 
+boolean WM8960::setVROI(boolean setting)
+{
+  return WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_3, 6, setting);
+}
+
+boolean WM8960::setVSEL(uint8_t setting)
+{
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_ADDITIONAL_CONTROL_1,7,6,setting); 
+}
+
 // convertDBtoSetting
 // This function will take in a dB value (as a float), and return the 
 // corresponding volume setting necessary.
