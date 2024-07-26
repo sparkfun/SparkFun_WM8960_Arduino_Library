@@ -629,7 +629,7 @@ boolean WM8960::setAdcRightDigitalVolumeDB(float dB)
 boolean WM8960::enableAlc(uint8_t mode)
 {
   boolean bit8 = (mode>>1);
-  boolean bit7 = (mode & B00000001);
+  boolean bit7 = (mode & 0b00000001);
   if (WM8960::_writeRegisterBit(WM8960_REG_ALC1, 8, bit8) == 0) return false;
   return WM8960::_writeRegisterBit(WM8960_REG_ALC1, 7, bit7);
 }
