@@ -1012,7 +1012,7 @@ boolean WM8960::disableVMID()
 // WM8960_VMIDSEL_2X5KOHM (for fast start-up)
 boolean WM8960::setVMID(uint8_t setting)
 {
-  return WM8960::_writeRegisterMultiBits(WM8960_REG_INPUT_BOOST_MIXER_1, 8, 7, setting);
+  return WM8960::_writeRegisterMultiBits(WM8960_REG_PWR_MGMT_1, 8, 7, setting);
 }
 
 /////////////////////////////////////////////////////////
