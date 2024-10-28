@@ -1100,6 +1100,41 @@ boolean WM8960::setHeadphoneVolume(uint8_t volume)
   return false; 
 }
 
+boolean WM8960::enableHeadphoneJackDetect() {
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_2, 6, 1);
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_1, 0, 1); // TOEN - slow clock enable
+  return result1 && result2;
+}
+
+boolean WM8960::disableHeadphoneJackDetect() {
+  boolean result1 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_2, 6, 0);
+  boolean result2 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_1, 0, 0); // TOEN - slow clock disable
+  return result1 && result2;
+}
+
+// SetHeadphoneJackDetectInput
+// Sets the input pin for jack insertion detection
+//
+// Valid inputs: WM8960_JACKDETECT_LINPUT3, WM8960_JACKDETECT_RINPUT3, WM8960_JACKDETECT_GPIO1
+boolean WM8960::setHeadphoneJackDetectInput(uint8_t setting) {
+  boolean result1 = false;
+  boolean result2 = false;
+  switch (setting) {
+    case WM8960_JACKDETECT_LINPUT3:
+      result1 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 3, 1);
+      result2 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 2, 0); // JD2
+      break;
+    case WM8960_JACKDETECT_RINPUT3:
+      result1 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 3, 1);
+      result2 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 2, 1); // JD3
+    default:
+      result1 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 3, 0); // GPIO1
+      result2 = WM8960::_writeRegisterBit(WM8960_REG_ADDITIONAL_CONTROL_4, 2, 0); // defaults to 0
+      break;
+  }
+  return result1 && result2;
+}
+
 // Set headphone volume dB
 // Sets the volume of the headphone output buffer amp to a specified dB value 
 // passed in as a float argument.
