@@ -267,7 +267,7 @@ void i2s_install() {
     .use_apll = false,
     .tx_desc_auto_clear = false,
     .fixed_mclk = 0,
-    .mclk_multiple = i2s_mclk_multiple_t(I2S_MCLK_MULTIPLE_DEFAULT),
+    .mclk_multiple = i2s_mclk_multiple_t(I2S_MCLK_MULTIPLE_512),
     .bits_per_chan = i2s_bits_per_chan_t(I2S_BITS_PER_CHAN_DEFAULT)
   };
 
