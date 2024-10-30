@@ -321,6 +321,11 @@
 #define WM8960_VSEL_INCREASED_BIAS_CURRENT 1
 #define WM8960_VSEL_LOWEST_BIAS_CURRENT 3
 
+// JACK DETECT INPUT
+#define WM8960_JACKDETECT_GPIO1 0
+#define WM8960_JACKDETECT_LINPUT3 1
+#define WM8960_JACKDETECT_RINPUT3 2
+
 class WM8960
 {
 	public:
@@ -683,6 +688,9 @@ class WM8960
 		// 6 = +6dB  (MAX)
 		boolean setHeadphoneVolumeDB(float dB);
 		
+		boolean enableHeadphoneJackDetect();
+		boolean disableHeadphoneJackDetect();
+		boolean setHeadphoneJackDetectInput(uint8_t setting = WM8960_JACKDETECT_LINPUT3);
 
 		/////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////// Speakers
